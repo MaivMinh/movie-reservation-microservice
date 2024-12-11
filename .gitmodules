@@ -1,0 +1,18 @@
+[submodule "movie-reservation-movie-service"]
+	path = movie-reservation-movie-service
+	url = https://github.com/MaivMinh/movie-reservation-movie-service.git
+[submodule "movie-reservation-auth-service"]
+	path = movie-reservation-auth-service
+	url = https://github.com/MaivMinh/movie-reservation-auth-service.git
+[submodule "movie-reservation-showtime-service"]
+	path = movie-reservation-showtime-service
+	url = https://github.com/MaivMinh/movie-reservation-showtime-service.git
+[submodule "movie-reservation-api-gateway"]
+	path = movie-reservation-api-gateway
+	url = https://github.com/MaivMinh/movie-reservation-api-gateway.git
+[submodule "movie-reservation-booking-service"]
+	path = movie-reservation-booking-service
+	url = https://github.com/MaivMinh/movie-reservation-booking-service.git
+[submodule "movie-reservation-service-discovery"]
+	path = movie-reservation-service-discovery
+	url = https://github.com/MaivMinh/movie-reservation-service-discovery.git
