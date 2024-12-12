@@ -7,28 +7,13 @@ services:
     ports:
       - "8761:8761"
 
-  redis_api_gateway:
+  redis-api-gateway:
     image: redis:latest
     restart: unless-stopped
     ports:
       - "6379:6379"
 
-  api_gateway:
-    image: api-gateway:1.0
-    restart: on-failure
-    ports:
-      - "8080:8080"
-    depends_on:
-      - service-discovery
-      - redis_api_gateway
-    environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
-      - EUREKA_INSTANCE_PREFERIPADDRESS=true
-      - SPRING_DATA_REDIS_HOST=redis_api_gateway
-      - SPRING_DATA_REDIS_PORT=6379
-
-
-  auth_mysql_db:
+  auth-mysql-db:
     image: mysql:8.2
     restart: unless-stopped
     env_file:
@@ -41,27 +26,26 @@ services:
     volumes:
       - auth_service_data:/var/lib/mysql
 
-  auth_service:
+  auth-service:
     image: auth-service:1.0
     restart: on-failure
     env_file:
       - .env
     ports:
-      - "8081:8080"
+      - "8081:8081"
+      - "9091:9091"
     depends_on:
       - service-discovery
-      - api_gateway
-      - auth_mysql_db
+      - auth-mysql-db
     environment:
       - SECRET_KEY=${SECRET_KEY}
-      - SPRING_DATASOURCE_URL=jdbc:mysql://auth_mysql_db:3306/auth_service_db?useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_URL=jdbc:mysql://auth-mysql-db:3306/auth_service_db?useSSL=false&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
       - EUREKA_INSTANCE_PREFERIPADDRESS=true
-      - API_GATEWAY_URL=http://api_gateway
 
-  movie_mysql_db:
+  movie-mysql-db:
     image: mysql:8.2
     restart: unless-stopped
     env_file:
@@ -74,30 +58,42 @@ services:
     volumes:
       - movie_service_data:/var/lib/mysql
 
-  movie_service:
+  movie-service:
     image: movie-service:1.0
     restart: on-failure
     ports:
-      - "8082:8080"
-      - "9091:9090"
+      - "8082:8082"
+      - "9092:9092"
     env_file:
       - .env
     depends_on:
       - service-discovery
-      - api_gateway
-      - movie_mysql_db
+      - movie-mysql-db
     environment:
       - SECRET_KEY=${SECRET_KEY}
-      - SPRING_DATASOURCE_URL=jdbc:mysql://movie_mysql_db:3306/movie_service_db?useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_URL=jdbc:mysql://movie-mysql-db:3306/movie_service_db?useSSL=false&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
       - EUREKA_INSTANCE_PREFERIPADDRESS=true
-      - API_GATEWAY_URL=http://api_gateway
     volumes:
       - .m2:/root/.m2
     stdin_open: true
     tty: true
+
+  api-gateway:
+    image: api-gateway:1.0
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    depends_on:
+      - service-discovery
+      - redis-api-gateway
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
+      - EUREKA_INSTANCE_PREFERIPADDRESS=true
+      - SPRING_DATA_REDIS_HOST=redis-api-gateway
+      - SPRING_DATA_REDIS_PORT=6379
 
 volumes:
     movie_service_data:
