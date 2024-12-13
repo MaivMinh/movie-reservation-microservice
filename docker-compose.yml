@@ -12,6 +12,21 @@ services:
     restart: unless-stopped
     ports:
       - "6379:6379"
+  api-gateway:
+    image: api-gateway:1.0
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    depends_on:
+      - service-discovery
+      - redis-api-gateway
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
+      - EUREKA_INSTANCE_PREFERIPADDRESS=true
+      - SPRING_DATA_REDIS_HOST=redis-api-gateway
+      - SPRING_DATA_REDIS_PORT=6379
+      - AUTH_GRPC_SERVER_NAME=auth-service
+      - AUTH_GRPC_SERVER_PORT=9091
 
   auth-mysql-db:
     image: mysql:8.2
@@ -76,24 +91,14 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
       - EUREKA_INSTANCE_PREFERIPADDRESS=true
+      - AUTH_GRPC_SERVER_NAME=auth-service
+      - AUTH_GRPC_SERVER_PORT=9091
     volumes:
       - .m2:/root/.m2
     stdin_open: true
     tty: true
 
-  api-gateway:
-    image: api-gateway:1.0
-    restart: on-failure
-    ports:
-      - "8080:8080"
-    depends_on:
-      - service-discovery
-      - redis-api-gateway
-    environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
-      - EUREKA_INSTANCE_PREFERIPADDRESS=true
-      - SPRING_DATA_REDIS_HOST=redis-api-gateway
-      - SPRING_DATA_REDIS_PORT=6379
+
 
 volumes:
     movie_service_data:
