@@ -104,7 +104,6 @@ services:
     tty: true
 
 
-
 volumes:
     movie_service_data:
         driver: local
