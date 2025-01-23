@@ -14,12 +14,8 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 @Configuration
 @AllArgsConstructor
 public class ProjectSecurityConfig {
-  private final Environment env;
-  private final AuthenticationService authService;
-
   @Bean
-  public SecurityWebFilterChain securityWebFilterChain(
-          ServerHttpSecurity http) {
+  public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
 
     return http.authorizeExchange(exchanges -> exchanges
                     .anyExchange().permitAll())

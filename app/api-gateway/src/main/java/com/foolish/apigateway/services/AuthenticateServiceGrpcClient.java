@@ -3,15 +3,12 @@ package com.foolish.apigateway.services;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.examples.lib.AuthenticateRequest;
 import net.devh.boot.grpc.examples.lib.AuthenticateResponse;
 import net.devh.boot.grpc.examples.lib.AuthenticateServiceGrpc;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
-
 import java.util.Objects;
 
 @Slf4j
