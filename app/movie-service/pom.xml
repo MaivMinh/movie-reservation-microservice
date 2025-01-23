@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.foolish</groupId>
+        <groupId>com.microservice</groupId>
         <artifactId>movie-reservation</artifactId>
         <version>1.0.0</version>
         <relativePath>../../pom.xml</relativePath>
@@ -74,7 +74,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-            <version>4.1.0</version>
+            <version>4.2.0</version>
         </dependency>
 
         <dependency>

@@ -8,7 +8,7 @@
         <version>3.4.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.foolish</groupId>
+    <groupId>com.microservice</groupId>
     <artifactId>movie-reservation</artifactId>
     <version>1.0.0</version>
     <name>movie-reservation</name>
