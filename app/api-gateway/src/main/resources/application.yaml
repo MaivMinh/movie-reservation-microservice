@@ -7,7 +7,7 @@ spring:
           predicates:
             - Path=/fps/**
           filters:
-            - PrefixPath=/api/v1
+            - PrefixPath=/api
             - AddResponseHeader=X-Powered-By,FPS Service
 
         - id: bff
@@ -16,7 +16,7 @@ spring:
             - Path=/**
             - Method=GET,POST,PUT,DELETE,PATCH
           filters:
-            - PrefixPath=/api/v1
+            - PrefixPath=/api
             - AddResponseHeader=X-Powered-By,BFF
 
   application:
@@ -28,7 +28,7 @@ spring:
 
 
 server:
-  port: 8080
+  port: 8888
 
 eureka:
   client:

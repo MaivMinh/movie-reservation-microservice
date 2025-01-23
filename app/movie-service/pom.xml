@@ -10,8 +10,8 @@
     </parent>
     <artifactId>movie-service</artifactId>
     <version>1.0.0</version>
-    <name>booking-service</name>
-    <description>Booking service</description>
+    <name>movie-service</name>
+    <description>Movie service</description>
     <packaging>jar</packaging>
     <url/>
     <licenses>
