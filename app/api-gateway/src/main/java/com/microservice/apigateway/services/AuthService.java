@@ -1,7 +1,7 @@
 package com.microservice.apigateway.services;
 
-import com.microservice.auth.AuthenticateRequest;
-import com.microservice.auth.AuthenticateResponse;
+import com.microservice.auth_proto.AuthenticateRequest;
+import com.microservice.auth_proto.AuthenticateResponse;
 import io.grpc.stub.StreamObserver;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

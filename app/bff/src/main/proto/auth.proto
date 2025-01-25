@@ -3,7 +3,7 @@ syntax = "proto3";
 package net.devh.boot.grpc.example;
 option java_multiple_files = true;
 option java_outer_classname = "AuthProto";
-option java_package = "com.microservice.auth";
+option java_package = "com.microservice.auth_proto";
 
 service AuthService {
   rpc doAuthenticate(AuthenticateRequest) returns (AuthenticateResponse);
@@ -16,7 +16,7 @@ service AuthService {
 }
 
 message ProfileRequest {
-  int64 accountId = 1;
+  int32 accountId = 1;
 }
 message Profile {
   string username = 1;
@@ -31,7 +31,7 @@ message ProfileResponse {
 
 
 message LogoutRequest {
-  string token = 1;
+  string accessToken = 1;
 }
 message LogoutResponse {
   int32 status = 1;
@@ -41,9 +41,8 @@ message LogoutResponse {
 
 message LoginSuccessInfo {
   string accessToken = 1;
-  string refreshToken = 2;
-  int64 expiresIn = 3;
-  string tokenType = 4;
+  int64 expiresIn = 2;
+  string tokenType = 3;
 }
 message LoginRequest {
   string username = 1;
@@ -77,7 +76,7 @@ message AuthenticateResponse {
 }
 
 message IdentityRequest {
-  string userId = 1;
+  int32 userId = 1;
 }
 
 message IdentityResponse {

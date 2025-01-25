@@ -6,9 +6,9 @@ spring:
           uri: lb://fps
           predicates:
             - Path=/fps/**
+            - Method=GET,POST,PUT,DELETE,PATCH
           filters:
             - PrefixPath=/api
-            - AddResponseHeader=X-Powered-By,FPS Service
 
         - id: bff
           uri: lb://bff
@@ -17,7 +17,6 @@ spring:
             - Method=GET,POST,PUT,DELETE,PATCH
           filters:
             - PrefixPath=/api
-            - AddResponseHeader=X-Powered-By,BFF
 
   application:
     name: api-gateway
@@ -33,5 +32,13 @@ server:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: ${EUREKA_SERVER_ADDRESS:http://localhost:8761/eureka}
       preferIpAddress: true
+
+grpc:
+  client:
+    authService:
+      address: ${GRPC_SERVER_AUTH_ADDRESS:static://localhost:9091}
+      negotiation-type: plaintext
+      enable-keep-alive: true
+      keep-alive-without-calls: true

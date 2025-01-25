@@ -20,16 +20,20 @@ public class AccountService {
   }
 
   public Account save(Account account) {
-    return accountRepo.save(account);
+    try {
+      return accountRepo.save(account);
+    } catch (Exception e) {
+      return null;
+    }
   }
 
   public Account findAccountByUsername(String username) {
-    return accountRepo.findByUsername(username);
+    return accountRepo.findAccountByUsername(username).orElse(null);
   }
 
-  public Role doIntrospect(String userId) {
+  public Role doIntrospect(int accountId) {
     // Thực hiện tìm kiếm ROLE của user.
-    Account account = accountRepo.findAccountById(Integer.parseInt(userId));
+    Account account = accountRepo.findAccountById(accountId).orElse(null);
     if (account != null && account.getId() > 0) {
       return account.getRole();
     }
@@ -37,6 +41,10 @@ public class AccountService {
   }
 
   public Account findAccountByEmail(String email) {
-    return accountRepo.findByEmail(email);
+    return accountRepo.findByEmail(email).orElse(null);
+  }
+
+  public Account findAccountById(int accountId) {
+    return accountRepo.findAccountById(accountId).orElse(null);
   }
 }

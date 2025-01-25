@@ -2,7 +2,8 @@ package com.microservice.apigateway.filters;
 
 import com.microservice.apigateway.services.AuthService;
 import com.microservice.apigateway.services.RedisService;
-import com.microservice.auth.AuthenticateResponse;
+import com.microservice.auth_proto.AuthenticateResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Component
 public class AuthenticationFilter implements GlobalFilter, Ordered {
   private final AuthService authenticationService;
@@ -29,6 +31,10 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+    if (exchange.getRequest().getURI().getPath().startsWith("/auth")) {
+      return chain.filter(exchange);
+    }
+
     String authorization = exchange.getRequest().getHeaders().getFirst("Authorization");
     if (authorization != null) {
       String token = authorization.substring(7);
@@ -42,7 +48,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
       if (value != null && !value.isEmpty()) {
         ServerHttpRequest request = exchange.getRequest()
                 .mutate()
-                .header("X-USER-ID", value)
+                .header("X-ACCOUNT-ID", value)
                 .build();
         ServerWebExchange updated = exchange.mutate().request(request).build();
         return chain.filter(updated);
@@ -59,13 +65,18 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         }
         String user_id = response.getUserId();
         long ttl = response.getTtl();
-        redisService.set(token, user_id, ttl);
-        ServerHttpRequest request = exchange.getRequest()
-                .mutate()
-                .header("X-USER-ID", user_id)
-                .build();
-        ServerWebExchange updated = exchange.mutate().request(request).build();
-        return chain.filter(updated);
+
+        return redisService.set(token, user_id, ttl).flatMap(result -> {
+          if (!result) {
+            log.error("Cannot set token to Redis");
+          } else log.info("Set token to Redis successfully");
+          ServerHttpRequest request = exchange.getRequest()
+                  .mutate()
+                  .header("X-ACCOUNT-ID", user_id)
+                  .build();
+          ServerWebExchange updated = exchange.mutate().request(request).build();
+          return chain.filter(updated);
+        });
       }
     }
     return chain.filter(exchange);
