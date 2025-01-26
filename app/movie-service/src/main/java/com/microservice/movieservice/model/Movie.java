@@ -3,8 +3,7 @@ package com.microservice.movieservice.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Date;
 import java.util.List;
@@ -13,6 +12,9 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "movies")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Movie {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +34,7 @@ public class Movie {
   private Boolean expired;
 
   @JsonIgnore
-  @OneToMany(mappedBy = "movie", targetEntity = MovieGenre.class, cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy = "movie", targetEntity = MovieGenre.class, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
   private List<MovieGenre> movieGenres;
 
 }

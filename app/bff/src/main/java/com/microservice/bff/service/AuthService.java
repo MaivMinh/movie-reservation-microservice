@@ -80,4 +80,14 @@ public class AuthService {
             .message(response.getMessage())
             .build();
   }
+
+
+  public boolean isAdmin(Integer id)  {
+    /// Hàm thực hiện kiểm tra xem account có ROLE là ADMIN không.
+    IsAdminRequest request = IsAdminRequest.newBuilder()
+            .setAccountId(id)
+            .build();
+    IsAdminResponse response = grpcClient.isAdmin(request);
+    return response.getIsAdmin();
+  }
 }

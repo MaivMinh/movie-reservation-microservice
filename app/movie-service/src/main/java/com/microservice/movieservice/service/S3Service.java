@@ -16,7 +16,6 @@ import java.util.UUID;
 public class S3Service {
   private final S3Client s3Client;
   private final Environment env;
-  private final MovieService movieService;
 
   private String generateUniqueFileName(String original) {
     String extension = "";

@@ -16,4 +16,16 @@ public class GenreService {
   public Genre findGenreByIdOrElseThrow(Integer id) {
     return genreRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Genre not found", Map.of("id", String.valueOf(id))));
   }
+
+  public Genre save(Genre genre) {
+    try {
+      return genreRepo.save(genre);
+    }catch (Exception e){
+      throw new RuntimeException("Failed to save genre");
+    }
+  }
+
+  public Genre findGenreById(Integer genreId) {
+    return genreRepo.findById(genreId).orElse(null);
+  }
 }

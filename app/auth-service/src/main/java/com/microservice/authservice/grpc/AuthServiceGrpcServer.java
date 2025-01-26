@@ -1,15 +1,10 @@
 package com.microservice.authservice.grpc;
 
 import com.microservice.auth_proto.*;
-import com.microservice.authservice.model.Role;
-import com.microservice.authservice.services.AccountService;
 import com.microservice.authservice.services.AuthService;
-import com.microservice.authservice.services.JwtUtilsService;
-import com.nimbusds.openid.connect.sdk.AuthenticationResponse;
 import io.grpc.Metadata;
 import io.grpc.ServerCall;
 import io.grpc.stub.StreamObserver;
-import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;
 import net.devh.boot.grpc.server.security.authentication.GrpcAuthenticationReader;
 import net.devh.boot.grpc.server.service.GrpcService;
@@ -39,6 +34,7 @@ public class AuthServiceGrpcServer extends AuthServiceGrpc.AuthServiceImplBase {
 
   @Override
   public void doAuthenticate(AuthenticateRequest request, StreamObserver<AuthenticateResponse> streamObserver) {
+    System.out.println("doAuthenticate AuthService");
     AuthenticateResponse response = authService.doAuthenticate(request);
     streamObserver.onNext(response);
     streamObserver.onCompleted();
@@ -75,6 +71,13 @@ public class AuthServiceGrpcServer extends AuthServiceGrpc.AuthServiceImplBase {
   @Override
   public void getProfile(ProfileRequest request, StreamObserver<ProfileResponse> responseObserver) {
     ProfileResponse response = authService.profile(request);
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
+
+  @Override
+  public void isAdmin(IsAdminRequest request, StreamObserver<IsAdminResponse> responseObserver) {
+    IsAdminResponse response = authService.isAdmin(request);
     responseObserver.onNext(response);
     responseObserver.onCompleted();
   }

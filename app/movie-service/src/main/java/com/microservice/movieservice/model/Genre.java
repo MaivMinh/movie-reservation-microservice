@@ -18,6 +18,6 @@ public class Genre {
   private String name;
 
   @JsonIgnore
-  @OneToMany(mappedBy = "genre", targetEntity = MovieGenre.class, cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy = "genre", targetEntity = MovieGenre.class, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
   private Set<MovieGenre> movieGenres;
 }

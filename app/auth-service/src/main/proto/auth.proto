@@ -8,11 +8,19 @@ option java_package = "com.microservice.auth_proto";
 service AuthService {
   rpc doAuthenticate(AuthenticateRequest) returns (AuthenticateResponse);
   rpc doIdentity(IdentityRequest) returns (IdentityResponse);
+  rpc isAdmin(IsAdminRequest) returns (IsAdminResponse);
 
   rpc postRegister(RegisterRequest) returns (RegisterResponse);
   rpc postLogin(LoginRequest) returns (LoginResponse);
   rpc postLogout(LogoutRequest) returns (LogoutResponse);
   rpc getProfile(ProfileRequest) returns (ProfileResponse);
+}
+
+message IsAdminRequest {
+  int32 accountId = 1;
+}
+message IsAdminResponse {
+  bool isAdmin = 1;
 }
 
 message ProfileRequest {

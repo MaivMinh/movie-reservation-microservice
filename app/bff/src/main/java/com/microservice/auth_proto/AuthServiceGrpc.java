@@ -77,6 +77,37 @@ public final class AuthServiceGrpc {
     return getDoIdentityMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.microservice.auth_proto.IsAdminRequest,
+      com.microservice.auth_proto.IsAdminResponse> getIsAdminMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "isAdmin",
+      requestType = com.microservice.auth_proto.IsAdminRequest.class,
+      responseType = com.microservice.auth_proto.IsAdminResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.microservice.auth_proto.IsAdminRequest,
+      com.microservice.auth_proto.IsAdminResponse> getIsAdminMethod() {
+    io.grpc.MethodDescriptor<com.microservice.auth_proto.IsAdminRequest, com.microservice.auth_proto.IsAdminResponse> getIsAdminMethod;
+    if ((getIsAdminMethod = AuthServiceGrpc.getIsAdminMethod) == null) {
+      synchronized (AuthServiceGrpc.class) {
+        if ((getIsAdminMethod = AuthServiceGrpc.getIsAdminMethod) == null) {
+          AuthServiceGrpc.getIsAdminMethod = getIsAdminMethod =
+              io.grpc.MethodDescriptor.<com.microservice.auth_proto.IsAdminRequest, com.microservice.auth_proto.IsAdminResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "isAdmin"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.microservice.auth_proto.IsAdminRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.microservice.auth_proto.IsAdminResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new AuthServiceMethodDescriptorSupplier("isAdmin"))
+              .build();
+        }
+      }
+    }
+    return getIsAdminMethod;
+  }
+
   private static volatile io.grpc.MethodDescriptor<com.microservice.auth_proto.RegisterRequest,
       com.microservice.auth_proto.RegisterResponse> getPostRegisterMethod;
 
@@ -265,6 +296,13 @@ public final class AuthServiceGrpc {
 
     /**
      */
+    default void isAdmin(com.microservice.auth_proto.IsAdminRequest request,
+        io.grpc.stub.StreamObserver<com.microservice.auth_proto.IsAdminResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getIsAdminMethod(), responseObserver);
+    }
+
+    /**
+     */
     default void postRegister(com.microservice.auth_proto.RegisterRequest request,
         io.grpc.stub.StreamObserver<com.microservice.auth_proto.RegisterResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getPostRegisterMethod(), responseObserver);
@@ -337,6 +375,14 @@ public final class AuthServiceGrpc {
 
     /**
      */
+    public void isAdmin(com.microservice.auth_proto.IsAdminRequest request,
+        io.grpc.stub.StreamObserver<com.microservice.auth_proto.IsAdminResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getIsAdminMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
     public void postRegister(com.microservice.auth_proto.RegisterRequest request,
         io.grpc.stub.StreamObserver<com.microservice.auth_proto.RegisterResponse> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
@@ -396,6 +442,13 @@ public final class AuthServiceGrpc {
     public com.microservice.auth_proto.IdentityResponse doIdentity(com.microservice.auth_proto.IdentityRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getDoIdentityMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.microservice.auth_proto.IsAdminResponse isAdmin(com.microservice.auth_proto.IsAdminRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getIsAdminMethod(), getCallOptions(), request);
     }
 
     /**
@@ -461,6 +514,14 @@ public final class AuthServiceGrpc {
 
     /**
      */
+    public com.google.common.util.concurrent.ListenableFuture<com.microservice.auth_proto.IsAdminResponse> isAdmin(
+        com.microservice.auth_proto.IsAdminRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getIsAdminMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
     public com.google.common.util.concurrent.ListenableFuture<com.microservice.auth_proto.RegisterResponse> postRegister(
         com.microservice.auth_proto.RegisterRequest request) {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
@@ -494,10 +555,11 @@ public final class AuthServiceGrpc {
 
   private static final int METHODID_DO_AUTHENTICATE = 0;
   private static final int METHODID_DO_IDENTITY = 1;
-  private static final int METHODID_POST_REGISTER = 2;
-  private static final int METHODID_POST_LOGIN = 3;
-  private static final int METHODID_POST_LOGOUT = 4;
-  private static final int METHODID_GET_PROFILE = 5;
+  private static final int METHODID_IS_ADMIN = 2;
+  private static final int METHODID_POST_REGISTER = 3;
+  private static final int METHODID_POST_LOGIN = 4;
+  private static final int METHODID_POST_LOGOUT = 5;
+  private static final int METHODID_GET_PROFILE = 6;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -523,6 +585,10 @@ public final class AuthServiceGrpc {
         case METHODID_DO_IDENTITY:
           serviceImpl.doIdentity((com.microservice.auth_proto.IdentityRequest) request,
               (io.grpc.stub.StreamObserver<com.microservice.auth_proto.IdentityResponse>) responseObserver);
+          break;
+        case METHODID_IS_ADMIN:
+          serviceImpl.isAdmin((com.microservice.auth_proto.IsAdminRequest) request,
+              (io.grpc.stub.StreamObserver<com.microservice.auth_proto.IsAdminResponse>) responseObserver);
           break;
         case METHODID_POST_REGISTER:
           serviceImpl.postRegister((com.microservice.auth_proto.RegisterRequest) request,
@@ -572,6 +638,13 @@ public final class AuthServiceGrpc {
               com.microservice.auth_proto.IdentityRequest,
               com.microservice.auth_proto.IdentityResponse>(
                 service, METHODID_DO_IDENTITY)))
+        .addMethod(
+          getIsAdminMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.microservice.auth_proto.IsAdminRequest,
+              com.microservice.auth_proto.IsAdminResponse>(
+                service, METHODID_IS_ADMIN)))
         .addMethod(
           getPostRegisterMethod(),
           io.grpc.stub.ServerCalls.asyncUnaryCall(
@@ -650,6 +723,7 @@ public final class AuthServiceGrpc {
               .setSchemaDescriptor(new AuthServiceFileDescriptorSupplier())
               .addMethod(getDoAuthenticateMethod())
               .addMethod(getDoIdentityMethod())
+              .addMethod(getIsAdminMethod())
               .addMethod(getPostRegisterMethod())
               .addMethod(getPostLoginMethod())
               .addMethod(getPostLogoutMethod())

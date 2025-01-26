@@ -204,4 +204,14 @@ public class AuthService {
     }
     return IdentityResponse.newBuilder().setActive(true).setRoles(role.getName().toString()).build();
   }
+
+  public IsAdminResponse isAdmin(IsAdminRequest request) {
+    /// Hàm thực hiện kiểm tra xem account id có phải là ADMIN.
+    int accountId = request.getAccountId();
+    Account account = accountService.findAccountById(accountId);
+    if (account == null || !account.getRole().getName().equals(ROLE.ADMIN)) {
+      return IsAdminResponse.newBuilder().setIsAdmin(false).build();
+    }
+    return IsAdminResponse.newBuilder().setIsAdmin(true).build();
+  }
 }

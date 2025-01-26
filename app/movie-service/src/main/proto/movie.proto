@@ -1,0 +1,110 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+package net.devh.boot.grpc.example;
+option java_multiple_files = true;
+option java_outer_classname = "MovieProto";
+option java_package = "com.microservice.movie_proto";
+
+service MovieService {
+  rpc createMovie(CreateMovieRequest) returns (CreateMovieResponse);
+  rpc getMovies(GetMoviesRequest) returns (GetMoviesResponse);
+  rpc getMovie(GetMovieRequest) returns (GetMovieResponse);
+  rpc searchMovies(SearchMoviesRequest) returns (SearchMoviesResponse);
+  rpc updateMovie(UpdateMovieRequest) returns (UpdateMovieResponse);
+}
+
+message UpdateMovie {
+  int32 id = 1;
+  google.protobuf.StringValue name = 2;
+  google.protobuf.StringValue poster = 3;
+  google.protobuf.StringValue backdrop = 4;
+  google.protobuf.StringValue description = 5;
+  google.protobuf.StringValue trailer = 6;
+  google.protobuf.Int64Value releaseDate = 7;
+}
+
+message UpdateMovieRequest {
+  UpdateMovie movie = 1;
+}
+
+message UpdateMovieResponse {
+  int32 status = 1;
+  string message = 2;
+}
+
+message SearchMoviesRequest {
+  map<string, string> criteria = 1;
+  int32 page = 2;
+  int32 size = 3;
+  string sort = 4;
+}
+message SearchMoviesResponse {
+  int32 status = 1;
+  string message = 2;
+  repeated Movie movies = 3;
+  int64 totalPage = 4;
+  int64 totalElement = 5;
+}
+
+
+message GetMovieRequest {
+  int32 id = 1;
+}
+message GetMovieResponse {
+  int32 status = 1;
+  string message = 2;
+  Movie movie = 3;
+}
+
+message GetMoviesRequest {
+  int32 page = 1;
+  int32 size = 2;
+  string sort = 3;
+}
+
+message GetMoviesResponse {
+  int32 status = 1;
+  string message = 2;
+  repeated Movie movies = 3;
+  int64 totalPage = 4;
+  int64 totalElement = 5;
+
+}
+
+message Genre {
+  int32 id = 1;
+  string name = 2;
+}
+
+message Movie {
+  int32 id = 1;
+  string name = 2;
+  string poster = 3;
+  string backdrop = 4;
+  string description = 5;
+  string trailer = 6;
+  int64 releaseDate = 7;
+  double voteAverage = 8;
+  int32 voteCount = 9;
+  repeated Genre genre = 10;
+}
+
+message NewMovie {
+  string name = 1;
+  string poster = 2;
+  string backdrop = 3;
+  string description = 4;
+  string trailer = 5;
+  int64 releaseDate = 6;
+  repeated int32 genre = 7;
+}
+
+message CreateMovieRequest {
+  NewMovie movie = 1;
+}
+
+message CreateMovieResponse {
+  int32 status = 1;
+  string message = 2;
+}

@@ -30,5 +30,7 @@ public class AuthServiceGrpcClient {
     return authServiceBlockingStub.postLogout(request);
   }
 
-
+  public IsAdminResponse isAdmin(IsAdminRequest request) {
+    return authServiceBlockingStub.isAdmin(request);
+  }
 }
