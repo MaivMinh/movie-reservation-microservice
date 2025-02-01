@@ -2,6 +2,7 @@ package com.microservice.bookingservice.grpc;
 
 import com.microservice.booking_proto.*;
 import com.microservice.bookingservice.service.BookingService;
+import com.microservice.bookingservice.service.ShowtimeService;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
@@ -10,6 +11,7 @@ import net.devh.boot.grpc.server.service.GrpcService;
 @RequiredArgsConstructor
 public class BookingServiceGrpcServer extends BookingServiceGrpc.BookingServiceImplBase {
   private final BookingService bookingService;
+  private final ShowtimeService showtimeService;
 
   @Override
   public void createCinema(CreateCinemaRequest request, StreamObserver<CreateCinemaResponse> responseObserver) {
@@ -42,6 +44,55 @@ public class BookingServiceGrpcServer extends BookingServiceGrpc.BookingServiceI
   @Override
   public void updateCinema(UpdateCinemaRequest request, StreamObserver<UpdateCinemaResponse> responseObserver) {
     UpdateCinemaResponse response = bookingService.updateCinema(request);
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
+
+  @Override
+  public void createShowtime(CreateShowtimeRequest request, StreamObserver<CreateShowtimeResponse> responseObserver) {
+    CreateShowtimeResponse response = showtimeService.createShowtime(request);
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
+
+  @Override
+  public void getShowtimes(GetShowtimesRequest request, StreamObserver<GetShowtimesResponse> responseObserver) {
+    GetShowtimesResponse response = showtimeService.getShowtimes(request);
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
+
+  @Override
+  public void updateShowtime(UpdateShowtimeRequest request, StreamObserver<UpdateShowtimeResponse> responseObserver) {
+    UpdateShowtimeResponse response = showtimeService.updateShowtime(request);
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
+
+  @Override
+  public void getShowtime(GetShowtimeRequest request, StreamObserver<GetShowtimeResponse> responseObserver) {
+    GetShowtimeResponse response = showtimeService.getShowtime(request);
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
+
+  @Override
+  public void deleteShowtime(DeleteShowtimeRequest request, StreamObserver<DeleteShowtimeResponse> responseObserver) {
+    DeleteShowtimeResponse response = showtimeService.deleteShowtime(request);
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
+
+  @Override
+  public void searchShowtimes(SearchShowtimesRequest request, StreamObserver<SearchShowtimesResponse> responseObserver) {
+    SearchShowtimesResponse response = showtimeService.searchShowtimes(request);
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
+
+  @Override
+  public void getMovieShowtimes(GetMovieShowtimesRequest request, StreamObserver<GetMovieShowtimesResponse> responseObserver) {
+    GetMovieShowtimesResponse response = showtimeService.getMovieShowtimes(request);
     responseObserver.onNext(response);
     responseObserver.onCompleted();
   }

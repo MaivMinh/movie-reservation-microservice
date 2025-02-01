@@ -16,8 +16,6 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private UpdateCinemaRequest() {
-    name_ = "";
-    address_ = "";
   }
 
   @java.lang.Override
@@ -57,79 +55,55 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int NAME_FIELD_NUMBER = 2;
-  private volatile java.lang.Object name_;
+  private com.google.protobuf.StringValue name_;
   /**
-   * <code>string name = 2;</code>
+   * <code>.google.protobuf.StringValue name = 2;</code>
+   * @return Whether the name field is set.
+   */
+  @java.lang.Override
+  public boolean hasName() {
+    return name_ != null;
+  }
+  /**
+   * <code>.google.protobuf.StringValue name = 2;</code>
    * @return The name.
    */
   @java.lang.Override
-  public java.lang.String getName() {
-    java.lang.Object ref = name_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      name_ = s;
-      return s;
-    }
+  public com.google.protobuf.StringValue getName() {
+    return name_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : name_;
   }
   /**
-   * <code>string name = 2;</code>
-   * @return The bytes for name.
+   * <code>.google.protobuf.StringValue name = 2;</code>
    */
   @java.lang.Override
-  public com.google.protobuf.ByteString
-      getNameBytes() {
-    java.lang.Object ref = name_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      name_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public com.google.protobuf.StringValueOrBuilder getNameOrBuilder() {
+    return getName();
   }
 
   public static final int ADDRESS_FIELD_NUMBER = 3;
-  private volatile java.lang.Object address_;
+  private com.google.protobuf.StringValue address_;
   /**
-   * <code>string address = 3;</code>
+   * <code>.google.protobuf.StringValue address = 3;</code>
+   * @return Whether the address field is set.
+   */
+  @java.lang.Override
+  public boolean hasAddress() {
+    return address_ != null;
+  }
+  /**
+   * <code>.google.protobuf.StringValue address = 3;</code>
    * @return The address.
    */
   @java.lang.Override
-  public java.lang.String getAddress() {
-    java.lang.Object ref = address_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      address_ = s;
-      return s;
-    }
+  public com.google.protobuf.StringValue getAddress() {
+    return address_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : address_;
   }
   /**
-   * <code>string address = 3;</code>
-   * @return The bytes for address.
+   * <code>.google.protobuf.StringValue address = 3;</code>
    */
   @java.lang.Override
-  public com.google.protobuf.ByteString
-      getAddressBytes() {
-    java.lang.Object ref = address_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      address_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public com.google.protobuf.StringValueOrBuilder getAddressOrBuilder() {
+    return getAddress();
   }
 
   public static final int PROVINCE_FIELD_NUMBER = 4;
@@ -175,11 +149,11 @@ private static final long serialVersionUID = 0L;
     if (id_ != 0) {
       output.writeInt32(1, id_);
     }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, name_);
+    if (name_ != null) {
+      output.writeMessage(2, getName());
     }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(address_)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, address_);
+    if (address_ != null) {
+      output.writeMessage(3, getAddress());
     }
     if (province_ != null) {
       output.writeMessage(4, getProvince());
@@ -197,11 +171,13 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(1, id_);
     }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, name_);
+    if (name_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(2, getName());
     }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(address_)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, address_);
+    if (address_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(3, getAddress());
     }
     if (province_ != null) {
       size += com.google.protobuf.CodedOutputStream
@@ -224,10 +200,16 @@ private static final long serialVersionUID = 0L;
 
     if (getId()
         != other.getId()) return false;
-    if (!getName()
-        .equals(other.getName())) return false;
-    if (!getAddress()
-        .equals(other.getAddress())) return false;
+    if (hasName() != other.hasName()) return false;
+    if (hasName()) {
+      if (!getName()
+          .equals(other.getName())) return false;
+    }
+    if (hasAddress() != other.hasAddress()) return false;
+    if (hasAddress()) {
+      if (!getAddress()
+          .equals(other.getAddress())) return false;
+    }
     if (hasProvince() != other.hasProvince()) return false;
     if (hasProvince()) {
       if (!getProvince()
@@ -246,10 +228,14 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + ID_FIELD_NUMBER;
     hash = (53 * hash) + getId();
-    hash = (37 * hash) + NAME_FIELD_NUMBER;
-    hash = (53 * hash) + getName().hashCode();
-    hash = (37 * hash) + ADDRESS_FIELD_NUMBER;
-    hash = (53 * hash) + getAddress().hashCode();
+    if (hasName()) {
+      hash = (37 * hash) + NAME_FIELD_NUMBER;
+      hash = (53 * hash) + getName().hashCode();
+    }
+    if (hasAddress()) {
+      hash = (37 * hash) + ADDRESS_FIELD_NUMBER;
+      hash = (53 * hash) + getAddress().hashCode();
+    }
     if (hasProvince()) {
       hash = (37 * hash) + PROVINCE_FIELD_NUMBER;
       hash = (53 * hash) + getProvince().hashCode();
@@ -384,10 +370,18 @@ private static final long serialVersionUID = 0L;
       super.clear();
       id_ = 0;
 
-      name_ = "";
-
-      address_ = "";
-
+      if (nameBuilder_ == null) {
+        name_ = null;
+      } else {
+        name_ = null;
+        nameBuilder_ = null;
+      }
+      if (addressBuilder_ == null) {
+        address_ = null;
+      } else {
+        address_ = null;
+        addressBuilder_ = null;
+      }
       if (provinceBuilder_ == null) {
         province_ = null;
       } else {
@@ -421,8 +415,16 @@ private static final long serialVersionUID = 0L;
     public com.microservice.booking_proto.UpdateCinemaRequest buildPartial() {
       com.microservice.booking_proto.UpdateCinemaRequest result = new com.microservice.booking_proto.UpdateCinemaRequest(this);
       result.id_ = id_;
-      result.name_ = name_;
-      result.address_ = address_;
+      if (nameBuilder_ == null) {
+        result.name_ = name_;
+      } else {
+        result.name_ = nameBuilder_.build();
+      }
+      if (addressBuilder_ == null) {
+        result.address_ = address_;
+      } else {
+        result.address_ = addressBuilder_.build();
+      }
       if (provinceBuilder_ == null) {
         result.province_ = province_;
       } else {
@@ -479,13 +481,11 @@ private static final long serialVersionUID = 0L;
       if (other.getId() != 0) {
         setId(other.getId());
       }
-      if (!other.getName().isEmpty()) {
-        name_ = other.name_;
-        onChanged();
+      if (other.hasName()) {
+        mergeName(other.getName());
       }
-      if (!other.getAddress().isEmpty()) {
-        address_ = other.address_;
-        onChanged();
+      if (other.hasAddress()) {
+        mergeAddress(other.getAddress());
       }
       if (other.hasProvince()) {
         mergeProvince(other.getProvince());
@@ -522,12 +522,16 @@ private static final long serialVersionUID = 0L;
               break;
             } // case 8
             case 18: {
-              name_ = input.readStringRequireUtf8();
+              input.readMessage(
+                  getNameFieldBuilder().getBuilder(),
+                  extensionRegistry);
 
               break;
             } // case 18
             case 26: {
-              address_ = input.readStringRequireUtf8();
+              input.readMessage(
+                  getAddressFieldBuilder().getBuilder(),
+                  extensionRegistry);
 
               break;
             } // case 26
@@ -585,156 +589,242 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object name_ = "";
+    private com.google.protobuf.StringValue name_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> nameBuilder_;
     /**
-     * <code>string name = 2;</code>
+     * <code>.google.protobuf.StringValue name = 2;</code>
+     * @return Whether the name field is set.
+     */
+    public boolean hasName() {
+      return nameBuilder_ != null || name_ != null;
+    }
+    /**
+     * <code>.google.protobuf.StringValue name = 2;</code>
      * @return The name.
      */
-    public java.lang.String getName() {
-      java.lang.Object ref = name_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        name_ = s;
-        return s;
+    public com.google.protobuf.StringValue getName() {
+      if (nameBuilder_ == null) {
+        return name_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : name_;
       } else {
-        return (java.lang.String) ref;
+        return nameBuilder_.getMessage();
       }
     }
     /**
-     * <code>string name = 2;</code>
-     * @return The bytes for name.
+     * <code>.google.protobuf.StringValue name = 2;</code>
      */
-    public com.google.protobuf.ByteString
-        getNameBytes() {
-      java.lang.Object ref = name_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        name_ = b;
-        return b;
+    public Builder setName(com.google.protobuf.StringValue value) {
+      if (nameBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        name_ = value;
+        onChanged();
       } else {
-        return (com.google.protobuf.ByteString) ref;
+        nameBuilder_.setMessage(value);
       }
+
+      return this;
     }
     /**
-     * <code>string name = 2;</code>
-     * @param value The name to set.
-     * @return This builder for chaining.
+     * <code>.google.protobuf.StringValue name = 2;</code>
      */
     public Builder setName(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      name_ = value;
-      onChanged();
+        com.google.protobuf.StringValue.Builder builderForValue) {
+      if (nameBuilder_ == null) {
+        name_ = builderForValue.build();
+        onChanged();
+      } else {
+        nameBuilder_.setMessage(builderForValue.build());
+      }
+
       return this;
     }
     /**
-     * <code>string name = 2;</code>
-     * @return This builder for chaining.
+     * <code>.google.protobuf.StringValue name = 2;</code>
+     */
+    public Builder mergeName(com.google.protobuf.StringValue value) {
+      if (nameBuilder_ == null) {
+        if (name_ != null) {
+          name_ =
+            com.google.protobuf.StringValue.newBuilder(name_).mergeFrom(value).buildPartial();
+        } else {
+          name_ = value;
+        }
+        onChanged();
+      } else {
+        nameBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.StringValue name = 2;</code>
      */
     public Builder clearName() {
-      
-      name_ = getDefaultInstance().getName();
-      onChanged();
+      if (nameBuilder_ == null) {
+        name_ = null;
+        onChanged();
+      } else {
+        name_ = null;
+        nameBuilder_ = null;
+      }
+
       return this;
     }
     /**
-     * <code>string name = 2;</code>
-     * @param value The bytes for name to set.
-     * @return This builder for chaining.
+     * <code>.google.protobuf.StringValue name = 2;</code>
      */
-    public Builder setNameBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
+    public com.google.protobuf.StringValue.Builder getNameBuilder() {
       
-      name_ = value;
       onChanged();
-      return this;
+      return getNameFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.google.protobuf.StringValue name = 2;</code>
+     */
+    public com.google.protobuf.StringValueOrBuilder getNameOrBuilder() {
+      if (nameBuilder_ != null) {
+        return nameBuilder_.getMessageOrBuilder();
+      } else {
+        return name_ == null ?
+            com.google.protobuf.StringValue.getDefaultInstance() : name_;
+      }
+    }
+    /**
+     * <code>.google.protobuf.StringValue name = 2;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> 
+        getNameFieldBuilder() {
+      if (nameBuilder_ == null) {
+        nameBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>(
+                getName(),
+                getParentForChildren(),
+                isClean());
+        name_ = null;
+      }
+      return nameBuilder_;
     }
 
-    private java.lang.Object address_ = "";
+    private com.google.protobuf.StringValue address_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> addressBuilder_;
     /**
-     * <code>string address = 3;</code>
+     * <code>.google.protobuf.StringValue address = 3;</code>
+     * @return Whether the address field is set.
+     */
+    public boolean hasAddress() {
+      return addressBuilder_ != null || address_ != null;
+    }
+    /**
+     * <code>.google.protobuf.StringValue address = 3;</code>
      * @return The address.
      */
-    public java.lang.String getAddress() {
-      java.lang.Object ref = address_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        address_ = s;
-        return s;
+    public com.google.protobuf.StringValue getAddress() {
+      if (addressBuilder_ == null) {
+        return address_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : address_;
       } else {
-        return (java.lang.String) ref;
+        return addressBuilder_.getMessage();
       }
     }
     /**
-     * <code>string address = 3;</code>
-     * @return The bytes for address.
+     * <code>.google.protobuf.StringValue address = 3;</code>
      */
-    public com.google.protobuf.ByteString
-        getAddressBytes() {
-      java.lang.Object ref = address_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        address_ = b;
-        return b;
+    public Builder setAddress(com.google.protobuf.StringValue value) {
+      if (addressBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        address_ = value;
+        onChanged();
       } else {
-        return (com.google.protobuf.ByteString) ref;
+        addressBuilder_.setMessage(value);
       }
+
+      return this;
     }
     /**
-     * <code>string address = 3;</code>
-     * @param value The address to set.
-     * @return This builder for chaining.
+     * <code>.google.protobuf.StringValue address = 3;</code>
      */
     public Builder setAddress(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      address_ = value;
-      onChanged();
+        com.google.protobuf.StringValue.Builder builderForValue) {
+      if (addressBuilder_ == null) {
+        address_ = builderForValue.build();
+        onChanged();
+      } else {
+        addressBuilder_.setMessage(builderForValue.build());
+      }
+
       return this;
     }
     /**
-     * <code>string address = 3;</code>
-     * @return This builder for chaining.
+     * <code>.google.protobuf.StringValue address = 3;</code>
+     */
+    public Builder mergeAddress(com.google.protobuf.StringValue value) {
+      if (addressBuilder_ == null) {
+        if (address_ != null) {
+          address_ =
+            com.google.protobuf.StringValue.newBuilder(address_).mergeFrom(value).buildPartial();
+        } else {
+          address_ = value;
+        }
+        onChanged();
+      } else {
+        addressBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.StringValue address = 3;</code>
      */
     public Builder clearAddress() {
-      
-      address_ = getDefaultInstance().getAddress();
-      onChanged();
+      if (addressBuilder_ == null) {
+        address_ = null;
+        onChanged();
+      } else {
+        address_ = null;
+        addressBuilder_ = null;
+      }
+
       return this;
     }
     /**
-     * <code>string address = 3;</code>
-     * @param value The bytes for address to set.
-     * @return This builder for chaining.
+     * <code>.google.protobuf.StringValue address = 3;</code>
      */
-    public Builder setAddressBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
+    public com.google.protobuf.StringValue.Builder getAddressBuilder() {
       
-      address_ = value;
       onChanged();
-      return this;
+      return getAddressFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.google.protobuf.StringValue address = 3;</code>
+     */
+    public com.google.protobuf.StringValueOrBuilder getAddressOrBuilder() {
+      if (addressBuilder_ != null) {
+        return addressBuilder_.getMessageOrBuilder();
+      } else {
+        return address_ == null ?
+            com.google.protobuf.StringValue.getDefaultInstance() : address_;
+      }
+    }
+    /**
+     * <code>.google.protobuf.StringValue address = 3;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> 
+        getAddressFieldBuilder() {
+      if (addressBuilder_ == null) {
+        addressBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>(
+                getAddress(),
+                getParentForChildren(),
+                isClean());
+        address_ = null;
+      }
+      return addressBuilder_;
     }
 
     private com.microservice.booking_proto.Province province_;

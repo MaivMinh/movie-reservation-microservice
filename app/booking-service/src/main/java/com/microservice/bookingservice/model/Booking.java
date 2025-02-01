@@ -20,6 +20,6 @@ public class Booking {
   @JoinColumn(name = "showtime_id", referencedColumnName = "id")
   private Showtime showtime;
 
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "booking")
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "booking")
   private List<BookedSeat> bookedSeats;
 }

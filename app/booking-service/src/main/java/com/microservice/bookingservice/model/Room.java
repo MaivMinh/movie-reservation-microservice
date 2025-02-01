@@ -21,6 +21,6 @@ public class Room {
   @JoinColumn(name = "cinema_id", referencedColumnName = "id")
   private Cinema cinema;
 
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "room")
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "room")
   private List<Seat> seats;
 }

@@ -31,7 +31,10 @@ public class Movie {
   private Date releaseDate;
   private Double voteAverage;
   private Integer voteCount;
-  private Boolean expired;
+
+  @Enumerated(EnumType.STRING)
+  private MovieStatus status;
+
 
   @JsonIgnore
   @OneToMany(mappedBy = "movie", targetEntity = MovieGenre.class, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)

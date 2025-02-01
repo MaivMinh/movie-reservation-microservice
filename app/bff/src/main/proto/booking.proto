@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package net.devh.boot.grpc.example;
+import "google/protobuf/wrappers.proto";
 option java_multiple_files = true;
 option java_outer_classname = "BookingProto";
 option java_package = "com.microservice.booking_proto";
@@ -11,12 +12,122 @@ service BookingService {
   rpc getCinema(GetCinemaRequest) returns (GetCinemaResponse);
   rpc searchCinemas(SearchCinemasRequest) returns (SearchCinemasResponse);
   rpc updateCinema(UpdateCinemaRequest) returns (UpdateCinemaResponse);
+
+  rpc createShowtime(CreateShowtimeRequest) returns (CreateShowtimeResponse);
+  rpc getShowtime(GetShowtimeRequest) returns (GetShowtimeResponse);
+  rpc getShowtimes(GetShowtimesRequest) returns (GetShowtimesResponse);
+  rpc updateShowtime(UpdateShowtimeRequest) returns (UpdateShowtimeResponse);
+  rpc deleteShowtime(DeleteShowtimeRequest) returns (DeleteShowtimeResponse);
+  rpc searchShowtimes(SearchShowtimesRequest) returns (SearchShowtimesResponse);
+  rpc getMovieShowtimes(GetMovieShowtimesRequest) returns (GetMovieShowtimesResponse);
+}
+
+message GetMovieShowtimesRequest {
+  int32 movieId = 1;
+  int32 page = 2;
+  int32 size = 3;
+  string sort = 4;
+}
+
+message GetMovieShowtimesResponse {
+  int32 status = 1;
+  string message = 2;
+  repeated Showtime showtimes = 3;
+  int64 totalElement = 4;
+  int64 totalPage = 5;
+}
+
+message SearchShowtimesRequest {
+  map<string, string> criteria = 1;
+  int32 page = 2;
+  int32 size = 3;
+  string sort = 4;
+}
+message SearchShowtimesResponse {
+  int32 status = 1;
+  string message = 2;
+  repeated Showtime showtimes = 3;
+  int64 totalElement = 4;
+  int64 totalPage = 5;
+}
+
+message DeleteShowtimeRequest {
+  int32 id = 1;
+}
+message DeleteShowtimeResponse {
+  int32 status = 1;
+  string message = 2;
+}
+
+message GetShowtimeRequest {
+  int32 id = 1;
+}
+message GetShowtimeResponse {
+  int32 status = 1;
+  string message = 2;
+  Showtime showtime = 3;
+}
+
+message UpdateShowtimeRequest {
+  int32 id = 1;
+  google.protobuf.Int32Value roomId = 2;
+  google.protobuf.Int32Value movieId = 3;
+  google.protobuf.Int64Value startTime = 4;
+  google.protobuf.Int64Value endTime = 5;
+  google.protobuf.Int64Value date = 6;
+}
+message UpdateShowtimeResponse {
+  int32 status = 1;
+  string message = 2;
+}
+
+message GetShowtimesRequest {
+  int32 page = 1;
+  int32 size = 2;
+  string sort = 3;
+}
+
+message Room {
+  int32 id = 1;
+  string name = 2;
+  Cinema cinema = 3;
+  string location = 4;
+}
+
+message Showtime {
+  int32 id = 1;
+  Room room = 2;
+  int32 movieId = 3;
+  int64 date = 4;
+  int64 startTime = 5;
+  int64 endTime = 6;
+}
+
+message GetShowtimesResponse {
+  int32 status = 1;
+  string message = 2;
+  repeated Showtime showtimes = 3;
+  int64 totalElement = 4;
+  int64 totalPage = 5;
+}
+
+message CreateShowtimeRequest {
+  int32 roomId = 1;
+  int32 movieId = 2;
+  string startTime = 3;
+  string endTime = 4;
+  int64 date = 5;
+}
+
+message CreateShowtimeResponse {
+  int32 status = 1;
+  string message = 2;
 }
 
 message UpdateCinemaRequest {
   int32 id = 1;
-  string name = 2;
-  string address = 3;
+  google.protobuf.StringValue name = 2;
+  google.protobuf.StringValue address = 3;
   Province province = 4;
 }
 

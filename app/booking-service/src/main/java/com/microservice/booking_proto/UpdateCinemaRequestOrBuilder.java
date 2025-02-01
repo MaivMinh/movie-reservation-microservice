@@ -14,28 +14,34 @@ public interface UpdateCinemaRequestOrBuilder extends
   int getId();
 
   /**
-   * <code>string name = 2;</code>
+   * <code>.google.protobuf.StringValue name = 2;</code>
+   * @return Whether the name field is set.
+   */
+  boolean hasName();
+  /**
+   * <code>.google.protobuf.StringValue name = 2;</code>
    * @return The name.
    */
-  java.lang.String getName();
+  com.google.protobuf.StringValue getName();
   /**
-   * <code>string name = 2;</code>
-   * @return The bytes for name.
+   * <code>.google.protobuf.StringValue name = 2;</code>
    */
-  com.google.protobuf.ByteString
-      getNameBytes();
+  com.google.protobuf.StringValueOrBuilder getNameOrBuilder();
 
   /**
-   * <code>string address = 3;</code>
+   * <code>.google.protobuf.StringValue address = 3;</code>
+   * @return Whether the address field is set.
+   */
+  boolean hasAddress();
+  /**
+   * <code>.google.protobuf.StringValue address = 3;</code>
    * @return The address.
    */
-  java.lang.String getAddress();
+  com.google.protobuf.StringValue getAddress();
   /**
-   * <code>string address = 3;</code>
-   * @return The bytes for address.
+   * <code>.google.protobuf.StringValue address = 3;</code>
    */
-  com.google.protobuf.ByteString
-      getAddressBytes();
+  com.google.protobuf.StringValueOrBuilder getAddressOrBuilder();
 
   /**
    * <code>.net.devh.boot.grpc.example.Province province = 4;</code>

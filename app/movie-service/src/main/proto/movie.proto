@@ -12,7 +12,18 @@ service MovieService {
   rpc getMovie(GetMovieRequest) returns (GetMovieResponse);
   rpc searchMovies(SearchMoviesRequest) returns (SearchMoviesResponse);
   rpc updateMovie(UpdateMovieRequest) returns (UpdateMovieResponse);
+  rpc isMoviePlayingNow(IsMoviePlayingNowRequest) returns (IsMoviePlayingNowResponse);
 }
+
+message IsMoviePlayingNowRequest {
+  int32 id = 1;
+}
+message IsMoviePlayingNowResponse {
+  int32 status = 1;
+  string message = 2;
+  bool isNowPlaying = 3;
+}
+
 
 message UpdateMovie {
   int32 id = 1;
@@ -22,6 +33,7 @@ message UpdateMovie {
   google.protobuf.StringValue description = 5;
   google.protobuf.StringValue trailer = 6;
   google.protobuf.Int64Value releaseDate = 7;
+  google.protobuf.StringValue status = 8;
 }
 
 message UpdateMovieRequest {
@@ -88,6 +100,7 @@ message Movie {
   double voteAverage = 8;
   int32 voteCount = 9;
   repeated Genre genre = 10;
+  string status = 11;
 }
 
 message NewMovie {

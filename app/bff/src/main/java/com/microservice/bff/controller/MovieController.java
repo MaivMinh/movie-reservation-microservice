@@ -1,14 +1,12 @@
 package com.microservice.bff.controller;
 
-import com.microservice.bff.request.Movie;
 import com.microservice.bff.request.NewMovie;
 import com.microservice.bff.request.UpdateMovie;
 import com.microservice.bff.response.ResponseData;
 import com.microservice.bff.service.AuthService;
 import com.microservice.bff.service.MovieService;
-import io.netty.util.internal.StringUtil;
+import com.microservice.bff.service.ShowtimeService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,6 +24,7 @@ import java.util.Map;
 public class MovieController {
   private final MovieService movieService;
   private final AuthService authService;
+  private final ShowtimeService showtimeService;
 
   /// ================== ADMIN ROLE ================== ///
 
@@ -148,6 +147,19 @@ public class MovieController {
       criteria = new HashMap<>();
     }
     ResponseData response = movieService.searchMovies(criteria, page, size, sort);
+    return ResponseEntity.ok(response);
+  }
+
+  /// Phương thức lấy danh sách suất chiếu của phim.
+  /// Done.
+  @GetMapping(value = "/{id}/showtimes")
+  public ResponseEntity<ResponseData> getMovieShowtimes(@PathVariable("id") int id,
+                                                   @RequestParam(value = "page", defaultValue = "1", required = false) int page,
+                                                   @RequestParam(value = "size", defaultValue = "10", required = false) int size,
+                                                   @RequestParam(value = "sort", defaultValue = "", required = false) String sort) {
+    page = (page > 0) ? (page - 1) : 0;
+    size = (size > 0) ? size : 10;
+    ResponseData response = showtimeService.getMovieShowtimes(id, page, size, sort);
     return ResponseEntity.ok(response);
   }
 }

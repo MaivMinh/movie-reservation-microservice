@@ -114,4 +114,16 @@ public interface MovieOrBuilder extends
    */
   com.microservice.movie_proto.GenreOrBuilder getGenreOrBuilder(
       int index);
+
+  /**
+   * <code>string status = 11;</code>
+   * @return The status.
+   */
+  java.lang.String getStatus();
+  /**
+   * <code>string status = 11;</code>
+   * @return The bytes for status.
+   */
+  com.google.protobuf.ByteString
+      getStatusBytes();
 }

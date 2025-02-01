@@ -102,4 +102,19 @@ public interface UpdateMovieOrBuilder extends
    * <code>.google.protobuf.Int64Value releaseDate = 7;</code>
    */
   com.google.protobuf.Int64ValueOrBuilder getReleaseDateOrBuilder();
+
+  /**
+   * <code>.google.protobuf.StringValue status = 8;</code>
+   * @return Whether the status field is set.
+   */
+  boolean hasStatus();
+  /**
+   * <code>.google.protobuf.StringValue status = 8;</code>
+   * @return The status.
+   */
+  com.google.protobuf.StringValue getStatus();
+  /**
+   * <code>.google.protobuf.StringValue status = 8;</code>
+   */
+  com.google.protobuf.StringValueOrBuilder getStatusOrBuilder();
 }

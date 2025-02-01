@@ -1,12 +1,13 @@
 package com.microservice.bookingservice.service;
 
 import com.microservice.booking_proto.*;
+import com.microservice.bookingservice.grpc.MovieServiceGrpcClient;
+import com.microservice.bookingservice.model.*;
 import com.microservice.bookingservice.model.Cinema;
-import com.microservice.bookingservice.model.Photo;
 import com.microservice.bookingservice.model.Province;
-import com.microservice.bookingservice.repository.CinemaRepo;
-import com.microservice.bookingservice.repository.PhotoRepo;
-import com.microservice.bookingservice.repository.ProvinceRepo;
+import com.microservice.bookingservice.repository.*;
+import com.microservice.movie_proto.IsMoviePlayingNowRequest;
+import com.microservice.movie_proto.IsMoviePlayingNowResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,8 +15,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +31,7 @@ import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(propagation = Propagation.REQUIRED)
 public class BookingService {
 
   private final ProvinceRepo provinceRepo;
@@ -230,8 +236,9 @@ public class BookingService {
       }
       cinema.setProvince(province);
     }
-    cinema.setName(request.getName());
-    cinema.setAddress(request.getAddress());
+
+    if (request.hasName())  cinema.setName(request.getName().getValue());
+    if (request.hasAddress())  cinema.setAddress(request.getAddress().getValue());
 
     try {
       cinemaRepo.save(cinema);
@@ -247,4 +254,5 @@ public class BookingService {
             .setMessage("Success")
             .build();
   }
+
 }

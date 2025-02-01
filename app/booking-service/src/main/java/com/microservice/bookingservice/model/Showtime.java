@@ -1,8 +1,7 @@
 package com.microservice.bookingservice.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -11,6 +10,9 @@ import java.sql.Time;
 @Setter
 @Table(name = "showtimes")
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Showtime {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

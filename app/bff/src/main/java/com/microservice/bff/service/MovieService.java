@@ -2,9 +2,13 @@ package com.microservice.bff.service;
 
 import com.google.protobuf.Int64Value;
 import com.google.protobuf.StringValue;
+import com.microservice.bff.grpc.BookingServiceGrpcClient;
 import com.microservice.bff.grpc.MovieServiceGrpcClient;
 import com.microservice.bff.request.Movie;
 import com.microservice.bff.response.ResponseData;
+import com.microservice.bff.response.Showtime;
+import com.microservice.booking_proto.GetMovieShowtimesRequest;
+import com.microservice.booking_proto.GetMovieShowtimesResponse;
 import com.microservice.movie_proto.*;
 import jakarta.validation.constraints.NotNull;
 import jdk.swing.interop.SwingInterOpUtils;
@@ -22,6 +26,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MovieService {
   private final MovieServiceGrpcClient movieServiceGrpcClient;
+  private final BookingServiceGrpcClient bookingServiceGrpcClient;
 
   public ResponseData createMovie(com.microservice.bff.request.NewMovie movie) {
     NewMovie newMovie = NewMovie.newBuilder().setName(movie.getName()).setBackdrop(movie.getBackdrop()).setPoster(movie.getPoster()).setDescription(movie.getDescription()).setTrailer(movie.getTrailer()).setReleaseDate(movie.getReleaseDate().getTime()).addAllGenre(Arrays.stream(movie.getGenres()).toList()).build();
@@ -37,7 +42,7 @@ public class MovieService {
     GetMoviesRequest request = GetMoviesRequest.newBuilder().setPage(page).setSize(size).setSort(sort).build();
 
     GetMoviesResponse response = movieServiceGrpcClient.getMovies(request);
-    List<Movie> movies = response.getMoviesList().stream().map(movie -> Movie.builder().id(movie.getId()).name(movie.getName()).description(movie.getDescription()).trailer(movie.getTrailer()).releaseDate(new Date(movie.getReleaseDate())).poster(movie.getPoster()).backdrop(movie.getBackdrop()).genres(movie.getGenreList().stream().map(genre -> com.microservice.bff.request.Genre.builder().id(genre.getId()).name(genre.getName()).build()).toList()).build()).toList();
+    List<Movie> movies = response.getMoviesList().stream().map(movie -> Movie.builder().id(movie.getId()).name(movie.getName()).description(movie.getDescription()).trailer(movie.getTrailer()).releaseDate(new Date(movie.getReleaseDate())).poster(movie.getPoster()).backdrop(movie.getBackdrop()).status(movie.getStatus()).genres(movie.getGenreList().stream().map(genre -> com.microservice.bff.request.Genre.builder().id(genre.getId()).name(genre.getName()).build()).toList()).build()).toList();
 
     if (movies.isEmpty()) {
       return ResponseData.builder().status(response.getStatus()).message(response.getMessage()).build();
@@ -53,7 +58,7 @@ public class MovieService {
       return ResponseData.builder().status(response.getStatus()).message(response.getMessage()).build();
     }
     com.microservice.movie_proto.Movie movieResponse = response.getMovie();
-    Movie movie = Movie.builder().id(movieResponse.getId()).name(movieResponse.getName()).description(movieResponse.getDescription()).trailer(movieResponse.getTrailer()).releaseDate(new Date(movieResponse.getReleaseDate())).poster(movieResponse.getPoster()).backdrop(movieResponse.getBackdrop()).genres(movieResponse.getGenreList().stream().map(genre -> com.microservice.bff.request.Genre.builder().id(genre.getId()).name(genre.getName()).build()).toList()).build();
+    Movie movie = Movie.builder().id(movieResponse.getId()).name(movieResponse.getName()).description(movieResponse.getDescription()).trailer(movieResponse.getTrailer()).releaseDate(new Date(movieResponse.getReleaseDate())).poster(movieResponse.getPoster()).backdrop(movieResponse.getBackdrop()).status(movieResponse.getStatus()).genres(movieResponse.getGenreList().stream().map(genre -> com.microservice.bff.request.Genre.builder().id(genre.getId()).name(genre.getName()).build()).toList()).build();
 
     return ResponseData.builder().status(response.getStatus()).message(response.getMessage()).data(movie).build();
   }
@@ -62,7 +67,7 @@ public class MovieService {
     SearchMoviesRequest request = SearchMoviesRequest.newBuilder().putAllCriteria(criteria).setPage(page).setSize(size).setSort(sort).build();
 
     SearchMoviesResponse response = movieServiceGrpcClient.searchMovies(request);
-    List<Movie> movies = response.getMoviesList().stream().map(movie -> Movie.builder().id(movie.getId()).name(movie.getName()).description(movie.getDescription()).trailer(movie.getTrailer()).releaseDate(new Date(movie.getReleaseDate())).poster(movie.getPoster()).backdrop(movie.getBackdrop()).genres(movie.getGenreList().stream().map(genre -> com.microservice.bff.request.Genre.builder().id(genre.getId()).name(genre.getName()).build()).toList()).build()).toList();
+    List<Movie> movies = response.getMoviesList().stream().map(movie -> Movie.builder().id(movie.getId()).name(movie.getName()).description(movie.getDescription()).trailer(movie.getTrailer()).releaseDate(new Date(movie.getReleaseDate())).poster(movie.getPoster()).backdrop(movie.getBackdrop()).status(movie.getStatus()).genres(movie.getGenreList().stream().map(genre -> com.microservice.bff.request.Genre.builder().id(genre.getId()).name(genre.getName()).build()).toList()).build()).toList();
 
     return ResponseData.builder().status(response.getStatus()).message(response.getMessage()).data(Map.of("movies", movies, "totalPages", response.getTotalElement(), "totalElements", response.getTotalPage(), "page", page + 1, "size", size)).build();
   }
@@ -90,6 +95,10 @@ public class MovieService {
       builder.setBackdrop(StringValue.of(updateMovie.getBackdrop()));
     }
 
+    if (StringUtils.hasText(updateMovie.getStatus())) {
+      builder.setStatus(StringValue.of(updateMovie.getStatus()));
+    }
+
     UpdateMovieRequest request = UpdateMovieRequest.newBuilder().setMovie(builder.build()).build();
     UpdateMovieResponse response = movieServiceGrpcClient.updateMovie(request);
     return ResponseData.builder()
@@ -97,4 +106,5 @@ public class MovieService {
             .message(response.getMessage())
             .build();
   }
+
 }

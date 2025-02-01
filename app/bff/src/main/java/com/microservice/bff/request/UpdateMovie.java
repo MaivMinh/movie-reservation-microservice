@@ -13,4 +13,5 @@ public class UpdateMovie {
     private Date releaseDate;
     private String poster;
     private String backdrop;
+    private String status;
 }

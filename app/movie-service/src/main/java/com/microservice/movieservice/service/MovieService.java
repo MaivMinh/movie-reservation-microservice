@@ -5,6 +5,7 @@ import com.microservice.movieservice.exceptions.ResourceNotFoundException;
 import com.microservice.movieservice.model.Genre;
 import com.microservice.movieservice.model.Movie;
 import com.microservice.movieservice.model.MovieGenre;
+import com.microservice.movieservice.model.MovieStatus;
 import com.microservice.movieservice.repository.MovieRepo;
 import com.microservice.movieservice.response.ResponseData;
 import com.microservice.movieservice.response.ResponseError;
@@ -211,6 +212,7 @@ public class MovieService {
                     .setReleaseDate(movie.getReleaseDate().getTime())
                     .setVoteAverage(movie.getVoteAverage())
                     .setVoteCount(movie.getVoteCount())
+                    .setStatus(movie.getStatus().toString())
                     .addAllGenre(movie.getMovieGenres().stream().map(element -> com.microservice.movie_proto.Genre.newBuilder()
                             .setId(element.getGenre().getId())
                             .setName(element.getGenre().getName())
@@ -244,6 +246,7 @@ public class MovieService {
                     .setReleaseDate(movie.getReleaseDate().getTime())
                     .setVoteAverage(movie.getVoteAverage())
                     .setVoteCount(movie.getVoteCount())
+                    .setStatus(movie.getStatus().toString())
                     .addAllGenre(movie.getMovieGenres().stream().map(element -> com.microservice.movie_proto.Genre.newBuilder()
                             .setId(element.getGenre().getId())
                             .setName(element.getGenre().getName())
@@ -297,6 +300,7 @@ public class MovieService {
                       .setReleaseDate(movie.getReleaseDate().getTime())
                       .setVoteAverage(movie.getVoteAverage())
                       .setVoteCount(movie.getVoteCount())
+                      .setStatus(movie.getStatus().toString())
                       .addAllGenre(movie.getMovieGenres().stream().map(element -> com.microservice.movie_proto.Genre.newBuilder()
                               .setId(element.getGenre().getId())
                               .setName(element.getGenre().getName())
@@ -351,6 +355,9 @@ public class MovieService {
     if (updateMovie.hasBackdrop()) {
       movie.setBackdrop(updateMovie.getBackdrop().getValue());
     }
+    if (updateMovie.hasStatus()) {
+      movie.setStatus(MovieStatus.valueOf(updateMovie.getStatus().getValue()));
+    }
 
     try {
       movieRepo.save(movie);
@@ -364,6 +371,26 @@ public class MovieService {
     return UpdateMovieResponse.newBuilder()
             .setStatus(200)
             .setMessage("Update movie successfully")
+            .build();
+  }
+
+  public IsMoviePlayingNowResponse isMoviePlayingNow(IsMoviePlayingNowRequest request) {
+    /// Hàm kiểm tra xem phim có đang chiếu không.
+    /// Nếu phim không tồn tại hoặc đang không chiếu thì trả về false.
+
+    int movieId = request.getId();
+    Movie movie = movieRepo.findById(movieId).orElse(null);
+    if (movie == null || movie.getId() <= 0 || !movie.getStatus().equals(MovieStatus.NOW_PLAYING))  {
+      return IsMoviePlayingNowResponse.newBuilder()
+              .setStatus(HttpStatus.OK.value())
+              .setMessage("Success")
+              .setIsNowPlaying(false)
+              .build();
+    }
+    return IsMoviePlayingNowResponse.newBuilder()
+            .setStatus(HttpStatus.OK.value())
+            .setMessage("Success")
+            .setIsNowPlaying(true)
             .build();
   }
 }

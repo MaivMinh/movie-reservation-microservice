@@ -25,10 +25,38 @@ public class BookingServiceGrpcClient {
   }
 
   public SearchCinemasResponse searchCinemas(SearchCinemasRequest request) {
-    return  bookingServiceBlockingStub.searchCinemas(request);
+    return bookingServiceBlockingStub.searchCinemas(request);
   }
 
   public UpdateCinemaResponse updateCinema(UpdateCinemaRequest request) {
     return bookingServiceBlockingStub.updateCinema(request);
+  }
+
+  public CreateShowtimeResponse createShowtime(CreateShowtimeRequest request) {
+    return bookingServiceBlockingStub.createShowtime(request);
+  }
+
+  public GetShowtimesResponse getShowtimes(GetShowtimesRequest request) {
+    return bookingServiceBlockingStub.getShowtimes(request);
+  }
+
+  public UpdateShowtimeResponse updateShowtime(UpdateShowtimeRequest request) {
+    return bookingServiceBlockingStub.updateShowtime(request);
+  }
+
+  public GetShowtimeResponse getShowtime(GetShowtimeRequest request) {
+    return bookingServiceBlockingStub.getShowtime(request);
+  }
+
+  public DeleteShowtimeResponse deleteShowtime(DeleteShowtimeRequest request) {
+    return bookingServiceBlockingStub.deleteShowtime(request);
+  }
+
+  public SearchShowtimesResponse searchShowtimes(SearchShowtimesRequest request) {
+    return bookingServiceBlockingStub.searchShowtimes(request);
+  }
+
+  public GetMovieShowtimesResponse getMovieShowtimes(GetMovieShowtimesRequest request) {
+    return bookingServiceBlockingStub.getMovieShowtimes(request);
   }
 }

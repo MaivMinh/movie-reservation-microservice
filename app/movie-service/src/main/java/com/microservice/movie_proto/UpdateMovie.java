@@ -210,6 +210,32 @@ private static final long serialVersionUID = 0L;
     return getReleaseDate();
   }
 
+  public static final int STATUS_FIELD_NUMBER = 8;
+  private com.google.protobuf.StringValue status_;
+  /**
+   * <code>.google.protobuf.StringValue status = 8;</code>
+   * @return Whether the status field is set.
+   */
+  @java.lang.Override
+  public boolean hasStatus() {
+    return status_ != null;
+  }
+  /**
+   * <code>.google.protobuf.StringValue status = 8;</code>
+   * @return The status.
+   */
+  @java.lang.Override
+  public com.google.protobuf.StringValue getStatus() {
+    return status_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : status_;
+  }
+  /**
+   * <code>.google.protobuf.StringValue status = 8;</code>
+   */
+  @java.lang.Override
+  public com.google.protobuf.StringValueOrBuilder getStatusOrBuilder() {
+    return getStatus();
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -244,6 +270,9 @@ private static final long serialVersionUID = 0L;
     }
     if (releaseDate_ != null) {
       output.writeMessage(7, getReleaseDate());
+    }
+    if (status_ != null) {
+      output.writeMessage(8, getStatus());
     }
     getUnknownFields().writeTo(output);
   }
@@ -281,6 +310,10 @@ private static final long serialVersionUID = 0L;
     if (releaseDate_ != null) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(7, getReleaseDate());
+    }
+    if (status_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(8, getStatus());
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -329,6 +362,11 @@ private static final long serialVersionUID = 0L;
       if (!getReleaseDate()
           .equals(other.getReleaseDate())) return false;
     }
+    if (hasStatus() != other.hasStatus()) return false;
+    if (hasStatus()) {
+      if (!getStatus()
+          .equals(other.getStatus())) return false;
+    }
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -365,6 +403,10 @@ private static final long serialVersionUID = 0L;
     if (hasReleaseDate()) {
       hash = (37 * hash) + RELEASEDATE_FIELD_NUMBER;
       hash = (53 * hash) + getReleaseDate().hashCode();
+    }
+    if (hasStatus()) {
+      hash = (37 * hash) + STATUS_FIELD_NUMBER;
+      hash = (53 * hash) + getStatus().hashCode();
     }
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
@@ -532,6 +574,12 @@ private static final long serialVersionUID = 0L;
         releaseDate_ = null;
         releaseDateBuilder_ = null;
       }
+      if (statusBuilder_ == null) {
+        status_ = null;
+      } else {
+        status_ = null;
+        statusBuilder_ = null;
+      }
       return this;
     }
 
@@ -588,6 +636,11 @@ private static final long serialVersionUID = 0L;
         result.releaseDate_ = releaseDate_;
       } else {
         result.releaseDate_ = releaseDateBuilder_.build();
+      }
+      if (statusBuilder_ == null) {
+        result.status_ = status_;
+      } else {
+        result.status_ = statusBuilder_.build();
       }
       onBuilt();
       return result;
@@ -657,6 +710,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.hasReleaseDate()) {
         mergeReleaseDate(other.getReleaseDate());
+      }
+      if (other.hasStatus()) {
+        mergeStatus(other.getStatus());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -731,6 +787,13 @@ private static final long serialVersionUID = 0L;
 
               break;
             } // case 58
+            case 66: {
+              input.readMessage(
+                  getStatusFieldBuilder().getBuilder(),
+                  extensionRegistry);
+
+              break;
+            } // case 66
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -1490,6 +1553,125 @@ private static final long serialVersionUID = 0L;
         releaseDate_ = null;
       }
       return releaseDateBuilder_;
+    }
+
+    private com.google.protobuf.StringValue status_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> statusBuilder_;
+    /**
+     * <code>.google.protobuf.StringValue status = 8;</code>
+     * @return Whether the status field is set.
+     */
+    public boolean hasStatus() {
+      return statusBuilder_ != null || status_ != null;
+    }
+    /**
+     * <code>.google.protobuf.StringValue status = 8;</code>
+     * @return The status.
+     */
+    public com.google.protobuf.StringValue getStatus() {
+      if (statusBuilder_ == null) {
+        return status_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : status_;
+      } else {
+        return statusBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.google.protobuf.StringValue status = 8;</code>
+     */
+    public Builder setStatus(com.google.protobuf.StringValue value) {
+      if (statusBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        status_ = value;
+        onChanged();
+      } else {
+        statusBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.StringValue status = 8;</code>
+     */
+    public Builder setStatus(
+        com.google.protobuf.StringValue.Builder builderForValue) {
+      if (statusBuilder_ == null) {
+        status_ = builderForValue.build();
+        onChanged();
+      } else {
+        statusBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.StringValue status = 8;</code>
+     */
+    public Builder mergeStatus(com.google.protobuf.StringValue value) {
+      if (statusBuilder_ == null) {
+        if (status_ != null) {
+          status_ =
+            com.google.protobuf.StringValue.newBuilder(status_).mergeFrom(value).buildPartial();
+        } else {
+          status_ = value;
+        }
+        onChanged();
+      } else {
+        statusBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.StringValue status = 8;</code>
+     */
+    public Builder clearStatus() {
+      if (statusBuilder_ == null) {
+        status_ = null;
+        onChanged();
+      } else {
+        status_ = null;
+        statusBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.StringValue status = 8;</code>
+     */
+    public com.google.protobuf.StringValue.Builder getStatusBuilder() {
+      
+      onChanged();
+      return getStatusFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.google.protobuf.StringValue status = 8;</code>
+     */
+    public com.google.protobuf.StringValueOrBuilder getStatusOrBuilder() {
+      if (statusBuilder_ != null) {
+        return statusBuilder_.getMessageOrBuilder();
+      } else {
+        return status_ == null ?
+            com.google.protobuf.StringValue.getDefaultInstance() : status_;
+      }
+    }
+    /**
+     * <code>.google.protobuf.StringValue status = 8;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> 
+        getStatusFieldBuilder() {
+      if (statusBuilder_ == null) {
+        statusBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>(
+                getStatus(),
+                getParentForChildren(),
+                isClean());
+        status_ = null;
+      }
+      return statusBuilder_;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

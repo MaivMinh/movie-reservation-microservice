@@ -1,5 +1,7 @@
 package com.microservice.bff.grpc;
 
+import com.microservice.booking_proto.GetMovieShowtimesRequest;
+import com.microservice.booking_proto.GetMovieShowtimesResponse;
 import com.microservice.movie_proto.*;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.client.inject.GrpcClient;

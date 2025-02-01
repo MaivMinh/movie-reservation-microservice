@@ -18,11 +18,10 @@ public class Seat {
   private Integer price;
   private String seatRow;
   private Integer seatNumber;
-  private Boolean available;
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "room_id", referencedColumnName = "id")
   private Room room;
 
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "seat")
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "seat")
   private List<BookedSeat> bookedSeats;
 }

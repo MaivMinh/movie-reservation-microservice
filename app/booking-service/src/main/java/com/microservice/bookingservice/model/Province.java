@@ -16,6 +16,6 @@ public class Province {
   private Integer id;
   private String name;
 
-  @OneToMany(mappedBy = "province", fetch = FetchType.EAGER)
+  @OneToMany(mappedBy = "province", fetch = FetchType.LAZY)
   private List<Cinema> cinemas;
 }

@@ -19,10 +19,10 @@ public class Cinema {
   private String name;
   private String address;
 
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "cinema")
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "cinema")
   private List<Photo> photos;
 
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "cinema")
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "cinema")
   private List<Room> rooms;
 
   @ManyToOne(fetch = FetchType.EAGER, targetEntity = Province.class)

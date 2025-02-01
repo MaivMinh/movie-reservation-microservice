@@ -1,5 +1,6 @@
 package com.microservice.bff.service;
 
+import com.google.protobuf.StringValue;
 import com.microservice.bff.grpc.BookingServiceGrpcClient;
 import com.microservice.bff.request.CreateCinema;
 import com.microservice.bff.request.UpdateCinema;
@@ -7,7 +8,7 @@ import com.microservice.bff.response.Cinema;
 import com.microservice.bff.response.Province;
 import com.microservice.bff.response.ResponseData;
 import com.microservice.booking_proto.*;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -16,9 +17,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@RequiredArgsConstructor
 @Service
-@AllArgsConstructor
-public class BookingService {
+public class CinemaService {
   private final BookingServiceGrpcClient bookingServiceGrpcClient;
 
   public ResponseData createCinema(CreateCinema createCinema) {
@@ -153,10 +154,10 @@ public class BookingService {
     UpdateCinemaRequest.Builder builder = UpdateCinemaRequest.newBuilder();
     builder.setId(id);
     if (StringUtils.hasText(updateCinema.getName())) {
-      builder.setName(updateCinema.getName());
+      builder.setName(StringValue.of(updateCinema.getName()));
     }
     if (StringUtils.hasText(updateCinema.getAddress())) {
-      builder.setAddress(updateCinema.getAddress());
+      builder.setAddress(StringValue.of(updateCinema.getAddress()));
     }
     if (updateCinema.getProvince() != null) {
       builder.setProvince(com.microservice.booking_proto.Province.newBuilder()

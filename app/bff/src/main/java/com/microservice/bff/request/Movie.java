@@ -18,4 +18,5 @@ public class Movie {
   private String trailer;
   private Date releaseDate;
   private List<Genre> genres;
+  private String status;
 }
