@@ -2,23 +2,20 @@ package com.microservice.bookingservice.service;
 
 import com.microservice.booking_proto.*;
 import com.microservice.bookingservice.grpc.MovieServiceGrpcClient;
-import com.microservice.bookingservice.model.Cinema;
 import com.microservice.bookingservice.model.Room;
 import com.microservice.bookingservice.model.Showtime;
-import com.microservice.bookingservice.repository.CinemaRepo;
 import com.microservice.bookingservice.repository.RoomRepo;
 import com.microservice.bookingservice.repository.ShowtimeRepo;
 import com.microservice.movie_proto.IsMoviePlayingNowRequest;
 import com.microservice.movie_proto.IsMoviePlayingNowResponse;
-import io.netty.util.internal.StringUtil;
 import lombok.RequiredArgsConstructor;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -29,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.microservice.bookingservice.specifications.CinemaSpecs.containsName;
 import static com.microservice.bookingservice.specifications.ShowtimeSpecs.*;
 import static org.springframework.data.jpa.domain.Specification.where;
 
@@ -106,6 +102,7 @@ public class ShowtimeService {
             .build();
   }
 
+  @Transactional(readOnly = true)
   public GetShowtimesResponse getShowtimes(GetShowtimesRequest request) {
     int page = request.getPage();
     int size = request.getSize();
@@ -221,6 +218,7 @@ public class ShowtimeService {
             .build();
   }
 
+  @Transactional(readOnly = true)
   public GetShowtimeResponse getShowtime(GetShowtimeRequest request) {
     /// Hàm thực hiện lấy thông tin 1 showtime.
     int id = request.getId();
@@ -281,6 +279,7 @@ public class ShowtimeService {
             .build();
   }
 
+  @Transactional(readOnly = true)
   public SearchShowtimesResponse searchShowtimes(SearchShowtimesRequest request) {
     /// Hàm thực hiện tìm kiếm showtime theo điều kiện.
     int page = request.getPage();
@@ -302,7 +301,6 @@ public class ShowtimeService {
     try {
       pageShowtime = this.searchByCriteria(criteria, pageable);
     } catch (Exception e) {
-      e.printStackTrace();
       return SearchShowtimesResponse.newBuilder()
               .setStatus(500)
               .setMessage("Can not search showtime")
@@ -342,7 +340,8 @@ public class ShowtimeService {
             .build();
   }
 
-  private Page<Showtime> searchByCriteria(Map<String, String> criteria, Pageable pageable) {
+  @Transactional(readOnly = true)
+  public Page<Showtime> searchByCriteria(Map<String, String> criteria, Pageable pageable) {
     Specification<Showtime> specification = where(null);
 
     if (StringUtils.hasText(criteria.get("roomId"))) {
@@ -357,6 +356,7 @@ public class ShowtimeService {
     return showtimeRepo.findAll(specification, pageable);
   }
 
+  @Transactional(readOnly = true)
   public GetMovieShowtimesResponse getMovieShowtimes(GetMovieShowtimesRequest request) {
     /// Hàm thực hiện lấy suất chiếu của 1 phim cụ thể.
     int movieId = request.getMovieId();

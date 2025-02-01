@@ -6,14 +6,8 @@ import com.microservice.bff.grpc.BookingServiceGrpcClient;
 import com.microservice.bff.grpc.MovieServiceGrpcClient;
 import com.microservice.bff.request.Movie;
 import com.microservice.bff.response.ResponseData;
-import com.microservice.bff.response.Showtime;
-import com.microservice.booking_proto.GetMovieShowtimesRequest;
-import com.microservice.booking_proto.GetMovieShowtimesResponse;
 import com.microservice.movie_proto.*;
-import jakarta.validation.constraints.NotNull;
-import jdk.swing.interop.SwingInterOpUtils;
 import lombok.RequiredArgsConstructor;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
