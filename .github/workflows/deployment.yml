@@ -1,9 +1,4 @@
 name: Build and deploy Spring application to DigitalOcean Droplet.
-env:
-  JAVA_VERSION: 23
-  DROPLET_HOST: ${{ secrets.DROPLET_HOST }}
-  DIGITAL_OCEAN_KEYS: ${{ secrets.DIGITAL_OCEAN_KEYS }}
-  DROPLET_USERNAME: ${{ secrets.DROPLET_USERNAME }}
 
 on:
   push:
@@ -17,10 +12,10 @@ jobs:
       - name: executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          port: ${{ secrets.PORT }}
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USERNAME }}
+          key: ${{ secrets.DIGITAL_OCEAN_KEYS }}
+          port: 22
           script: |
             echo "Deploying Spring application to DigitalOcean Droplet."
             echo "Pulling and Packaging Spring application."
