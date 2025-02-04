@@ -19,10 +19,10 @@ jobs:
           script: |
             echo "Deploying Spring application to DigitalOcean Droplet."
             echo "Stopping and removing existing containers."
+            cd ./movie-reservation-microservice
             docker compose down || { echo "Failed to stop and remove containers"; exit 1; }
             
             echo "Pulling and Packaging Spring application."
-            cd ./movie-reservation-microservice
             git pull origin main
             mvn clean
             mvn compile
