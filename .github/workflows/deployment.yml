@@ -28,12 +28,6 @@ jobs:
             echo "Containerizing Spring application."
             docker compose down || { echo "Failed to stop and remove containers"; exit 1; }
             
-
-#            Cần lưu ý rằng: Nếu build các image bị lỗi giữa chừng, thì các image đã build thành công trước đó vẫn tồn tại.
-#            Tuy nhiên, với việc thoát ra khỏi script bằng lệnh exit 1, thì toàn bộ quá trình sẽ dừng lại và không thể tiếp tục.
-#            Và do đó, server cũng sẽ không chạy docker compose up -d. Khiến tới server không chạy được.
-#            Bước tiếp theo chúng ta có thể làm là fix lại lỗi này, push lên main rồi chạy lại workflow.
-
             docker build -t service-discovery:1.0 ./app/service-discovery/ || { echo "Failed to build service-discovery"; exit 1; }
             docker build -t api-gateway:1.0 ./app/api-gateway/ || { echo "Failed to build api-gateway"; exit 1; }
             docker build -t bff:1.0 ./app/bff/ || { echo "Failed to build bff"; exit 1; }
