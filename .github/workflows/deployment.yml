@@ -1,0 +1,43 @@
+name: Build and deploy Spring application to DigitalOcean Droplet.
+env:
+  JAVA_VERSION: 23
+  DROPLET_HOST: ${{ secrets.DROPLET_HOST }}
+  DIGITAL_OCEAN_KEYS: ${{ secrets.DIGITAL_OCEAN_KEYS }}
+  DROPLET_USERNAME: ${{ secrets.DROPLET_USERNAME }}
+
+on:
+  push:
+    branches:
+      - master
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Deploy to DigitalOcean Droplet
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.DROPLET_HOST }}
+          port: '22'
+          key: ${{ env.DIGITAL_OCEAN_KEYS }}
+          username: ${{ env.DROPLET_USERNAME }}
+          script:
+            echo "Deploying Spring application to DigitalOcean Droplet."
+            echo "Pulling and Packaging Spring application."
+            cd ./movie-reservation-microservice
+            git pull origin main
+            mvn clean
+            mvn compile
+            mvn package
+            
+            echo "Containerizing Spring application."
+            docker build -t service-discovery:1.0 ./app/service-discovery/
+            docker build -t api-gateway:1.0 ./app/api-gateway/
+            docker build -t bff:1.0 ./app/bff/
+            docker build -t auth-service:1.0 ./app/auth-service/
+            docker build -t movie-service:1.0 ./app/movie-service/
+            docker build -t booking-service:1.0 ./app/booking-service/
+            
+            echo "Deploying Spring application to DigitalOcean Droplet."
+            docker-compose up -d
+            echo  "Spring application deployed successfully."
