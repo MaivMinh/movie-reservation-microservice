@@ -18,15 +18,15 @@ jobs:
           port: 22
           script: |
             echo "Deploying Spring application to DigitalOcean Droplet."
+            echo "Stopping and removing existing containers."
+            docker compose down || { echo "Failed to stop and remove containers"; exit 1; }
+            
             echo "Pulling and Packaging Spring application."
             cd ./movie-reservation-microservice
             git pull origin main
             mvn clean
             mvn compile
             mvn package
-
-            echo "Containerizing Spring application."
-            docker compose down || { echo "Failed to stop and remove containers"; exit 1; }
             
             docker build -t service-discovery:1.0 ./app/service-discovery/ || { echo "Failed to build service-discovery"; exit 1; }
             docker build -t api-gateway:1.0 ./app/api-gateway/ || { echo "Failed to build api-gateway"; exit 1; }
