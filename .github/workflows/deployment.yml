@@ -26,13 +26,21 @@ jobs:
             mvn package
 
             echo "Containerizing Spring application."
-            docker build -t service-discovery:1.0 ./app/service-discovery/
-            docker build -t api-gateway:1.0 ./app/api-gateway/
-            docker build -t bff:1.0 ./app/bff/
-            docker build -t auth-service:1.0 ./app/auth-service/
-            docker build -t movie-service:1.0 ./app/movie-service/
-            docker build -t booking-service:1.0 ./app/booking-service/
+            docker compose down || { echo "Failed to stop and remove containers"; exit 1; }
+            
 
+#            Cần lưu ý rằng: Nếu build các image bị lỗi giữa chừng, thì các image đã build thành công trước đó vẫn tồn tại.
+#            Tuy nhiên, với việc thoát ra khỏi script bằng lệnh exit 1, thì toàn bộ quá trình sẽ dừng lại và không thể tiếp tục.
+#            Và do đó, server cũng sẽ không chạy docker compose up -d. Khiến tới server không chạy được.
+#            Bước tiếp theo chúng ta có thể làm là fix lại lỗi này, push lên main rồi chạy lại workflow.
+
+            docker build -t service-discovery:1.0 ./app/service-discovery/ || { echo "Failed to build service-discovery"; exit 1; }
+            docker build -t api-gateway:1.0 ./app/api-gateway/ || { echo "Failed to build api-gateway"; exit 1; }
+            docker build -t bff:1.0 ./app/bff/ || { echo "Failed to build bff"; exit 1; }
+            docker build -t auth-service:1.0 ./app/auth-service/ || { echo "Failed to build auth-service"; exit 1; }
+            docker build -t movie-service:1.0 ./app/movie-service/ || { echo "Failed to build movie-service"; exit 1; }
+            docker build -t booking-service:1.0 ./app/booking-service/ || { echo "Failed to build booking-service"; exit 1; }
+            
             echo "Deploying Spring application to DigitalOcean Droplet."
-            docker-compose up -d
-            echo  "Spring application deployed successfully."
+            docker compose up -d || { echo "Failed to start containers"; exit 1; }
+            echo "Spring application deployed successfully."
