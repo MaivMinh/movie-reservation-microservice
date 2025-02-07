@@ -8,6 +8,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+import java.util.List;
 
 @Configuration
 @AllArgsConstructor
@@ -26,8 +27,8 @@ public class ProjectSecurityConfig {
   @Bean
   CorsWebFilter corsFilter() {
     CorsConfiguration config = new CorsConfiguration();
-    config.setAllowCredentials(true);
-    config.addAllowedOrigin("http://localhost");
+    config.setAllowCredentials(false);
+    config.setAllowedOrigins(List.of("http://localhost:5173"));
     config.addAllowedHeader("*");
     config.addAllowedMethod("*");
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
