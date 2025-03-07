@@ -13,6 +13,21 @@ service MovieService {
   rpc searchMovies(SearchMoviesRequest) returns (SearchMoviesResponse);
   rpc updateMovie(UpdateMovieRequest) returns (UpdateMovieResponse);
   rpc isMoviePlayingNow(IsMoviePlayingNowRequest) returns (IsMoviePlayingNowResponse);
+  rpc getNowPlayingMovies(GetNowPlayingMoviesRequest) returns (GetNowPlayingMoviesResponse);
+}
+
+message GetNowPlayingMoviesRequest {
+  int32 page = 1;
+  int32 size = 2;
+  string sort = 3;
+}
+
+message GetNowPlayingMoviesResponse {
+  int32 status = 1;
+  string message = 2;
+  repeated Movie movies = 3;
+  int64 totalPage = 4;
+  int64 totalElement = 5;
 }
 
 message IsMoviePlayingNowRequest {

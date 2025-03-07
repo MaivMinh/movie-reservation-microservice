@@ -239,12 +239,8 @@ public class ShowtimeService {
   }
 
   public ResponseData getMovieShowtimes(int id, int page, int size, String sort) {
-
     GetMovieShowtimesRequest request = GetMovieShowtimesRequest.newBuilder()
             .setMovieId(id)
-            .setPage(page)
-            .setSize(size)
-            .setSort(sort)
             .build();
 
     GetMovieShowtimesResponse response = bookingServiceGrpcClient.getMovieShowtimes(request);
@@ -283,9 +279,6 @@ public class ShowtimeService {
             .message(response.getMessage())
             .data(Map.of(
                     "showtimes", showtimes,
-                    "totalPages", response.getTotalElement(),
-                    "totalElements", response.getTotalPage(),
-                    "page", page + 1,
                     "size", size))
             .build();
   }

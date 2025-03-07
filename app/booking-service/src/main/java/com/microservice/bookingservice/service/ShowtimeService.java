@@ -358,26 +358,13 @@ public class ShowtimeService {
 
   @Transactional(readOnly = true)
   public GetMovieShowtimesResponse getMovieShowtimes(GetMovieShowtimesRequest request) {
-    /// Hàm thực hiện lấy suất chiếu của 1 phim cụ thể.
+    /// Hàm thực hiện lấy tất cả suất chiếu của 1 phim cụ thể tính từ thời điểm hiện tại.
     int movieId = request.getMovieId();
-    int page = request.getPage();
-    int size = request.getSize();
-    String sort = request.getSort();
+    List<Showtime> result = showtimeRepo.findCurrentAndFutureShowtimesByMovieId(movieId);
 
-    Pageable pageable = null;
+    System.out.println(result.size());
 
-    if (StringUtils.hasText(sort)) {
-      List<Sort.Order> orders = new ArrayList<>();
-      String[] list = sort.split(",");
-      for (String element : list) {
-        orders.add(new Sort.Order(Sort.Direction.fromString(element.split(":")[1].toUpperCase()), element.split(":")[0]));
-      }
-      pageable = PageRequest.of(page, size, Sort.by(orders));
-    } else pageable = PageRequest.of(page, size);
-
-    Page<Showtime> pageShowtime = showtimeRepo.findAll(hasMovieId(movieId), pageable);
-
-    List<com.microservice.booking_proto.Showtime> showtimes = pageShowtime.getContent().stream().map(showtime -> com.microservice.booking_proto.Showtime.newBuilder()
+    List<com.microservice.booking_proto.Showtime> showtimes = result.stream().map(showtime -> com.microservice.booking_proto.Showtime.newBuilder()
             .setId(showtime.getId())
             .setRoom(com.microservice.booking_proto.Room.newBuilder()
                     .setId(showtime.getRoom().getId())
@@ -404,8 +391,6 @@ public class ShowtimeService {
               .setStatus(200)
               .setMessage("Success")
               .addAllShowtimes(showtimes)
-              .setTotalElement(pageShowtime.getTotalElements())
-              .setTotalPage(pageShowtime.getTotalPages())
               .build();
   }
 }

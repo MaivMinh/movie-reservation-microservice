@@ -96,4 +96,11 @@ public class BookingServiceGrpcServer extends BookingServiceGrpc.BookingServiceI
     responseObserver.onNext(response);
     responseObserver.onCompleted();
   }
+
+  @Override
+  public void getBookingByShowtime(GetBookingByShowtimeRequest request, StreamObserver<GetBookingByShowtimeResponse> responseObserver) {
+    GetBookingByShowtimeResponse response = bookingService.getBookingByShowtime(request);
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
 }

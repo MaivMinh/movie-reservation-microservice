@@ -19,5 +19,4 @@ public class RedisConfig {
     RedisSerializationContext<String, String> context = builder.value(serializer).build();
     return new ReactiveRedisTemplate<>(factory, context);
   }
-
 }

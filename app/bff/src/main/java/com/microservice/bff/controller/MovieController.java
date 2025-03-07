@@ -153,13 +153,22 @@ public class MovieController {
   /// Phương thức lấy danh sách suất chiếu của phim.
   /// Done.
   @GetMapping(value = "/{id}/showtimes")
-  public ResponseEntity<ResponseData> getMovieShowtimes(@PathVariable("id") int id,
-                                                   @RequestParam(value = "page", defaultValue = "1", required = false) int page,
-                                                   @RequestParam(value = "size", defaultValue = "10", required = false) int size,
-                                                   @RequestParam(value = "sort", defaultValue = "", required = false) String sort) {
+  public ResponseEntity<ResponseData> getMovieShowtimes(@PathVariable("id") int id, @RequestParam(value = "page", defaultValue = "1", required = false) int page, @RequestParam(value = "size", defaultValue = "10", required = false) int size, @RequestParam(value = "sort", defaultValue = "", required = false) String sort) {
     page = (page > 0) ? (page - 1) : 0;
     size = (size > 0) ? size : 10;
     ResponseData response = showtimeService.getMovieShowtimes(id, page, size, sort);
+    return ResponseEntity.ok(response);
+  }
+
+
+  /// Phương thức lấy danh sách phim đang chiếu.
+  @GetMapping(value = "/now-playing")
+  public ResponseEntity<ResponseData> getNowPlayingMovies(@RequestParam(value = "page", defaultValue = "1", required = false) int page,
+                                                          @RequestParam(value = "size", defaultValue = "10", required = false) int size,
+                                                          @RequestParam(value = "sort", defaultValue = "", required = false) String sort) {
+    page = (page > 0) ? (page - 1) : 0;
+    size = (size > 0) ? size : 10;
+    ResponseData response = movieService.getNowPlayingMovies(page, size, sort);
     return ResponseEntity.ok(response);
   }
 }

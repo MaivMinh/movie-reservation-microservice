@@ -33,4 +33,8 @@ public class MovieServiceGrpcClient {
   public UpdateMovieResponse updateMovie(UpdateMovieRequest request) {
     return movieServiceBlockingStub.updateMovie(request);
   }
+
+  public GetNowPlayingMoviesResponse getNowPlayingMovies(GetNowPlayingMoviesRequest request) {
+    return movieServiceBlockingStub.getNowPlayingMovies(request);
+  }
 }

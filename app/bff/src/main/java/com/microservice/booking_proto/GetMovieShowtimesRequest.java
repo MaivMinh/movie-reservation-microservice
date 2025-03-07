@@ -16,7 +16,6 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private GetMovieShowtimesRequest() {
-    sort_ = "";
   }
 
   @java.lang.Override
@@ -55,66 +54,6 @@ private static final long serialVersionUID = 0L;
     return movieId_;
   }
 
-  public static final int PAGE_FIELD_NUMBER = 2;
-  private int page_;
-  /**
-   * <code>int32 page = 2;</code>
-   * @return The page.
-   */
-  @java.lang.Override
-  public int getPage() {
-    return page_;
-  }
-
-  public static final int SIZE_FIELD_NUMBER = 3;
-  private int size_;
-  /**
-   * <code>int32 size = 3;</code>
-   * @return The size.
-   */
-  @java.lang.Override
-  public int getSize() {
-    return size_;
-  }
-
-  public static final int SORT_FIELD_NUMBER = 4;
-  private volatile java.lang.Object sort_;
-  /**
-   * <code>string sort = 4;</code>
-   * @return The sort.
-   */
-  @java.lang.Override
-  public java.lang.String getSort() {
-    java.lang.Object ref = sort_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      sort_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string sort = 4;</code>
-   * @return The bytes for sort.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getSortBytes() {
-    java.lang.Object ref = sort_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      sort_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -132,15 +71,6 @@ private static final long serialVersionUID = 0L;
     if (movieId_ != 0) {
       output.writeInt32(1, movieId_);
     }
-    if (page_ != 0) {
-      output.writeInt32(2, page_);
-    }
-    if (size_ != 0) {
-      output.writeInt32(3, size_);
-    }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(sort_)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, sort_);
-    }
     getUnknownFields().writeTo(output);
   }
 
@@ -153,17 +83,6 @@ private static final long serialVersionUID = 0L;
     if (movieId_ != 0) {
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(1, movieId_);
-    }
-    if (page_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(2, page_);
-    }
-    if (size_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(3, size_);
-    }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(sort_)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, sort_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -182,12 +101,6 @@ private static final long serialVersionUID = 0L;
 
     if (getMovieId()
         != other.getMovieId()) return false;
-    if (getPage()
-        != other.getPage()) return false;
-    if (getSize()
-        != other.getSize()) return false;
-    if (!getSort()
-        .equals(other.getSort())) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -201,12 +114,6 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + MOVIEID_FIELD_NUMBER;
     hash = (53 * hash) + getMovieId();
-    hash = (37 * hash) + PAGE_FIELD_NUMBER;
-    hash = (53 * hash) + getPage();
-    hash = (37 * hash) + SIZE_FIELD_NUMBER;
-    hash = (53 * hash) + getSize();
-    hash = (37 * hash) + SORT_FIELD_NUMBER;
-    hash = (53 * hash) + getSort().hashCode();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -337,12 +244,6 @@ private static final long serialVersionUID = 0L;
       super.clear();
       movieId_ = 0;
 
-      page_ = 0;
-
-      size_ = 0;
-
-      sort_ = "";
-
       return this;
     }
 
@@ -370,9 +271,6 @@ private static final long serialVersionUID = 0L;
     public com.microservice.booking_proto.GetMovieShowtimesRequest buildPartial() {
       com.microservice.booking_proto.GetMovieShowtimesRequest result = new com.microservice.booking_proto.GetMovieShowtimesRequest(this);
       result.movieId_ = movieId_;
-      result.page_ = page_;
-      result.size_ = size_;
-      result.sort_ = sort_;
       onBuilt();
       return result;
     }
@@ -424,16 +322,6 @@ private static final long serialVersionUID = 0L;
       if (other.getMovieId() != 0) {
         setMovieId(other.getMovieId());
       }
-      if (other.getPage() != 0) {
-        setPage(other.getPage());
-      }
-      if (other.getSize() != 0) {
-        setSize(other.getSize());
-      }
-      if (!other.getSort().isEmpty()) {
-        sort_ = other.sort_;
-        onChanged();
-      }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
@@ -465,21 +353,6 @@ private static final long serialVersionUID = 0L;
 
               break;
             } // case 8
-            case 16: {
-              page_ = input.readInt32();
-
-              break;
-            } // case 16
-            case 24: {
-              size_ = input.readInt32();
-
-              break;
-            } // case 24
-            case 34: {
-              sort_ = input.readStringRequireUtf8();
-
-              break;
-            } // case 34
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -523,144 +396,6 @@ private static final long serialVersionUID = 0L;
     public Builder clearMovieId() {
       
       movieId_ = 0;
-      onChanged();
-      return this;
-    }
-
-    private int page_ ;
-    /**
-     * <code>int32 page = 2;</code>
-     * @return The page.
-     */
-    @java.lang.Override
-    public int getPage() {
-      return page_;
-    }
-    /**
-     * <code>int32 page = 2;</code>
-     * @param value The page to set.
-     * @return This builder for chaining.
-     */
-    public Builder setPage(int value) {
-      
-      page_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int32 page = 2;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearPage() {
-      
-      page_ = 0;
-      onChanged();
-      return this;
-    }
-
-    private int size_ ;
-    /**
-     * <code>int32 size = 3;</code>
-     * @return The size.
-     */
-    @java.lang.Override
-    public int getSize() {
-      return size_;
-    }
-    /**
-     * <code>int32 size = 3;</code>
-     * @param value The size to set.
-     * @return This builder for chaining.
-     */
-    public Builder setSize(int value) {
-      
-      size_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int32 size = 3;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearSize() {
-      
-      size_ = 0;
-      onChanged();
-      return this;
-    }
-
-    private java.lang.Object sort_ = "";
-    /**
-     * <code>string sort = 4;</code>
-     * @return The sort.
-     */
-    public java.lang.String getSort() {
-      java.lang.Object ref = sort_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        sort_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <code>string sort = 4;</code>
-     * @return The bytes for sort.
-     */
-    public com.google.protobuf.ByteString
-        getSortBytes() {
-      java.lang.Object ref = sort_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        sort_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string sort = 4;</code>
-     * @param value The sort to set.
-     * @return This builder for chaining.
-     */
-    public Builder setSort(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      sort_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string sort = 4;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearSort() {
-      
-      sort_ = getDefaultInstance().getSort();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string sort = 4;</code>
-     * @param value The bytes for sort to set.
-     * @return This builder for chaining.
-     */
-    public Builder setSortBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      sort_ = value;
       onChanged();
       return this;
     }

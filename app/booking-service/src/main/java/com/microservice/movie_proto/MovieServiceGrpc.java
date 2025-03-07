@@ -201,6 +201,37 @@ public final class MovieServiceGrpc {
     return getIsMoviePlayingNowMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.microservice.movie_proto.GetNowPlayingMoviesRequest,
+      com.microservice.movie_proto.GetNowPlayingMoviesResponse> getGetNowPlayingMoviesMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "getNowPlayingMovies",
+      requestType = com.microservice.movie_proto.GetNowPlayingMoviesRequest.class,
+      responseType = com.microservice.movie_proto.GetNowPlayingMoviesResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.microservice.movie_proto.GetNowPlayingMoviesRequest,
+      com.microservice.movie_proto.GetNowPlayingMoviesResponse> getGetNowPlayingMoviesMethod() {
+    io.grpc.MethodDescriptor<com.microservice.movie_proto.GetNowPlayingMoviesRequest, com.microservice.movie_proto.GetNowPlayingMoviesResponse> getGetNowPlayingMoviesMethod;
+    if ((getGetNowPlayingMoviesMethod = MovieServiceGrpc.getGetNowPlayingMoviesMethod) == null) {
+      synchronized (MovieServiceGrpc.class) {
+        if ((getGetNowPlayingMoviesMethod = MovieServiceGrpc.getGetNowPlayingMoviesMethod) == null) {
+          MovieServiceGrpc.getGetNowPlayingMoviesMethod = getGetNowPlayingMoviesMethod =
+              io.grpc.MethodDescriptor.<com.microservice.movie_proto.GetNowPlayingMoviesRequest, com.microservice.movie_proto.GetNowPlayingMoviesResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "getNowPlayingMovies"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.microservice.movie_proto.GetNowPlayingMoviesRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.microservice.movie_proto.GetNowPlayingMoviesResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new MovieServiceMethodDescriptorSupplier("getNowPlayingMovies"))
+              .build();
+        }
+      }
+    }
+    return getGetNowPlayingMoviesMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -290,6 +321,13 @@ public final class MovieServiceGrpc {
         io.grpc.stub.StreamObserver<com.microservice.movie_proto.IsMoviePlayingNowResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getIsMoviePlayingNowMethod(), responseObserver);
     }
+
+    /**
+     */
+    default void getNowPlayingMovies(com.microservice.movie_proto.GetNowPlayingMoviesRequest request,
+        io.grpc.stub.StreamObserver<com.microservice.movie_proto.GetNowPlayingMoviesResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetNowPlayingMoviesMethod(), responseObserver);
+    }
   }
 
   /**
@@ -366,6 +404,14 @@ public final class MovieServiceGrpc {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getIsMoviePlayingNowMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void getNowPlayingMovies(com.microservice.movie_proto.GetNowPlayingMoviesRequest request,
+        io.grpc.stub.StreamObserver<com.microservice.movie_proto.GetNowPlayingMoviesResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getGetNowPlayingMoviesMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -424,6 +470,13 @@ public final class MovieServiceGrpc {
     public com.microservice.movie_proto.IsMoviePlayingNowResponse isMoviePlayingNow(com.microservice.movie_proto.IsMoviePlayingNowRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getIsMoviePlayingNowMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.microservice.movie_proto.GetNowPlayingMoviesResponse getNowPlayingMovies(com.microservice.movie_proto.GetNowPlayingMoviesRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getGetNowPlayingMoviesMethod(), getCallOptions(), request);
     }
   }
 
@@ -490,6 +543,14 @@ public final class MovieServiceGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getIsMoviePlayingNowMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.microservice.movie_proto.GetNowPlayingMoviesResponse> getNowPlayingMovies(
+        com.microservice.movie_proto.GetNowPlayingMoviesRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getGetNowPlayingMoviesMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_CREATE_MOVIE = 0;
@@ -498,6 +559,7 @@ public final class MovieServiceGrpc {
   private static final int METHODID_SEARCH_MOVIES = 3;
   private static final int METHODID_UPDATE_MOVIE = 4;
   private static final int METHODID_IS_MOVIE_PLAYING_NOW = 5;
+  private static final int METHODID_GET_NOW_PLAYING_MOVIES = 6;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -539,6 +601,10 @@ public final class MovieServiceGrpc {
         case METHODID_IS_MOVIE_PLAYING_NOW:
           serviceImpl.isMoviePlayingNow((com.microservice.movie_proto.IsMoviePlayingNowRequest) request,
               (io.grpc.stub.StreamObserver<com.microservice.movie_proto.IsMoviePlayingNowResponse>) responseObserver);
+          break;
+        case METHODID_GET_NOW_PLAYING_MOVIES:
+          serviceImpl.getNowPlayingMovies((com.microservice.movie_proto.GetNowPlayingMoviesRequest) request,
+              (io.grpc.stub.StreamObserver<com.microservice.movie_proto.GetNowPlayingMoviesResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -600,6 +666,13 @@ public final class MovieServiceGrpc {
               com.microservice.movie_proto.IsMoviePlayingNowRequest,
               com.microservice.movie_proto.IsMoviePlayingNowResponse>(
                 service, METHODID_IS_MOVIE_PLAYING_NOW)))
+        .addMethod(
+          getGetNowPlayingMoviesMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.microservice.movie_proto.GetNowPlayingMoviesRequest,
+              com.microservice.movie_proto.GetNowPlayingMoviesResponse>(
+                service, METHODID_GET_NOW_PLAYING_MOVIES)))
         .build();
   }
 
@@ -654,6 +727,7 @@ public final class MovieServiceGrpc {
               .addMethod(getSearchMoviesMethod())
               .addMethod(getUpdateMovieMethod())
               .addMethod(getIsMoviePlayingNowMethod())
+              .addMethod(getGetNowPlayingMoviesMethod())
               .build();
         }
       }

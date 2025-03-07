@@ -3,19 +3,19 @@ package com.microservice.authservice.aspects;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.Instant;
 
 @Slf4j
-@Aspect
+@Aspect /// Để thể hiện đây là một Aspect thì chúng ta sử dụng @Aspect
 @Component
 public class LoggerAspect {
+
+
+  /// Join point luôn đại diện cho việc thực thi một method. Nó chứa thông tin về method như tên, tham số, modifier, ...
 
   // Một @Pointcut thực hiện việc gom các nhóm lại với nhau. Advice sẽ làm việc với các nhóm đã match với @Pointcut này.
   @Pointcut("execution(* com.microservice.authservice..*.*(..))")

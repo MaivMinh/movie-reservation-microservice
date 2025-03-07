@@ -14,6 +14,7 @@ public class Seat {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
+  @Enumerated(EnumType.STRING)
   private SeatType type;
   private Integer price;
   private String seatRow;

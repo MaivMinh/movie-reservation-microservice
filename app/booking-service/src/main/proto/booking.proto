@@ -20,21 +20,27 @@ service BookingService {
   rpc deleteShowtime(DeleteShowtimeRequest) returns (DeleteShowtimeResponse);
   rpc searchShowtimes(SearchShowtimesRequest) returns (SearchShowtimesResponse);
   rpc getMovieShowtimes(GetMovieShowtimesRequest) returns (GetMovieShowtimesResponse);
+  rpc getBookingByShowtime(GetBookingByShowtimeRequest) returns (GetBookingByShowtimeResponse);
+}
+
+message GetBookingByShowtimeRequest {
+  int32 showtimeId = 1;
+}
+message GetBookingByShowtimeResponse {
+  int32 status = 1;
+  string message = 2;
+  Showtime showtime = 3;
+  repeated Seat seats = 5;
 }
 
 message GetMovieShowtimesRequest {
   int32 movieId = 1;
-  int32 page = 2;
-  int32 size = 3;
-  string sort = 4;
 }
 
 message GetMovieShowtimesResponse {
   int32 status = 1;
   string message = 2;
   repeated Showtime showtimes = 3;
-  int64 totalElement = 4;
-  int64 totalPage = 5;
 }
 
 message SearchShowtimesRequest {
@@ -85,6 +91,15 @@ message GetShowtimesRequest {
   int32 page = 1;
   int32 size = 2;
   string sort = 3;
+}
+
+message Seat {
+  int32 id = 1;
+  string type = 2;
+  int32 price = 3;
+  string seatRow = 4;
+  int32 seatNumber = 5;
+  bool isBooked = 6;
 }
 
 message Room {

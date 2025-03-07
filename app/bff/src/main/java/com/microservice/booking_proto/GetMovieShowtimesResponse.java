@@ -134,28 +134,6 @@ private static final long serialVersionUID = 0L;
     return showtimes_.get(index);
   }
 
-  public static final int TOTALELEMENT_FIELD_NUMBER = 4;
-  private long totalElement_;
-  /**
-   * <code>int64 totalElement = 4;</code>
-   * @return The totalElement.
-   */
-  @java.lang.Override
-  public long getTotalElement() {
-    return totalElement_;
-  }
-
-  public static final int TOTALPAGE_FIELD_NUMBER = 5;
-  private long totalPage_;
-  /**
-   * <code>int64 totalPage = 5;</code>
-   * @return The totalPage.
-   */
-  @java.lang.Override
-  public long getTotalPage() {
-    return totalPage_;
-  }
-
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -179,12 +157,6 @@ private static final long serialVersionUID = 0L;
     for (int i = 0; i < showtimes_.size(); i++) {
       output.writeMessage(3, showtimes_.get(i));
     }
-    if (totalElement_ != 0L) {
-      output.writeInt64(4, totalElement_);
-    }
-    if (totalPage_ != 0L) {
-      output.writeInt64(5, totalPage_);
-    }
     getUnknownFields().writeTo(output);
   }
 
@@ -204,14 +176,6 @@ private static final long serialVersionUID = 0L;
     for (int i = 0; i < showtimes_.size(); i++) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(3, showtimes_.get(i));
-    }
-    if (totalElement_ != 0L) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(4, totalElement_);
-    }
-    if (totalPage_ != 0L) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(5, totalPage_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -234,10 +198,6 @@ private static final long serialVersionUID = 0L;
         .equals(other.getMessage())) return false;
     if (!getShowtimesList()
         .equals(other.getShowtimesList())) return false;
-    if (getTotalElement()
-        != other.getTotalElement()) return false;
-    if (getTotalPage()
-        != other.getTotalPage()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -257,12 +217,6 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + SHOWTIMES_FIELD_NUMBER;
       hash = (53 * hash) + getShowtimesList().hashCode();
     }
-    hash = (37 * hash) + TOTALELEMENT_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getTotalElement());
-    hash = (37 * hash) + TOTALPAGE_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getTotalPage());
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -402,10 +356,6 @@ private static final long serialVersionUID = 0L;
         showtimesBuilder_.clear();
       }
       bitField0_ = (bitField0_ & ~0x00000001);
-      totalElement_ = 0L;
-
-      totalPage_ = 0L;
-
       return this;
     }
 
@@ -444,8 +394,6 @@ private static final long serialVersionUID = 0L;
       } else {
         result.showtimes_ = showtimesBuilder_.build();
       }
-      result.totalElement_ = totalElement_;
-      result.totalPage_ = totalPage_;
       onBuilt();
       return result;
     }
@@ -527,12 +475,6 @@ private static final long serialVersionUID = 0L;
           }
         }
       }
-      if (other.getTotalElement() != 0L) {
-        setTotalElement(other.getTotalElement());
-      }
-      if (other.getTotalPage() != 0L) {
-        setTotalPage(other.getTotalPage());
-      }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
@@ -582,16 +524,6 @@ private static final long serialVersionUID = 0L;
               }
               break;
             } // case 26
-            case 32: {
-              totalElement_ = input.readInt64();
-
-              break;
-            } // case 32
-            case 40: {
-              totalPage_ = input.readInt64();
-
-              break;
-            } // case 40
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -954,68 +886,6 @@ private static final long serialVersionUID = 0L;
         showtimes_ = null;
       }
       return showtimesBuilder_;
-    }
-
-    private long totalElement_ ;
-    /**
-     * <code>int64 totalElement = 4;</code>
-     * @return The totalElement.
-     */
-    @java.lang.Override
-    public long getTotalElement() {
-      return totalElement_;
-    }
-    /**
-     * <code>int64 totalElement = 4;</code>
-     * @param value The totalElement to set.
-     * @return This builder for chaining.
-     */
-    public Builder setTotalElement(long value) {
-      
-      totalElement_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int64 totalElement = 4;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearTotalElement() {
-      
-      totalElement_ = 0L;
-      onChanged();
-      return this;
-    }
-
-    private long totalPage_ ;
-    /**
-     * <code>int64 totalPage = 5;</code>
-     * @return The totalPage.
-     */
-    @java.lang.Override
-    public long getTotalPage() {
-      return totalPage_;
-    }
-    /**
-     * <code>int64 totalPage = 5;</code>
-     * @param value The totalPage to set.
-     * @return This builder for chaining.
-     */
-    public Builder setTotalPage(long value) {
-      
-      totalPage_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int64 totalPage = 5;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearTotalPage() {
-      
-      totalPage_ = 0L;
-      onChanged();
-      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

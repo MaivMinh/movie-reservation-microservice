@@ -1,10 +1,13 @@
 package com.microservice.bookingservice.service;
 
 import com.microservice.booking_proto.*;
+import com.microservice.booking_proto.Room;
 import com.microservice.bookingservice.grpc.MovieServiceGrpcClient;
 import com.microservice.bookingservice.model.*;
 import com.microservice.bookingservice.model.Cinema;
 import com.microservice.bookingservice.model.Province;
+import com.microservice.bookingservice.model.Seat;
+import com.microservice.bookingservice.model.Showtime;
 import com.microservice.bookingservice.repository.*;
 import com.microservice.movie_proto.IsMoviePlayingNowRequest;
 import com.microservice.movie_proto.IsMoviePlayingNowResponse;
@@ -14,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,9 +26,7 @@ import org.springframework.util.StringUtils;
 import java.sql.Date;
 import java.sql.Time;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.microservice.bookingservice.specifications.CinemaSpecs.containsName;
 import static org.springframework.data.jpa.domain.Specification.where;
@@ -37,6 +39,11 @@ public class BookingService {
   private final ProvinceRepo provinceRepo;
   private final PhotoRepo photoRepo;
   private final CinemaRepo cinemaRepo;
+  private final ShowtimeService showtimeService;
+  private final ShowtimeRepo showtimeRepo;
+  private final SeatRepo seatRepo;
+  private final BookingRepo bookingRepo;
+  private final BookedSeatRepo bookedSeatRepo;
 
   public CreateCinemaResponse createCinema(CreateCinemaRequest request) {
 
@@ -237,8 +244,8 @@ public class BookingService {
       cinema.setProvince(province);
     }
 
-    if (request.hasName())  cinema.setName(request.getName().getValue());
-    if (request.hasAddress())  cinema.setAddress(request.getAddress().getValue());
+    if (request.hasName()) cinema.setName(request.getName().getValue());
+    if (request.hasAddress()) cinema.setAddress(request.getAddress().getValue());
 
     try {
       cinemaRepo.save(cinema);
@@ -255,4 +262,78 @@ public class BookingService {
             .build();
   }
 
+  public GetBookingByShowtimeResponse getBookingByShowtime(GetBookingByShowtimeRequest request) {
+    /// Hàm thực hiện lấy thông tin của booking thông qua showtime.
+
+    int showtimeId = request.getShowtimeId();
+    Showtime showtime = showtimeRepo.findById(showtimeId).orElse(null);
+
+    if (showtime == null) {
+      return GetBookingByShowtimeResponse.newBuilder()
+              .setStatus(HttpStatus.NOT_FOUND.value())
+              .setMessage("Showtime not found")
+              .build();
+    }
+
+
+    /// Lấy danh sách tất cả các ghế ngồi mặc định của rạp tương ứng.
+    int roomId = showtime.getRoom().getId();
+    List<Seat> seats = seatRepo.findAllByRoomId(roomId);
+
+    /// Lấy danh sách tất cả booking của showtime hiện tại.
+    List<Booking> bookings = bookingRepo.findAllByShowtime(showtime);
+    Set<Integer> booked = new HashSet<>();  /// Danh sách các ghế đã được đặt.
+    for (Booking booking : bookings) {
+      bookedSeatRepo.findAllByBookingId(booking.getId()).stream().forEach(bookedSeat -> {
+        booked.add(bookedSeat.getSeat().getId()); /// ID của mỗi ghế này là Unique.
+      });
+    }
+
+    List<SeatDTO> seatDTOs = new ArrayList<>();
+    for (Seat seat : seats) {
+      SeatDTO.SeatDTOBuilder cur = SeatDTO.builder();
+      cur.id(seat.getId());
+      cur.type(String.valueOf(seat.getType()));
+      cur.price(seat.getPrice());
+      cur.seatRow(seat.getSeatRow());
+      cur.seatNumber(seat.getSeatNumber());
+      cur.isBooked(booked.contains(seat.getId()));
+      seatDTOs.add(cur.build());
+    }
+
+    return GetBookingByShowtimeResponse.newBuilder()
+            .setStatus(HttpStatus.OK.value())
+            .setMessage("Success")
+            .setShowtime(com.microservice.booking_proto.Showtime.newBuilder()
+                    .setId(showtime.getId())
+                    .setMovieId(showtime.getMovieId())
+                    .setDate(showtime.getDate().getTime())
+                    .setStartTime(showtime.getStartTime().getTime())
+                    .setEndTime(showtime.getEndTime().getTime())
+                    .setRoom(Room.newBuilder()
+                            .setId(showtime.getRoom().getId())
+                            .setName(showtime.getRoom().getName())
+                            .setLocation(showtime.getRoom().getLocation())
+                            .setCinema(com.microservice.booking_proto.Cinema.newBuilder()
+                                    .setId(showtime.getRoom().getCinema().getId())
+                                    .setName(showtime.getRoom().getCinema().getName())
+                                    .setAddress(showtime.getRoom().getCinema().getAddress())
+                                    .setProvince(com.microservice.booking_proto.Province.newBuilder()
+                                            .setId(showtime.getRoom().getCinema().getProvince().getId())
+                                            .setName(showtime.getRoom().getCinema().getProvince().getName())
+                                            .build())
+                                    .build())
+                            .build())
+                    .build())
+            .addAllSeats(seatDTOs.stream().map(dto -> com.microservice.booking_proto.Seat.newBuilder()
+                    .setId(dto.getId())
+                    .setType(dto.getType())
+                    .setPrice(dto.getPrice())
+                    .setSeatRow(dto.getSeatRow())
+                    .setSeatNumber(dto.getSeatNumber())
+                    .setIsBooked(dto.isBooked())
+                    .build())
+                    .toList())
+            .build();
+  }
 }

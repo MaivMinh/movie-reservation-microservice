@@ -387,6 +387,37 @@ public final class BookingServiceGrpc {
     return getGetMovieShowtimesMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.microservice.booking_proto.GetBookingByShowtimeRequest,
+      com.microservice.booking_proto.GetBookingByShowtimeResponse> getGetBookingByShowtimeMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "getBookingByShowtime",
+      requestType = com.microservice.booking_proto.GetBookingByShowtimeRequest.class,
+      responseType = com.microservice.booking_proto.GetBookingByShowtimeResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.microservice.booking_proto.GetBookingByShowtimeRequest,
+      com.microservice.booking_proto.GetBookingByShowtimeResponse> getGetBookingByShowtimeMethod() {
+    io.grpc.MethodDescriptor<com.microservice.booking_proto.GetBookingByShowtimeRequest, com.microservice.booking_proto.GetBookingByShowtimeResponse> getGetBookingByShowtimeMethod;
+    if ((getGetBookingByShowtimeMethod = BookingServiceGrpc.getGetBookingByShowtimeMethod) == null) {
+      synchronized (BookingServiceGrpc.class) {
+        if ((getGetBookingByShowtimeMethod = BookingServiceGrpc.getGetBookingByShowtimeMethod) == null) {
+          BookingServiceGrpc.getGetBookingByShowtimeMethod = getGetBookingByShowtimeMethod =
+              io.grpc.MethodDescriptor.<com.microservice.booking_proto.GetBookingByShowtimeRequest, com.microservice.booking_proto.GetBookingByShowtimeResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "getBookingByShowtime"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.microservice.booking_proto.GetBookingByShowtimeRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.microservice.booking_proto.GetBookingByShowtimeResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new BookingServiceMethodDescriptorSupplier("getBookingByShowtime"))
+              .build();
+        }
+      }
+    }
+    return getGetBookingByShowtimeMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -518,6 +549,13 @@ public final class BookingServiceGrpc {
         io.grpc.stub.StreamObserver<com.microservice.booking_proto.GetMovieShowtimesResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetMovieShowtimesMethod(), responseObserver);
     }
+
+    /**
+     */
+    default void getBookingByShowtime(com.microservice.booking_proto.GetBookingByShowtimeRequest request,
+        io.grpc.stub.StreamObserver<com.microservice.booking_proto.GetBookingByShowtimeResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetBookingByShowtimeMethod(), responseObserver);
+    }
   }
 
   /**
@@ -642,6 +680,14 @@ public final class BookingServiceGrpc {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getGetMovieShowtimesMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void getBookingByShowtime(com.microservice.booking_proto.GetBookingByShowtimeRequest request,
+        io.grpc.stub.StreamObserver<com.microservice.booking_proto.GetBookingByShowtimeResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getGetBookingByShowtimeMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -742,6 +788,13 @@ public final class BookingServiceGrpc {
     public com.microservice.booking_proto.GetMovieShowtimesResponse getMovieShowtimes(com.microservice.booking_proto.GetMovieShowtimesRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getGetMovieShowtimesMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.microservice.booking_proto.GetBookingByShowtimeResponse getBookingByShowtime(com.microservice.booking_proto.GetBookingByShowtimeRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getGetBookingByShowtimeMethod(), getCallOptions(), request);
     }
   }
 
@@ -856,6 +909,14 @@ public final class BookingServiceGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getGetMovieShowtimesMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.microservice.booking_proto.GetBookingByShowtimeResponse> getBookingByShowtime(
+        com.microservice.booking_proto.GetBookingByShowtimeRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getGetBookingByShowtimeMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_CREATE_CINEMA = 0;
@@ -870,6 +931,7 @@ public final class BookingServiceGrpc {
   private static final int METHODID_DELETE_SHOWTIME = 9;
   private static final int METHODID_SEARCH_SHOWTIMES = 10;
   private static final int METHODID_GET_MOVIE_SHOWTIMES = 11;
+  private static final int METHODID_GET_BOOKING_BY_SHOWTIME = 12;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -935,6 +997,10 @@ public final class BookingServiceGrpc {
         case METHODID_GET_MOVIE_SHOWTIMES:
           serviceImpl.getMovieShowtimes((com.microservice.booking_proto.GetMovieShowtimesRequest) request,
               (io.grpc.stub.StreamObserver<com.microservice.booking_proto.GetMovieShowtimesResponse>) responseObserver);
+          break;
+        case METHODID_GET_BOOKING_BY_SHOWTIME:
+          serviceImpl.getBookingByShowtime((com.microservice.booking_proto.GetBookingByShowtimeRequest) request,
+              (io.grpc.stub.StreamObserver<com.microservice.booking_proto.GetBookingByShowtimeResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -1038,6 +1104,13 @@ public final class BookingServiceGrpc {
               com.microservice.booking_proto.GetMovieShowtimesRequest,
               com.microservice.booking_proto.GetMovieShowtimesResponse>(
                 service, METHODID_GET_MOVIE_SHOWTIMES)))
+        .addMethod(
+          getGetBookingByShowtimeMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.microservice.booking_proto.GetBookingByShowtimeRequest,
+              com.microservice.booking_proto.GetBookingByShowtimeResponse>(
+                service, METHODID_GET_BOOKING_BY_SHOWTIME)))
         .build();
   }
 
@@ -1098,6 +1171,7 @@ public final class BookingServiceGrpc {
               .addMethod(getDeleteShowtimeMethod())
               .addMethod(getSearchShowtimesMethod())
               .addMethod(getGetMovieShowtimesMethod())
+              .addMethod(getGetBookingByShowtimeMethod())
               .build();
         }
       }

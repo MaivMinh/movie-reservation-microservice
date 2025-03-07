@@ -6,6 +6,8 @@ import com.microservice.bff.grpc.BookingServiceGrpcClient;
 import com.microservice.bff.grpc.MovieServiceGrpcClient;
 import com.microservice.bff.request.Movie;
 import com.microservice.bff.response.ResponseData;
+import com.microservice.booking_proto.GetMovieShowtimesRequest;
+import com.microservice.booking_proto.GetMovieShowtimesResponse;
 import com.microservice.movie_proto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MovieService {
   private final MovieServiceGrpcClient movieServiceGrpcClient;
-  private final BookingServiceGrpcClient bookingServiceGrpcClient;
 
   public ResponseData createMovie(com.microservice.bff.request.NewMovie movie) {
     NewMovie newMovie = NewMovie.newBuilder().setName(movie.getName()).setBackdrop(movie.getBackdrop()).setPoster(movie.getPoster()).setDescription(movie.getDescription()).setTrailer(movie.getTrailer()).setReleaseDate(movie.getReleaseDate().getTime()).addAllGenre(Arrays.stream(movie.getGenres()).toList()).build();
@@ -101,4 +102,35 @@ public class MovieService {
             .build();
   }
 
+
+  public ResponseData getNowPlayingMovies(int page, int size, String sort) {
+    GetNowPlayingMoviesRequest request = GetNowPlayingMoviesRequest.newBuilder().setPage(page).setSize(size).setSort(sort).build();
+    GetNowPlayingMoviesResponse response = movieServiceGrpcClient.getNowPlayingMovies(request);
+    List<Movie> movies = response
+            .getMoviesList().stream().map(movie -> Movie.builder()
+                    .id(movie.getId()).name(movie.getName())
+                    .description(movie.getDescription())
+                    .trailer(movie.getTrailer())
+                    .releaseDate(new Date(movie.getReleaseDate()))
+                    .poster(movie.getPoster())
+                    .backdrop(movie.getBackdrop())
+                    .status(movie.getStatus())
+                    .genres(movie.getGenreList().stream().map(genre -> com.microservice.bff.request.Genre.builder().id(genre.getId()).name(genre.getName()).build()).toList())
+                    .build())
+            .toList();
+
+    if (movies.isEmpty()) {
+      return ResponseData.builder().status(response.getStatus()).message(response.getMessage()).build();
+    }
+
+    return ResponseData.builder()
+            .status(response.getStatus())
+            .message(response.getMessage())
+            .data(Map.of("movies", movies,
+                    "totalPages", response.getTotalElement(),
+                    "totalElements", response.getTotalPage(),
+                    "page", page + 1,
+                    "size", size))
+            .build();
+  }
 }

@@ -48,16 +48,4 @@ public interface GetMovieShowtimesResponseOrBuilder extends
    */
   com.microservice.booking_proto.ShowtimeOrBuilder getShowtimesOrBuilder(
       int index);
-
-  /**
-   * <code>int64 totalElement = 4;</code>
-   * @return The totalElement.
-   */
-  long getTotalElement();
-
-  /**
-   * <code>int64 totalPage = 5;</code>
-   * @return The totalPage.
-   */
-  long getTotalPage();
 }

@@ -12,28 +12,4 @@ public interface GetMovieShowtimesRequestOrBuilder extends
    * @return The movieId.
    */
   int getMovieId();
-
-  /**
-   * <code>int32 page = 2;</code>
-   * @return The page.
-   */
-  int getPage();
-
-  /**
-   * <code>int32 size = 3;</code>
-   * @return The size.
-   */
-  int getSize();
-
-  /**
-   * <code>string sort = 4;</code>
-   * @return The sort.
-   */
-  java.lang.String getSort();
-  /**
-   * <code>string sort = 4;</code>
-   * @return The bytes for sort.
-   */
-  com.google.protobuf.ByteString
-      getSortBytes();
 }

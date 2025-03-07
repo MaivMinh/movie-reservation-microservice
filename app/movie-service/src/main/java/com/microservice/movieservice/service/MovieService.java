@@ -393,4 +393,48 @@ public class MovieService {
             .setIsNowPlaying(true)
             .build();
   }
+
+  public GetNowPlayingMoviesResponse getNowPlayingMovies(GetNowPlayingMoviesRequest request) {
+    /// Hàm thực hiện lấy các bộ phim đang chiếu - NOW_PLAYING.
+    int page = request.getPage();
+    int size = request.getSize();
+    String sort = request.getSort();
+
+    Pageable pageable = null;
+    if (StringUtils.hasText(sort)) {
+      /// sort=id:desc,releaseDate:asc
+      List<Sort.Order> orders = new ArrayList<>();
+      String[] list = sort.split(",");
+      for (String element : list) {
+        orders.add(new Sort.Order(Sort.Direction.fromString(element.split(":")[1].toUpperCase()), element.split(":")[0]));
+      }
+      pageable = PageRequest.of(page, size, Sort.by(orders));
+    } else pageable = org.springframework.data.domain.PageRequest.of(page, size);
+
+    Page<Movie> pageMovie = movieRepo.findByStatus(MovieStatus.NOW_PLAYING, pageable);
+    List<Movie> movies = pageMovie.getContent();
+
+    return GetNowPlayingMoviesResponse.newBuilder()
+            .setStatus(200)
+            .setMessage("Success")
+            .addAllMovies(movies.stream().map(movie -> com.microservice.movie_proto.Movie.newBuilder()
+                    .setId(movie.getId())
+                    .setName(movie.getName())
+                    .setPoster(movie.getPoster())
+                    .setBackdrop(movie.getBackdrop())
+                    .setDescription(movie.getDescription())
+                    .setTrailer(movie.getTrailer())
+                    .setReleaseDate(movie.getReleaseDate().getTime())
+                    .setVoteAverage(movie.getVoteAverage())
+                    .setVoteCount(movie.getVoteCount())
+                    .setStatus(movie.getStatus().toString())
+                    .addAllGenre(movie.getMovieGenres().stream().map(element -> com.microservice.movie_proto.Genre.newBuilder()
+                            .setId(element.getGenre().getId())
+                            .setName(element.getGenre().getName())
+                            .build()).toList())
+                    .build()).toList())
+            .setTotalElement(pageMovie.getTotalElements())
+            .setTotalPage(pageMovie.getTotalPages())
+            .build();
+  }
 }

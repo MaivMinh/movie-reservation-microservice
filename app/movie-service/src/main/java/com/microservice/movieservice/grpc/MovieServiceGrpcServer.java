@@ -57,4 +57,10 @@ public class MovieServiceGrpcServer extends MovieServiceGrpc.MovieServiceImplBas
     responseObserver.onCompleted();
   }
 
+  @Override
+  public void getNowPlayingMovies(GetNowPlayingMoviesRequest request, StreamObserver<GetNowPlayingMoviesResponse> responseObserver) {
+    GetNowPlayingMoviesResponse response = movieService.getNowPlayingMovies(request);
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
 }

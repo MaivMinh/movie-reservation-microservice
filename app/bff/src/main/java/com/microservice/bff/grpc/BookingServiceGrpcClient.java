@@ -59,4 +59,9 @@ public class BookingServiceGrpcClient {
   public GetMovieShowtimesResponse getMovieShowtimes(GetMovieShowtimesRequest request) {
     return bookingServiceBlockingStub.getMovieShowtimes(request);
   }
+
+
+  public GetBookingByShowtimeResponse getBookingByShowtime(GetBookingByShowtimeRequest request) {
+    return bookingServiceBlockingStub.getBookingByShowtime(request);
+  }
 }
