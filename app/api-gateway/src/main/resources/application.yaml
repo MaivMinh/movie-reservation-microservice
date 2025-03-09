@@ -10,6 +10,13 @@ spring:
           filters:
             - PrefixPath=/api
 
+        - id: api-documentation
+          uri: lb://bff
+          predicates:
+            - Path=/api-docs/**,/v3/api-docs/**
+            - Method=GET,POST,PUT,DELETE,PATCH
+
+
         - id: bff
           uri: lb://bff
           predicates:
