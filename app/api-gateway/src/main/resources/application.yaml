@@ -22,8 +22,6 @@ spring:
           predicates:
             - Path=/**
             - Method=GET,POST,PUT,DELETE,PATCH
-          filters:
-            - PrefixPath=/api
 
   application:
     name: api-gateway

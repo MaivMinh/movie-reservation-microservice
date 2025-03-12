@@ -23,12 +23,29 @@ public class ProjectConfigSecurity {
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
     http.csrf(AbstractHttpConfigurer::disable);
-    http.cors(AbstractHttpConfigurer::disable);
     http.authorizeHttpRequests(config ->
             config.anyRequest().permitAll());
     return http.build();
   }
 
+  @Bean
+  public WebMvcConfigurer corsConfigurer() {
+    return new WebMvcConfigurer() {
+      @Override
+      public void addCorsMappings(CorsRegistry registry) {
+        ///registry.addMapping("/greeting-javaconfig").allowedOrigins("http://localhost:9000");
+        registry
+                .addMapping("/**")
+                .allowedOrigins(
+                        "https://movie-reservation-frontend.vercel.app/",
+                        "http://localhost:8888",
+                        "https://moviereservation.software")
+                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                .allowCredentials(false)
+                .exposedHeaders("*");
+      }
+    };
+  }
 
   @Bean
   PasswordEncoder passwordEncoder() {
