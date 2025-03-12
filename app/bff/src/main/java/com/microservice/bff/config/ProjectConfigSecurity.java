@@ -36,10 +36,7 @@ public class ProjectConfigSecurity {
         ///registry.addMapping("/greeting-javaconfig").allowedOrigins("http://localhost:9000");
         registry
                 .addMapping("/**")
-                .allowedOrigins(
-                        "https://movie-reservation-frontend.vercel.app/",
-                        "http://localhost:8888",
-                        "https://moviereservation.software")
+                .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 .allowCredentials(false)
                 .exposedHeaders("*");
