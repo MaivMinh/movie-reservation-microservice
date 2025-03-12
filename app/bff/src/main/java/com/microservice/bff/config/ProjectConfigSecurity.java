@@ -29,22 +29,6 @@ public class ProjectConfigSecurity {
   }
 
   @Bean
-  public WebMvcConfigurer corsConfigurer() {
-    return new WebMvcConfigurer() {
-      @Override
-      public void addCorsMappings(CorsRegistry registry) {
-        ///registry.addMapping("/greeting-javaconfig").allowedOrigins("http://localhost:9000");
-        registry
-                .addMapping("/**")
-                .allowedOrigins("*")
-                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-                .allowCredentials(false)
-                .exposedHeaders("*");
-      }
-    };
-  }
-
-  @Bean
   PasswordEncoder passwordEncoder() {
     return PasswordEncoderFactories.createDelegatingPasswordEncoder();
   }
