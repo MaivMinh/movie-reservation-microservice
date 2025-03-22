@@ -21,6 +21,37 @@ service BookingService {
   rpc searchShowtimes(SearchShowtimesRequest) returns (SearchShowtimesResponse);
   rpc getMovieShowtimes(GetMovieShowtimesRequest) returns (GetMovieShowtimesResponse);
   rpc getBookingByShowtime(GetBookingByShowtimeRequest) returns (GetBookingByShowtimeResponse);
+  rpc handlePreSeatReservation(HandlePreSeatReservationRequest) returns (HandlePreSeatReservationResponse);
+  rpc handleDeclareQueue(HandleDeclareQueueRequest) returns (HandleDeclareQueueResponse);
+  rpc handleRemoveQueue(HandleRemoveQueueRequest) returns (HandleRemoveQueueResponse);
+}
+
+message HandleRemoveQueueRequest {
+  int32 accountId = 1;
+}
+
+message HandleRemoveQueueResponse {
+  int32 status = 1;
+  string message = 2;
+}
+
+message HandleDeclareQueueRequest {
+  int32 accountId = 1;
+}
+
+message HandleDeclareQueueResponse {
+  int32 status = 1;
+  string message = 2;
+}
+
+message HandlePreSeatReservationRequest {
+  int32 showtimeId = 1;
+  repeated int32 seats = 2;
+}
+
+message HandlePreSeatReservationResponse {
+  int32 status = 1;
+  string message = 2;
 }
 
 message GetBookingByShowtimeRequest {

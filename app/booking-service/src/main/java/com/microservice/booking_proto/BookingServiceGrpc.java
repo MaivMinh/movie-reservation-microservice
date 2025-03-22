@@ -418,6 +418,99 @@ public final class BookingServiceGrpc {
     return getGetBookingByShowtimeMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.microservice.booking_proto.HandlePreSeatReservationRequest,
+      com.microservice.booking_proto.HandlePreSeatReservationResponse> getHandlePreSeatReservationMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "handlePreSeatReservation",
+      requestType = com.microservice.booking_proto.HandlePreSeatReservationRequest.class,
+      responseType = com.microservice.booking_proto.HandlePreSeatReservationResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.microservice.booking_proto.HandlePreSeatReservationRequest,
+      com.microservice.booking_proto.HandlePreSeatReservationResponse> getHandlePreSeatReservationMethod() {
+    io.grpc.MethodDescriptor<com.microservice.booking_proto.HandlePreSeatReservationRequest, com.microservice.booking_proto.HandlePreSeatReservationResponse> getHandlePreSeatReservationMethod;
+    if ((getHandlePreSeatReservationMethod = BookingServiceGrpc.getHandlePreSeatReservationMethod) == null) {
+      synchronized (BookingServiceGrpc.class) {
+        if ((getHandlePreSeatReservationMethod = BookingServiceGrpc.getHandlePreSeatReservationMethod) == null) {
+          BookingServiceGrpc.getHandlePreSeatReservationMethod = getHandlePreSeatReservationMethod =
+              io.grpc.MethodDescriptor.<com.microservice.booking_proto.HandlePreSeatReservationRequest, com.microservice.booking_proto.HandlePreSeatReservationResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "handlePreSeatReservation"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.microservice.booking_proto.HandlePreSeatReservationRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.microservice.booking_proto.HandlePreSeatReservationResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new BookingServiceMethodDescriptorSupplier("handlePreSeatReservation"))
+              .build();
+        }
+      }
+    }
+    return getHandlePreSeatReservationMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<com.microservice.booking_proto.HandleDeclareQueueRequest,
+      com.microservice.booking_proto.HandleDeclareQueueResponse> getHandleDeclareQueueMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "handleDeclareQueue",
+      requestType = com.microservice.booking_proto.HandleDeclareQueueRequest.class,
+      responseType = com.microservice.booking_proto.HandleDeclareQueueResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.microservice.booking_proto.HandleDeclareQueueRequest,
+      com.microservice.booking_proto.HandleDeclareQueueResponse> getHandleDeclareQueueMethod() {
+    io.grpc.MethodDescriptor<com.microservice.booking_proto.HandleDeclareQueueRequest, com.microservice.booking_proto.HandleDeclareQueueResponse> getHandleDeclareQueueMethod;
+    if ((getHandleDeclareQueueMethod = BookingServiceGrpc.getHandleDeclareQueueMethod) == null) {
+      synchronized (BookingServiceGrpc.class) {
+        if ((getHandleDeclareQueueMethod = BookingServiceGrpc.getHandleDeclareQueueMethod) == null) {
+          BookingServiceGrpc.getHandleDeclareQueueMethod = getHandleDeclareQueueMethod =
+              io.grpc.MethodDescriptor.<com.microservice.booking_proto.HandleDeclareQueueRequest, com.microservice.booking_proto.HandleDeclareQueueResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "handleDeclareQueue"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.microservice.booking_proto.HandleDeclareQueueRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.microservice.booking_proto.HandleDeclareQueueResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new BookingServiceMethodDescriptorSupplier("handleDeclareQueue"))
+              .build();
+        }
+      }
+    }
+    return getHandleDeclareQueueMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<com.microservice.booking_proto.HandleRemoveQueueRequest,
+      com.microservice.booking_proto.HandleRemoveQueueResponse> getHandleRemoveQueueMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "handleRemoveQueue",
+      requestType = com.microservice.booking_proto.HandleRemoveQueueRequest.class,
+      responseType = com.microservice.booking_proto.HandleRemoveQueueResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.microservice.booking_proto.HandleRemoveQueueRequest,
+      com.microservice.booking_proto.HandleRemoveQueueResponse> getHandleRemoveQueueMethod() {
+    io.grpc.MethodDescriptor<com.microservice.booking_proto.HandleRemoveQueueRequest, com.microservice.booking_proto.HandleRemoveQueueResponse> getHandleRemoveQueueMethod;
+    if ((getHandleRemoveQueueMethod = BookingServiceGrpc.getHandleRemoveQueueMethod) == null) {
+      synchronized (BookingServiceGrpc.class) {
+        if ((getHandleRemoveQueueMethod = BookingServiceGrpc.getHandleRemoveQueueMethod) == null) {
+          BookingServiceGrpc.getHandleRemoveQueueMethod = getHandleRemoveQueueMethod =
+              io.grpc.MethodDescriptor.<com.microservice.booking_proto.HandleRemoveQueueRequest, com.microservice.booking_proto.HandleRemoveQueueResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "handleRemoveQueue"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.microservice.booking_proto.HandleRemoveQueueRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.microservice.booking_proto.HandleRemoveQueueResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new BookingServiceMethodDescriptorSupplier("handleRemoveQueue"))
+              .build();
+        }
+      }
+    }
+    return getHandleRemoveQueueMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -556,6 +649,27 @@ public final class BookingServiceGrpc {
         io.grpc.stub.StreamObserver<com.microservice.booking_proto.GetBookingByShowtimeResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetBookingByShowtimeMethod(), responseObserver);
     }
+
+    /**
+     */
+    default void handlePreSeatReservation(com.microservice.booking_proto.HandlePreSeatReservationRequest request,
+        io.grpc.stub.StreamObserver<com.microservice.booking_proto.HandlePreSeatReservationResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getHandlePreSeatReservationMethod(), responseObserver);
+    }
+
+    /**
+     */
+    default void handleDeclareQueue(com.microservice.booking_proto.HandleDeclareQueueRequest request,
+        io.grpc.stub.StreamObserver<com.microservice.booking_proto.HandleDeclareQueueResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getHandleDeclareQueueMethod(), responseObserver);
+    }
+
+    /**
+     */
+    default void handleRemoveQueue(com.microservice.booking_proto.HandleRemoveQueueRequest request,
+        io.grpc.stub.StreamObserver<com.microservice.booking_proto.HandleRemoveQueueResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getHandleRemoveQueueMethod(), responseObserver);
+    }
   }
 
   /**
@@ -688,6 +802,30 @@ public final class BookingServiceGrpc {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getGetBookingByShowtimeMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void handlePreSeatReservation(com.microservice.booking_proto.HandlePreSeatReservationRequest request,
+        io.grpc.stub.StreamObserver<com.microservice.booking_proto.HandlePreSeatReservationResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getHandlePreSeatReservationMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void handleDeclareQueue(com.microservice.booking_proto.HandleDeclareQueueRequest request,
+        io.grpc.stub.StreamObserver<com.microservice.booking_proto.HandleDeclareQueueResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getHandleDeclareQueueMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void handleRemoveQueue(com.microservice.booking_proto.HandleRemoveQueueRequest request,
+        io.grpc.stub.StreamObserver<com.microservice.booking_proto.HandleRemoveQueueResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getHandleRemoveQueueMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -795,6 +933,27 @@ public final class BookingServiceGrpc {
     public com.microservice.booking_proto.GetBookingByShowtimeResponse getBookingByShowtime(com.microservice.booking_proto.GetBookingByShowtimeRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getGetBookingByShowtimeMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.microservice.booking_proto.HandlePreSeatReservationResponse handlePreSeatReservation(com.microservice.booking_proto.HandlePreSeatReservationRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getHandlePreSeatReservationMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.microservice.booking_proto.HandleDeclareQueueResponse handleDeclareQueue(com.microservice.booking_proto.HandleDeclareQueueRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getHandleDeclareQueueMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.microservice.booking_proto.HandleRemoveQueueResponse handleRemoveQueue(com.microservice.booking_proto.HandleRemoveQueueRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getHandleRemoveQueueMethod(), getCallOptions(), request);
     }
   }
 
@@ -917,6 +1076,30 @@ public final class BookingServiceGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getGetBookingByShowtimeMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.microservice.booking_proto.HandlePreSeatReservationResponse> handlePreSeatReservation(
+        com.microservice.booking_proto.HandlePreSeatReservationRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getHandlePreSeatReservationMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.microservice.booking_proto.HandleDeclareQueueResponse> handleDeclareQueue(
+        com.microservice.booking_proto.HandleDeclareQueueRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getHandleDeclareQueueMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.microservice.booking_proto.HandleRemoveQueueResponse> handleRemoveQueue(
+        com.microservice.booking_proto.HandleRemoveQueueRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getHandleRemoveQueueMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_CREATE_CINEMA = 0;
@@ -932,6 +1115,9 @@ public final class BookingServiceGrpc {
   private static final int METHODID_SEARCH_SHOWTIMES = 10;
   private static final int METHODID_GET_MOVIE_SHOWTIMES = 11;
   private static final int METHODID_GET_BOOKING_BY_SHOWTIME = 12;
+  private static final int METHODID_HANDLE_PRE_SEAT_RESERVATION = 13;
+  private static final int METHODID_HANDLE_DECLARE_QUEUE = 14;
+  private static final int METHODID_HANDLE_REMOVE_QUEUE = 15;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -1001,6 +1187,18 @@ public final class BookingServiceGrpc {
         case METHODID_GET_BOOKING_BY_SHOWTIME:
           serviceImpl.getBookingByShowtime((com.microservice.booking_proto.GetBookingByShowtimeRequest) request,
               (io.grpc.stub.StreamObserver<com.microservice.booking_proto.GetBookingByShowtimeResponse>) responseObserver);
+          break;
+        case METHODID_HANDLE_PRE_SEAT_RESERVATION:
+          serviceImpl.handlePreSeatReservation((com.microservice.booking_proto.HandlePreSeatReservationRequest) request,
+              (io.grpc.stub.StreamObserver<com.microservice.booking_proto.HandlePreSeatReservationResponse>) responseObserver);
+          break;
+        case METHODID_HANDLE_DECLARE_QUEUE:
+          serviceImpl.handleDeclareQueue((com.microservice.booking_proto.HandleDeclareQueueRequest) request,
+              (io.grpc.stub.StreamObserver<com.microservice.booking_proto.HandleDeclareQueueResponse>) responseObserver);
+          break;
+        case METHODID_HANDLE_REMOVE_QUEUE:
+          serviceImpl.handleRemoveQueue((com.microservice.booking_proto.HandleRemoveQueueRequest) request,
+              (io.grpc.stub.StreamObserver<com.microservice.booking_proto.HandleRemoveQueueResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -1111,6 +1309,27 @@ public final class BookingServiceGrpc {
               com.microservice.booking_proto.GetBookingByShowtimeRequest,
               com.microservice.booking_proto.GetBookingByShowtimeResponse>(
                 service, METHODID_GET_BOOKING_BY_SHOWTIME)))
+        .addMethod(
+          getHandlePreSeatReservationMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.microservice.booking_proto.HandlePreSeatReservationRequest,
+              com.microservice.booking_proto.HandlePreSeatReservationResponse>(
+                service, METHODID_HANDLE_PRE_SEAT_RESERVATION)))
+        .addMethod(
+          getHandleDeclareQueueMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.microservice.booking_proto.HandleDeclareQueueRequest,
+              com.microservice.booking_proto.HandleDeclareQueueResponse>(
+                service, METHODID_HANDLE_DECLARE_QUEUE)))
+        .addMethod(
+          getHandleRemoveQueueMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.microservice.booking_proto.HandleRemoveQueueRequest,
+              com.microservice.booking_proto.HandleRemoveQueueResponse>(
+                service, METHODID_HANDLE_REMOVE_QUEUE)))
         .build();
   }
 
@@ -1172,6 +1391,9 @@ public final class BookingServiceGrpc {
               .addMethod(getSearchShowtimesMethod())
               .addMethod(getGetMovieShowtimesMethod())
               .addMethod(getGetBookingByShowtimeMethod())
+              .addMethod(getHandlePreSeatReservationMethod())
+              .addMethod(getHandleDeclareQueueMethod())
+              .addMethod(getHandleRemoveQueueMethod())
               .build();
         }
       }

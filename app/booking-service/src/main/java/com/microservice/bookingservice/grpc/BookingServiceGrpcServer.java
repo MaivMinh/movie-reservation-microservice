@@ -103,4 +103,25 @@ public class BookingServiceGrpcServer extends BookingServiceGrpc.BookingServiceI
     responseObserver.onNext(response);
     responseObserver.onCompleted();
   }
+
+  @Override
+  public void handlePreSeatReservation(HandlePreSeatReservationRequest request, StreamObserver<HandlePreSeatReservationResponse> responseObserver) {
+    HandlePreSeatReservationResponse response = bookingService.handlePreSeatReservation(request);
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
+
+  @Override
+  public void handleDeclareQueue(HandleDeclareQueueRequest request, StreamObserver<HandleDeclareQueueResponse> responseObserver) {
+    HandleDeclareQueueResponse response = bookingService.handleDeclareQueue(request);
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
+
+  @Override
+  public void handleRemoveQueue(HandleRemoveQueueRequest request, StreamObserver<HandleRemoveQueueResponse> responseObserver) {
+    HandleRemoveQueueResponse response = bookingService.handleRemoveQueue(request);
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
 }

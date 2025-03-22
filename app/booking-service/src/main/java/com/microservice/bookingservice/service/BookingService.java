@@ -3,6 +3,7 @@ package com.microservice.bookingservice.service;
 import com.microservice.booking_proto.*;
 import com.microservice.booking_proto.Room;
 import com.microservice.bookingservice.grpc.MovieServiceGrpcClient;
+import com.microservice.bookingservice.grpc.WebSocketServiceGrpcClient;
 import com.microservice.bookingservice.model.*;
 import com.microservice.bookingservice.model.Cinema;
 import com.microservice.bookingservice.model.Province;
@@ -11,6 +12,7 @@ import com.microservice.bookingservice.model.Showtime;
 import com.microservice.bookingservice.repository.*;
 import com.microservice.movie_proto.IsMoviePlayingNowRequest;
 import com.microservice.movie_proto.IsMoviePlayingNowResponse;
+import com.microservice.websocket_proto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,11 +41,11 @@ public class BookingService {
   private final ProvinceRepo provinceRepo;
   private final PhotoRepo photoRepo;
   private final CinemaRepo cinemaRepo;
-  private final ShowtimeService showtimeService;
   private final ShowtimeRepo showtimeRepo;
   private final SeatRepo seatRepo;
   private final BookingRepo bookingRepo;
   private final BookedSeatRepo bookedSeatRepo;
+  private final WebSocketServiceGrpcClient webSocketServiceGrpcClient;
 
   public CreateCinemaResponse createCinema(CreateCinemaRequest request) {
 
@@ -326,14 +328,62 @@ public class BookingService {
                             .build())
                     .build())
             .addAllSeats(seatDTOs.stream().map(dto -> com.microservice.booking_proto.Seat.newBuilder()
-                    .setId(dto.getId())
-                    .setType(dto.getType())
-                    .setPrice(dto.getPrice())
-                    .setSeatRow(dto.getSeatRow())
-                    .setSeatNumber(dto.getSeatNumber())
-                    .setIsBooked(dto.isBooked())
-                    .build())
+                            .setId(dto.getId())
+                            .setType(dto.getType())
+                            .setPrice(dto.getPrice())
+                            .setSeatRow(dto.getSeatRow())
+                            .setSeatNumber(dto.getSeatNumber())
+                            .setIsBooked(dto.isBooked())
+                            .build())
                     .toList())
+            .build();
+  }
+
+  public HandlePreSeatReservationResponse handlePreSeatReservation(HandlePreSeatReservationRequest handleRequest) {
+    /// Hàm thực hiện giữ chỗ các ghế đã chọn cho Client.
+
+    int showtimeId = handleRequest.getShowtimeId();
+    List<Integer> seats = handleRequest.getSeatsList();
+
+    CreatePreSeatReservationRequest request = CreatePreSeatReservationRequest.newBuilder()
+            .setShowtimeId(showtimeId)
+            .addAllSeats(seats)
+            .build();
+    CreatePreSeatReservationResponse response = webSocketServiceGrpcClient.createPreSeatReservation(request);
+
+    return HandlePreSeatReservationResponse.newBuilder()
+            .setStatus(response.getStatus())
+            .setMessage(response.getMessage())
+            .build();
+  }
+
+  public HandleDeclareQueueResponse handleDeclareQueue(HandleDeclareQueueRequest request) {
+    /// Hàm thực hiện gọi tới WebSocket server để tạo mới một queue.
+    int accountId = request.getAccountId();
+
+    DeclareQueueRequest req = DeclareQueueRequest.newBuilder()
+            .setAccountId(accountId)
+            .build();
+
+    DeclareQueueResponse response = webSocketServiceGrpcClient.declareQueue(req);
+
+    return HandleDeclareQueueResponse.newBuilder()
+            .setStatus(response.getStatus())
+            .setMessage(response.getMessage())
+            .build();
+  }
+
+  public HandleRemoveQueueResponse handleRemoveQueue(HandleRemoveQueueRequest request) {
+    int accountId = request.getAccountId();
+
+    RemoveQueueRequest req = RemoveQueueRequest.newBuilder()
+            .setAccountId(accountId)
+            .build();
+
+    RemoveQueueResponse response = webSocketServiceGrpcClient.removeQueue(req);
+    return HandleRemoveQueueResponse.newBuilder()
+            .setStatus(response.getStatus())
+            .setMessage(response.getMessage())
             .build();
   }
 }

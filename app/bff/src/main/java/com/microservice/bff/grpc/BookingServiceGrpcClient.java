@@ -64,4 +64,16 @@ public class BookingServiceGrpcClient {
   public GetBookingByShowtimeResponse getBookingByShowtime(GetBookingByShowtimeRequest request) {
     return bookingServiceBlockingStub.getBookingByShowtime(request);
   }
+
+  public HandlePreSeatReservationResponse handlePreSeatReservation(HandlePreSeatReservationRequest request) {
+    return bookingServiceBlockingStub.handlePreSeatReservation(request);
+  }
+
+  public HandleDeclareQueueResponse handleDeclareQueue(HandleDeclareQueueRequest build) {
+    return bookingServiceBlockingStub.handleDeclareQueue(build);
+  }
+
+  public HandleRemoveQueueResponse handleRemoveQueue(HandleRemoveQueueRequest build) {
+    return bookingServiceBlockingStub.handleRemoveQueue(build);
+  }
 }

@@ -2,14 +2,21 @@ package com.microservice.bff.service;
 
 import com.microservice.bff.grpc.BookingServiceGrpcClient;
 import com.microservice.bff.grpc.MovieServiceGrpcClient;
+import com.microservice.bff.request.DeclareQueueRequest;
+import com.microservice.bff.request.ReserveRequest;
 import com.microservice.bff.response.*;
-import com.microservice.booking_proto.GetBookingByShowtimeRequest;
-import com.microservice.booking_proto.GetBookingByShowtimeResponse;
+import com.microservice.bff.response.Cinema;
+import com.microservice.bff.response.Province;
+import com.microservice.bff.response.Room;
+import com.microservice.bff.response.Seat;
+import com.microservice.bff.response.Showtime;
+import com.microservice.booking_proto.*;
 import com.microservice.movie_proto.GetMovieRequest;
 import com.microservice.movie_proto.GetMovieResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.sql.Time;
 import java.util.Date;
@@ -69,7 +76,6 @@ public class BookingService {
 
     /// Lấy thông tin movie.
     int movieId = showtime.getMovieId();
-    System.out.println(movieId);
     GetMovieResponse movieResponse = movieServiceGrpcClient.getMovie(GetMovieRequest.newBuilder().setId(movieId).build());
     Movie movie = null;
     if (movieResponse.hasMovie()) {
@@ -86,5 +92,47 @@ public class BookingService {
             "showtime", showtime,
             "seats", seats
     ));
+  }
+
+  public ResponseData handlePreSeatReservation(ReserveRequest reserve) {
+    Integer showtimeId = reserve.getShowtimeId();
+    List<Integer> seats = reserve.getSeats();
+    if (showtimeId == null || seats == null || seats.isEmpty()) {
+      return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Invalid request");
+    }
+
+    HandlePreSeatReservationRequest request = HandlePreSeatReservationRequest.newBuilder()
+            .setShowtimeId(showtimeId)
+            .addAllSeats(seats)
+            .build();
+
+    HandlePreSeatReservationResponse response = bookingServiceGrpcClient.handlePreSeatReservation(request);
+    return new ResponseData(response.getStatus(), response.getMessage());
+  }
+
+  public ResponseData handleReleaseSeat(ReserveRequest reserve) {
+    return null;
+  }
+
+  public ResponseData declareQueue(DeclareQueueRequest request) {
+    String accountString = request.getAccountId();
+    if (!StringUtils.hasText(accountString)) {
+      return new ResponseData(HttpStatus.BAD_REQUEST.value(), "Unauthenticated user");
+    }
+    int accountId = Integer.parseInt(request.getAccountId());
+    HandleDeclareQueueResponse response = bookingServiceGrpcClient.handleDeclareQueue(HandleDeclareQueueRequest.newBuilder()
+            .setAccountId(accountId)
+            .build());
+    return new ResponseData(response.getStatus(), response.getMessage());
+  }
+
+  public ResponseData removeQueue(DeclareQueueRequest request) {
+    int accountId = Integer.parseInt(request.getAccountId());
+
+    HandleRemoveQueueResponse response = bookingServiceGrpcClient.handleRemoveQueue(HandleRemoveQueueRequest.newBuilder()
+            .setAccountId(accountId)
+            .build());
+
+    return new ResponseData(response.getStatus(), response.getMessage());
   }
 }
