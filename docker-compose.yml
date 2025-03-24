@@ -37,8 +37,8 @@ services:
     env_file:
       - .env
     depends_on:
-        - service-discovery
-        - api-gateway
+      - service-discovery
+      - api-gateway
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
       - EUREKA_INSTANCE_PREFERIPADDRESS=true
@@ -91,13 +91,53 @@ services:
       - AWS_CLOUDFRONT_DOMAIN=${AWS_CLOUDFRONT_DOMAIN}
 
 
+  rabbitmq-service:
+    image: rabbitmq:4.0-management
+    restart: on-failure
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+      - "61613:61613"
+    environment:
+      - RABBITMQ_PLUGINS=rabbitmq_stomp rabbitmq_web_stomp
+    command: [
+      "bash", "-c",
+      "chmod 400 /var/lib/rabbitmq/.erlang.cookie; 
+          rabbitmq-plugins enable rabbitmq_management;
+          rabbitmq-plugins enable rabbitmq_stomp;
+          rabbitmq-server" ]
+
+
+  websocket-service:
+    image: websocket-service:1.0
+    restart: on-failure
+    depends_on:
+      - rabbitmq-service
+    env_file:
+      - .env
+    ports:
+      - "8084:8084"
+      - "9094:9094"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
+      - EUREKA_INSTANCE_PREFERIPADDRESS=true
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - SPRING_RABBITMQ_HOST=rabbitmq-service
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+      - SPRING_MESSAGING_STOMP_BROKER_RELAY_HOST=rabbitmq-service
+      - SPRING_MESSAGING_STOMP_BROKER_RELAY_PORT=61613
+
   booking-service:
     image: booking-service:1.0
     restart: on-failure
     ports:
-        - "9093:9093"
+      - "9093:9093"
     env_file:
-        - .env
+      - .env
     depends_on:
       - service-discovery
       - api-gateway
@@ -109,3 +149,4 @@ services:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
       - EUREKA_INSTANCE_PREFERIPADDRESS=true
       - GRPC_SERVER_MOVIE_ADDRESS=static://movie-service:9092
+      - GRPC_SERVER_WEBSOCKET_ADDRESS=static://websocket-service:9094

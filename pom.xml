@@ -36,6 +36,7 @@
         <module>app/bff</module>
         <module>app/booking-service</module>
         <module>app/fps</module>
+        <module>app/websocket-service</module>
     </modules>
     <properties>
         <java.version>21</java.version>
