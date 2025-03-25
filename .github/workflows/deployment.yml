@@ -34,6 +34,7 @@ jobs:
             docker build -t auth-service:1.0 ./app/auth-service/ || { echo "Failed to build auth-service"; exit 1; }
             docker build -t movie-service:1.0 ./app/movie-service/ || { echo "Failed to build movie-service"; exit 1; }
             docker build -t booking-service:1.0 ./app/booking-service/ || { echo "Failed to build booking-service"; exit 1; }
+            docker build -t websocket-service:1.0 ./app/websocket-service/ || { echo "Failed to build websocket-service"; exit 1; }
             
             echo "Deploying Spring application to DigitalOcean Droplet."
             docker compose up -d || { echo "Failed to start containers"; exit 1; }
