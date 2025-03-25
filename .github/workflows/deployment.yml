@@ -9,6 +9,12 @@ jobs:
   deploy:
     runs-on: ubuntu-22.04
     steps:
+      - name: Login to Docker registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: MaivMinh
+          password: ${{ secrets.ACCESS_TOKEN_DROPLET }}
       - name: executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@v1.2.0
         with:
