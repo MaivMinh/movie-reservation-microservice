@@ -32,13 +32,13 @@ public class BookingController {
     */
 
     /// Kiểm tra xem là anonymous user hay authenticated user
-    if (StringUtils.hasText(request.getHeader("X-ACCOUNT-ID"))) {
-      return ResponseEntity.ok(new ResponseError(HttpStatus.UNAUTHORIZED.value(), "Unauthenticated user"));
+    if (!StringUtils.hasText(request.getHeader("X-ACCOUNT-ID"))) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseError(HttpStatus.UNAUTHORIZED.value(), "Unauthenticated user"));
     }
 
     /// Gọi gRPC xuống booking module.
     ResponseData response = bookingService.getBookingByShowtime(showtimeId);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.status(response.getStatus()).body(response);
   }
 
   /// Hàm thực hiện tạo ra một queue tương ứng mới dựa vào session-id.
@@ -55,12 +55,12 @@ public class BookingController {
     */
 
     /// Kiểm tra xem là anonymous user hay authenticated user
-    if (StringUtils.hasText(servletRequest.getHeader("X-ACCOUNT-ID"))) {
-      return ResponseEntity.ok(new ResponseError(HttpStatus.UNAUTHORIZED.value(), "Unauthenticated user"));
+    if (!StringUtils.hasText(servletRequest.getHeader("X-ACCOUNT-ID"))) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseError(HttpStatus.UNAUTHORIZED.value(), "Unauthenticated user"));
     }
 
-    ResponseData data = bookingService.declareQueue(request);
-    return ResponseEntity.ok(data);
+    ResponseData response = bookingService.declareQueue(request);
+    return ResponseEntity.status(response.getStatus()).body(response);
   }
 
   @PostMapping("/queues/remove")
@@ -76,12 +76,12 @@ public class BookingController {
     */
 
     /// Kiểm tra xem là anonymous user hay authenticated user
-    if (StringUtils.hasText(servletRequest.getHeader("X-ACCOUNT-ID"))) {
-      return ResponseEntity.ok(new ResponseError(HttpStatus.UNAUTHORIZED.value(), "Unauthenticated user"));
+    if (!StringUtils.hasText(servletRequest.getHeader("X-ACCOUNT-ID"))) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseError(HttpStatus.UNAUTHORIZED.value(), "Unauthenticated user"));
     }
 
-    ResponseData data = bookingService.removeQueue(request);
-    return ResponseEntity.ok(data);
+    ResponseData response = bookingService.removeQueue(request);
+    return ResponseEntity.status(response.getStatus()).body(response);
   }
 
   /// Hàm thực hiện giữ chỗ các ghế đã chọn cho Client.
@@ -100,13 +100,13 @@ public class BookingController {
     */
 
     /// Kiểm tra xem là anonymous user hay authenticated user
-    if (StringUtils.hasText(request.getHeader("X-ACCOUNT-ID"))) {
-      return ResponseEntity.ok(new ResponseError(HttpStatus.UNAUTHORIZED.value(), "Unauthenticated user"));
+    if (!StringUtils.hasText(request.getHeader("X-ACCOUNT-ID"))) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseError(HttpStatus.UNAUTHORIZED.value(), "Unauthenticated user"));
     }
 
     /// Gọi gRPC xuống booking module.
     ResponseData response = bookingService.handlePreSeatReservation(reserve);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.status(response.getStatus()).body(response);
   }
 
   /// Hàm thực hiện giải phóng các ghế đã giữ chỗ.
@@ -125,12 +125,12 @@ public class BookingController {
     */
 
     /// Kiểm tra xem là anonymous user hay authenticated user
-    if (StringUtils.hasText(servletRequest.getHeader("X-ACCOUNT-ID"))) {
-      return ResponseEntity.ok(new ResponseError(HttpStatus.UNAUTHORIZED.value(), "Unauthenticated user"));
+    if (!StringUtils.hasText(servletRequest.getHeader("X-ACCOUNT-ID"))) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseError(HttpStatus.UNAUTHORIZED.value(), "Unauthenticated user"));
     }
 
     /// Gọi gRPC xuống booking module.
     ResponseData response = bookingService.handleReleaseSeat(reserve);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.status(response.getStatus()).body(response);
   }
 }

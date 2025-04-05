@@ -18,19 +18,19 @@ public class AuthController {
   @PostMapping(value = "/register")
   public ResponseEntity<ResponseData> register(@RequestBody Register register) {
     ResponseData response = authService.register(register);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.status(response.getStatus()).body(response);
   }
 
   @PostMapping(value = "/login")
   public ResponseEntity<ResponseData> login(@RequestBody LoginRequest request) {
     ResponseData response = authService.login(request);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.status(response.getStatus()).body(response);
   }
 
 
   @PostMapping(value = "/logout")
   public ResponseEntity<ResponseData> logout(@RequestBody Logout logout) {
     ResponseData response = authService.logout(logout.getToken());
-    return ResponseEntity.ok(response);
+    return ResponseEntity.status(response.getStatus()).body(response);
   }
 }
