@@ -95,4 +95,11 @@ public class AuthServiceGrpcServer extends AuthServiceGrpc.AuthServiceImplBase {
     responseObserver.onNext(response);
     responseObserver.onCompleted();
   }
+
+  @Override
+  public void verifyEmail(VerifyEmailRequest request, StreamObserver<VerifyEmailResponse> responseObserver) {
+    VerifyEmailResponse response = authService.verifyEmail(request);
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
 }

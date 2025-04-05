@@ -116,4 +116,15 @@ public class AuthService {
             .message(response.getMessage())
             .build();
   }
+
+  public ResponseData verifyEmail(String token) {
+    VerifyEmailRequest request = VerifyEmailRequest.newBuilder()
+            .setToken(token)
+            .build();
+    VerifyEmailResponse response = grpcClient.verifyEmail(request);
+    return ResponseData.builder()
+            .status(response.getStatus())
+            .message(response.getMessage())
+            .build();
+  }
 }

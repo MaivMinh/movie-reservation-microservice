@@ -41,4 +41,8 @@ public class AuthServiceGrpcClient {
   public ResetPasswordResponse resetPassword(ResetPasswordRequest request) {
     return authServiceBlockingStub.resetPassword(request);
   }
+
+  public VerifyEmailResponse verifyEmail(VerifyEmailRequest request) {
+    return authServiceBlockingStub.verifyEmail(request);
+  }
 }

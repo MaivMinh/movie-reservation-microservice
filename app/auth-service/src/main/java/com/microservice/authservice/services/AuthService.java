@@ -38,6 +38,9 @@ public class AuthService {
   @Value("${application.security.jwt.expiration}")
   private long expiration;
 
+  @Value("${application.server.host}")
+  private String host;
+
   private final AccountService accountService;
   private final RoleService roleService;
   private final AuthenticationManager authenticationManager;
@@ -60,11 +63,29 @@ public class AuthService {
             .role(roleService.findByRoleName(ROLE.USER))
             .build();
 
+    /// Thực  hiện gửi mail xác thực tới cho người dùng.
+    String token = Jwts.builder()
+            .setIssuer("auth-service")
+            .setSubject("Verify Email")
+            .addClaims(Map.of("email", account.getEmail()))
+            .setExpiration(new Date(System.currentTimeMillis() + 30 * 60 * 1000)) // 30 minutes
+            .setIssuedAt(new Date())
+            .signWith(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)))
+            .compact();
+    boolean success = mailService.sendMailToVerifyEmail(account.getEmail(), host + "/api/auth", token);
+    if (!success) {
+      return RegisterResponse.newBuilder().setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value()).setMessage("Can not send email").build();
+    }
+
+
     Account saved = accountService.save(account);
     if (saved == null) {
       return RegisterResponse.newBuilder().setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value()).setMessage("Can not create account").build();
     }
-    return RegisterResponse.newBuilder().setStatus(HttpStatus.OK.value()).setMessage("Account created").build();
+
+
+    /// Nếu gửi mail thành công thì trả về thông báo cho người dùng.
+    return RegisterResponse.newBuilder().setStatus(HttpStatus.OK.value()).setMessage("Account created successfully!").build();
   }
 
   public LoginResponse login(LoginRequest request) {
@@ -82,6 +103,12 @@ public class AuthService {
 
     /// Thực hiện revoke access token cũ nếu có.
     Account account = accountService.findAccountByUsername(authenticated.getName());
+    if (account.getActive() == null || !account.getActive()) {
+      return LoginResponse.newBuilder()
+              .setStatus(HttpStatus.UNAUTHORIZED.value())
+              .setMessage("Account is not active")
+              .build();
+    }
     accessTokenService.revokeAll(account);
 
     /// Thực hiện việc tạo acces token và gửi về cho client.
@@ -308,6 +335,54 @@ public class AuthService {
     return ResetPasswordResponse.newBuilder()
             .setStatus(HttpStatus.OK.value())
             .setMessage("Reset password successfully!")
+            .build();
+  }
+
+  public VerifyEmailResponse verifyEmail(VerifyEmailRequest request) {
+    /// Hàm thực hiện xác thực email của người dùng vừa đăng ký tài khoản.
+    String token = request.getToken();
+    if (!StringUtils.hasText(token)) {
+      return VerifyEmailResponse.newBuilder()
+              .setStatus(HttpStatus.BAD_REQUEST.value())
+              .setMessage("Token is empty")
+              .build();
+    }
+
+    Claims claims;
+    try {
+      claims = Jwts.parserBuilder()
+              .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)))
+              .build()
+              .parseClaimsJws(token)
+              .getBody();
+    } catch (RuntimeException e) {
+      return VerifyEmailResponse.newBuilder()
+              .setStatus(HttpStatus.UNAUTHORIZED.value())
+              .setMessage("Token is invalid")
+              .build();
+    }
+
+    String email = claims.get("email").toString();
+    Account account = accountService.findAccountByEmail(email);
+    if (account == null) {
+      return VerifyEmailResponse.newBuilder()
+              .setStatus(HttpStatus.NOT_FOUND.value())
+              .setMessage("Email is invalid")
+              .build();
+    }
+
+    try {
+      account.setActive(true);
+      accountService.save(account);
+    } catch (RuntimeException e) {
+      return VerifyEmailResponse.newBuilder()
+              .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
+              .setMessage("Can not verify email. Try again!")
+              .build();
+    }
+    return VerifyEmailResponse.newBuilder()
+            .setStatus(HttpStatus.OK.value())
+            .setMessage("Verify email successfully!")
             .build();
   }
 }

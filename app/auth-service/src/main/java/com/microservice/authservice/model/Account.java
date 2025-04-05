@@ -23,4 +23,6 @@ public class Account {
   @OneToOne(targetEntity = Role.class)
   @JoinColumn(name = "role_id", referencedColumnName = "id")
   private Role role;
+
+  private Boolean active;
 }

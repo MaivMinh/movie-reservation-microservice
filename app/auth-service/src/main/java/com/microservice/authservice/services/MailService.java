@@ -32,4 +32,10 @@ public class MailService {
     String text = "Click the link to reset your password: " + link;
     return sendSimpleMail(to, subject, text);
   }
+
+  public boolean sendMailToVerifyEmail(String to, String host, String token) {
+    String link = host + "/verify-email?token=" + token;
+    String text = "Click the link to verify your email: " + link;
+    return sendSimpleMail(to, "Verify your email", text);
+  }
 }

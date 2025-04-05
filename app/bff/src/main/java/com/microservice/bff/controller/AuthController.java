@@ -47,4 +47,10 @@ public class AuthController {
     ResponseData response = authService.resetPassword(resetRequest);
     return ResponseEntity.status(response.getStatus()).body(response);
   }
+
+  @GetMapping(value = "/verify-email")
+  public ResponseEntity<ResponseData> verifyEmail(@RequestParam String token) {
+    ResponseData response = authService.verifyEmail(token);
+    return ResponseEntity.status(response.getStatus()).body(response);
+  }
 }

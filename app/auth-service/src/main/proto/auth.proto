@@ -16,6 +16,16 @@ service AuthService {
   rpc getProfile(ProfileRequest) returns (ProfileResponse);
   rpc forgotPassword(ForgotPasswordRequest) returns (ForgotPasswordResponse);
   rpc resetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
+  rpc verifyEmail(VerifyEmailRequest) returns (VerifyEmailResponse);
+}
+
+message VerifyEmailRequest {
+  string token = 1;
+}
+
+message VerifyEmailResponse {
+  int32 status = 1;
+  string message = 2;
 }
 
 message ForgotPasswordRequest {

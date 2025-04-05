@@ -294,6 +294,37 @@ public final class AuthServiceGrpc {
     return getResetPasswordMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.microservice.auth_proto.VerifyEmailRequest,
+      com.microservice.auth_proto.VerifyEmailResponse> getVerifyEmailMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "verifyEmail",
+      requestType = com.microservice.auth_proto.VerifyEmailRequest.class,
+      responseType = com.microservice.auth_proto.VerifyEmailResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.microservice.auth_proto.VerifyEmailRequest,
+      com.microservice.auth_proto.VerifyEmailResponse> getVerifyEmailMethod() {
+    io.grpc.MethodDescriptor<com.microservice.auth_proto.VerifyEmailRequest, com.microservice.auth_proto.VerifyEmailResponse> getVerifyEmailMethod;
+    if ((getVerifyEmailMethod = AuthServiceGrpc.getVerifyEmailMethod) == null) {
+      synchronized (AuthServiceGrpc.class) {
+        if ((getVerifyEmailMethod = AuthServiceGrpc.getVerifyEmailMethod) == null) {
+          AuthServiceGrpc.getVerifyEmailMethod = getVerifyEmailMethod =
+              io.grpc.MethodDescriptor.<com.microservice.auth_proto.VerifyEmailRequest, com.microservice.auth_proto.VerifyEmailResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "verifyEmail"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.microservice.auth_proto.VerifyEmailRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.microservice.auth_proto.VerifyEmailResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new AuthServiceMethodDescriptorSupplier("verifyEmail"))
+              .build();
+        }
+      }
+    }
+    return getVerifyEmailMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -404,6 +435,13 @@ public final class AuthServiceGrpc {
         io.grpc.stub.StreamObserver<com.microservice.auth_proto.ResetPasswordResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getResetPasswordMethod(), responseObserver);
     }
+
+    /**
+     */
+    default void verifyEmail(com.microservice.auth_proto.VerifyEmailRequest request,
+        io.grpc.stub.StreamObserver<com.microservice.auth_proto.VerifyEmailResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getVerifyEmailMethod(), responseObserver);
+    }
   }
 
   /**
@@ -504,6 +542,14 @@ public final class AuthServiceGrpc {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getResetPasswordMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void verifyEmail(com.microservice.auth_proto.VerifyEmailRequest request,
+        io.grpc.stub.StreamObserver<com.microservice.auth_proto.VerifyEmailResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getVerifyEmailMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -583,6 +629,13 @@ public final class AuthServiceGrpc {
     public com.microservice.auth_proto.ResetPasswordResponse resetPassword(com.microservice.auth_proto.ResetPasswordRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getResetPasswordMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.microservice.auth_proto.VerifyEmailResponse verifyEmail(com.microservice.auth_proto.VerifyEmailRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getVerifyEmailMethod(), getCallOptions(), request);
     }
   }
 
@@ -673,6 +726,14 @@ public final class AuthServiceGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getResetPasswordMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.microservice.auth_proto.VerifyEmailResponse> verifyEmail(
+        com.microservice.auth_proto.VerifyEmailRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getVerifyEmailMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_DO_AUTHENTICATE = 0;
@@ -684,6 +745,7 @@ public final class AuthServiceGrpc {
   private static final int METHODID_GET_PROFILE = 6;
   private static final int METHODID_FORGOT_PASSWORD = 7;
   private static final int METHODID_RESET_PASSWORD = 8;
+  private static final int METHODID_VERIFY_EMAIL = 9;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -737,6 +799,10 @@ public final class AuthServiceGrpc {
         case METHODID_RESET_PASSWORD:
           serviceImpl.resetPassword((com.microservice.auth_proto.ResetPasswordRequest) request,
               (io.grpc.stub.StreamObserver<com.microservice.auth_proto.ResetPasswordResponse>) responseObserver);
+          break;
+        case METHODID_VERIFY_EMAIL:
+          serviceImpl.verifyEmail((com.microservice.auth_proto.VerifyEmailRequest) request,
+              (io.grpc.stub.StreamObserver<com.microservice.auth_proto.VerifyEmailResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -819,6 +885,13 @@ public final class AuthServiceGrpc {
               com.microservice.auth_proto.ResetPasswordRequest,
               com.microservice.auth_proto.ResetPasswordResponse>(
                 service, METHODID_RESET_PASSWORD)))
+        .addMethod(
+          getVerifyEmailMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.microservice.auth_proto.VerifyEmailRequest,
+              com.microservice.auth_proto.VerifyEmailResponse>(
+                service, METHODID_VERIFY_EMAIL)))
         .build();
   }
 
@@ -876,6 +949,7 @@ public final class AuthServiceGrpc {
               .addMethod(getGetProfileMethod())
               .addMethod(getForgotPasswordMethod())
               .addMethod(getResetPasswordMethod())
+              .addMethod(getVerifyEmailMethod())
               .build();
         }
       }
