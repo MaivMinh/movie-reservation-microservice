@@ -32,6 +32,7 @@ public class AuthService {
 
   private final AccessTokenService accessTokenService;
   private final JwtUtilsService jwtUtilsService;
+  private final MailService mailService;
   @Value("${application.security.jwt.secret-key}")
   private String secret;
   @Value("${application.security.jwt.expiration}")
@@ -213,5 +214,100 @@ public class AuthService {
       return IsAdminResponse.newBuilder().setIsAdmin(false).build();
     }
     return IsAdminResponse.newBuilder().setIsAdmin(true).build();
+  }
+
+  public ForgotPasswordResponse forgotPassword(ForgotPasswordRequest request) {
+    /// Hàm thực hiện lấy thông tin của email và host. Sau đó kiểm tra email có tồn tại hay không.
+    /// Nếu email tồn tại, gửi link đặt lại mật khẩu về email.
+
+    String email = request.getEmail();
+    String host = request.getHost();
+
+    if (!StringUtils.hasText(email) || !StringUtils.hasText(host)) {
+      return ForgotPasswordResponse.newBuilder()
+              .setStatus(HttpStatus.BAD_REQUEST.value())
+              .setMessage("Email or host is empty")
+              .build();
+    }
+
+    Account account = accountService.findAccountByEmail(email);
+    if (account == null) {
+      return ForgotPasswordResponse.newBuilder()
+              .setStatus(HttpStatus.NOT_FOUND.value())
+              .setMessage("Email not found")
+              .build();
+    }
+
+    String token = Jwts.builder()
+            .setIssuer("auth-service")
+            .setSubject("Reset Password")
+            .addClaims(Map.of("email", account.getEmail()))
+            .setExpiration(new Date(System.currentTimeMillis() + 30 * 60 * 1000)) // 30 minutes
+            .setIssuedAt(new Date())
+            .signWith(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)))
+            .compact();
+
+    /// Thực hiện gửi email về cho người dùng.
+    boolean success = mailService.sendMailToResetPassword(account.getEmail(), "Reset Password", host, token);
+    if (!success) {
+      return ForgotPasswordResponse.newBuilder()
+              .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
+              .setMessage("Can not send email")
+              .build();
+    }
+    return ForgotPasswordResponse.newBuilder()
+            .setStatus(HttpStatus.OK.value())
+            .setMessage("Reset password link sent to email")
+            .build();
+  }
+
+  public ResetPasswordResponse resetPassword(ResetPasswordRequest request) {
+    /// Hàm thực hiện lấy token và password từ request.
+    /// Nếu token hợp lệ thì thay đổi password dựa vào email ở trong token.
+
+    String token = request.getToken();
+    String password = request.getPassword();
+
+    if (!StringUtils.hasText(token) || !StringUtils.hasText(password)) {
+      return ResetPasswordResponse.newBuilder()
+              .setStatus(HttpStatus.BAD_REQUEST.value())
+              .setMessage("Token or password is empty")
+              .build();
+    }
+
+    Claims claims;
+    try {
+      claims = Jwts.parserBuilder()
+              .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)))
+              .build()
+              .parseClaimsJws(token)
+              .getBody();
+    } catch (RuntimeException e) {
+      return ResetPasswordResponse.newBuilder()
+              .setStatus(HttpStatus.UNAUTHORIZED.value())
+              .setMessage("Token is invalid")
+              .build();
+    }
+    String email = claims.get("email").toString();
+    Account account = accountService.findAccountByEmail(email);
+    if (account == null) {
+      return ResetPasswordResponse.newBuilder()
+              .setStatus(HttpStatus.NOT_FOUND.value())
+              .setMessage("Email is invalid")
+              .build();
+    }
+    account.setPassword(passwordEncoder.encode(password));
+    try {
+      accountService.save(account);
+    } catch (RuntimeException e) {
+      return ResetPasswordResponse.newBuilder()
+              .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
+              .setMessage("Can not reset password. Try again!")
+              .build();
+    }
+    return ResetPasswordResponse.newBuilder()
+            .setStatus(HttpStatus.OK.value())
+            .setMessage("Reset password successfully!")
+            .build();
   }
 }

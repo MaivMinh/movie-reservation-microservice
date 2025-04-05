@@ -3,6 +3,7 @@ package com.microservice.bff.service;
 import com.microservice.auth_proto.*;
 import com.microservice.bff.grpc.AuthServiceGrpcClient;
 import com.microservice.bff.request.Register;
+import com.microservice.bff.request.ResetRequest;
 import com.microservice.bff.response.ResponseData;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -89,5 +90,30 @@ public class AuthService {
             .build();
     IsAdminResponse response = grpcClient.isAdmin(request);
     return response.getIsAdmin();
+  }
+
+  public ResponseData forgotPassword(String email, String host) {
+    ForgotPasswordRequest request = ForgotPasswordRequest.newBuilder()
+            .setEmail(email)
+            .setHost(host)
+            .build();
+    ForgotPasswordResponse response = grpcClient.forgotPassword(request);
+    return ResponseData.builder()
+            .status(response.getStatus())
+            .message(response.getMessage())
+            .build();
+  }
+
+  public ResponseData resetPassword(ResetRequest resetRequest) {
+    ResetPasswordRequest request = ResetPasswordRequest.newBuilder()
+            .setToken(resetRequest.getToken())
+            .setPassword(resetRequest.getPassword())
+            .build();
+
+    ResetPasswordResponse response = grpcClient.resetPassword(request);
+    return ResponseData.builder()
+            .status(response.getStatus())
+            .message(response.getMessage())
+            .build();
   }
 }

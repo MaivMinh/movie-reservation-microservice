@@ -232,6 +232,68 @@ public final class AuthServiceGrpc {
     return getGetProfileMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.microservice.auth_proto.ForgotPasswordRequest,
+      com.microservice.auth_proto.ForgotPasswordResponse> getForgotPasswordMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "forgotPassword",
+      requestType = com.microservice.auth_proto.ForgotPasswordRequest.class,
+      responseType = com.microservice.auth_proto.ForgotPasswordResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.microservice.auth_proto.ForgotPasswordRequest,
+      com.microservice.auth_proto.ForgotPasswordResponse> getForgotPasswordMethod() {
+    io.grpc.MethodDescriptor<com.microservice.auth_proto.ForgotPasswordRequest, com.microservice.auth_proto.ForgotPasswordResponse> getForgotPasswordMethod;
+    if ((getForgotPasswordMethod = AuthServiceGrpc.getForgotPasswordMethod) == null) {
+      synchronized (AuthServiceGrpc.class) {
+        if ((getForgotPasswordMethod = AuthServiceGrpc.getForgotPasswordMethod) == null) {
+          AuthServiceGrpc.getForgotPasswordMethod = getForgotPasswordMethod =
+              io.grpc.MethodDescriptor.<com.microservice.auth_proto.ForgotPasswordRequest, com.microservice.auth_proto.ForgotPasswordResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "forgotPassword"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.microservice.auth_proto.ForgotPasswordRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.microservice.auth_proto.ForgotPasswordResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new AuthServiceMethodDescriptorSupplier("forgotPassword"))
+              .build();
+        }
+      }
+    }
+    return getForgotPasswordMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<com.microservice.auth_proto.ResetPasswordRequest,
+      com.microservice.auth_proto.ResetPasswordResponse> getResetPasswordMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "resetPassword",
+      requestType = com.microservice.auth_proto.ResetPasswordRequest.class,
+      responseType = com.microservice.auth_proto.ResetPasswordResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.microservice.auth_proto.ResetPasswordRequest,
+      com.microservice.auth_proto.ResetPasswordResponse> getResetPasswordMethod() {
+    io.grpc.MethodDescriptor<com.microservice.auth_proto.ResetPasswordRequest, com.microservice.auth_proto.ResetPasswordResponse> getResetPasswordMethod;
+    if ((getResetPasswordMethod = AuthServiceGrpc.getResetPasswordMethod) == null) {
+      synchronized (AuthServiceGrpc.class) {
+        if ((getResetPasswordMethod = AuthServiceGrpc.getResetPasswordMethod) == null) {
+          AuthServiceGrpc.getResetPasswordMethod = getResetPasswordMethod =
+              io.grpc.MethodDescriptor.<com.microservice.auth_proto.ResetPasswordRequest, com.microservice.auth_proto.ResetPasswordResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "resetPassword"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.microservice.auth_proto.ResetPasswordRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.microservice.auth_proto.ResetPasswordResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new AuthServiceMethodDescriptorSupplier("resetPassword"))
+              .build();
+        }
+      }
+    }
+    return getResetPasswordMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -328,6 +390,20 @@ public final class AuthServiceGrpc {
         io.grpc.stub.StreamObserver<com.microservice.auth_proto.ProfileResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetProfileMethod(), responseObserver);
     }
+
+    /**
+     */
+    default void forgotPassword(com.microservice.auth_proto.ForgotPasswordRequest request,
+        io.grpc.stub.StreamObserver<com.microservice.auth_proto.ForgotPasswordResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getForgotPasswordMethod(), responseObserver);
+    }
+
+    /**
+     */
+    default void resetPassword(com.microservice.auth_proto.ResetPasswordRequest request,
+        io.grpc.stub.StreamObserver<com.microservice.auth_proto.ResetPasswordResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getResetPasswordMethod(), responseObserver);
+    }
   }
 
   /**
@@ -412,6 +488,22 @@ public final class AuthServiceGrpc {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getGetProfileMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void forgotPassword(com.microservice.auth_proto.ForgotPasswordRequest request,
+        io.grpc.stub.StreamObserver<com.microservice.auth_proto.ForgotPasswordResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getForgotPasswordMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void resetPassword(com.microservice.auth_proto.ResetPasswordRequest request,
+        io.grpc.stub.StreamObserver<com.microservice.auth_proto.ResetPasswordResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getResetPasswordMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -477,6 +569,20 @@ public final class AuthServiceGrpc {
     public com.microservice.auth_proto.ProfileResponse getProfile(com.microservice.auth_proto.ProfileRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getGetProfileMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.microservice.auth_proto.ForgotPasswordResponse forgotPassword(com.microservice.auth_proto.ForgotPasswordRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getForgotPasswordMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.microservice.auth_proto.ResetPasswordResponse resetPassword(com.microservice.auth_proto.ResetPasswordRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getResetPasswordMethod(), getCallOptions(), request);
     }
   }
 
@@ -551,6 +657,22 @@ public final class AuthServiceGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getGetProfileMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.microservice.auth_proto.ForgotPasswordResponse> forgotPassword(
+        com.microservice.auth_proto.ForgotPasswordRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getForgotPasswordMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.microservice.auth_proto.ResetPasswordResponse> resetPassword(
+        com.microservice.auth_proto.ResetPasswordRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getResetPasswordMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_DO_AUTHENTICATE = 0;
@@ -560,6 +682,8 @@ public final class AuthServiceGrpc {
   private static final int METHODID_POST_LOGIN = 4;
   private static final int METHODID_POST_LOGOUT = 5;
   private static final int METHODID_GET_PROFILE = 6;
+  private static final int METHODID_FORGOT_PASSWORD = 7;
+  private static final int METHODID_RESET_PASSWORD = 8;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -605,6 +729,14 @@ public final class AuthServiceGrpc {
         case METHODID_GET_PROFILE:
           serviceImpl.getProfile((com.microservice.auth_proto.ProfileRequest) request,
               (io.grpc.stub.StreamObserver<com.microservice.auth_proto.ProfileResponse>) responseObserver);
+          break;
+        case METHODID_FORGOT_PASSWORD:
+          serviceImpl.forgotPassword((com.microservice.auth_proto.ForgotPasswordRequest) request,
+              (io.grpc.stub.StreamObserver<com.microservice.auth_proto.ForgotPasswordResponse>) responseObserver);
+          break;
+        case METHODID_RESET_PASSWORD:
+          serviceImpl.resetPassword((com.microservice.auth_proto.ResetPasswordRequest) request,
+              (io.grpc.stub.StreamObserver<com.microservice.auth_proto.ResetPasswordResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -673,6 +805,20 @@ public final class AuthServiceGrpc {
               com.microservice.auth_proto.ProfileRequest,
               com.microservice.auth_proto.ProfileResponse>(
                 service, METHODID_GET_PROFILE)))
+        .addMethod(
+          getForgotPasswordMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.microservice.auth_proto.ForgotPasswordRequest,
+              com.microservice.auth_proto.ForgotPasswordResponse>(
+                service, METHODID_FORGOT_PASSWORD)))
+        .addMethod(
+          getResetPasswordMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.microservice.auth_proto.ResetPasswordRequest,
+              com.microservice.auth_proto.ResetPasswordResponse>(
+                service, METHODID_RESET_PASSWORD)))
         .build();
   }
 
@@ -728,6 +874,8 @@ public final class AuthServiceGrpc {
               .addMethod(getPostLoginMethod())
               .addMethod(getPostLogoutMethod())
               .addMethod(getGetProfileMethod())
+              .addMethod(getForgotPasswordMethod())
+              .addMethod(getResetPasswordMethod())
               .build();
         }
       }
