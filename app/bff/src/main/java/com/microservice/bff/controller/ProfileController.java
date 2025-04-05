@@ -20,12 +20,11 @@ public class ProfileController {
   @GetMapping(value = "")
   public ResponseEntity<ResponseData> getProfile(HttpServletRequest request) {
     String accountId = request.getHeader("X-ACCOUNT-ID");
-    System.out.println("Account ID: " + accountId);
     if (!StringUtils.hasText(accountId)) {
-      return ResponseEntity.ok(new ResponseData(HttpStatus.UNAUTHORIZED.value(), "Unauthorized"));
+      return ResponseEntity.status(401).body(new ResponseData(HttpStatus.UNAUTHORIZED.value(), "Unauthorized"));
     }
     int id = Integer.parseInt(accountId);
     ResponseData response = authService.getProfile(id);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.status(response.getStatus()).body(response);
   }
 }

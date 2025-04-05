@@ -3,10 +3,12 @@ package com.microservice.bff.controller;
 import com.microservice.bff.request.CreateCinema;
 import com.microservice.bff.request.UpdateCinema;
 import com.microservice.bff.response.ResponseData;
+import com.microservice.bff.response.ResponseError;
 import com.microservice.bff.service.AuthService;
 import com.microservice.bff.service.CinemaService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +32,7 @@ public class CinemaController {
     page = page < 1 ? 0 : page - 1;
     size = size < 1 ? 10 : size;
     ResponseData response = bookingService.getCinemas(page, size, sort);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.status(response.getStatus()).body(response);
   }
 
   /// Hàm thực hiện lấy thông tin rạp cụ thể.
@@ -38,7 +40,7 @@ public class CinemaController {
   @GetMapping(value = "/{id}")
   public ResponseEntity<ResponseData> getCinema(@PathVariable("id") int id) {
     ResponseData response = bookingService.getCinema(id);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.status(response.getStatus()).body(response);
   }
 
   /// Hàm thực hiện tìm kiếm theo tiêu chí.
@@ -51,7 +53,7 @@ public class CinemaController {
     page = page < 1 ? 0 : page - 1;
     size = size < 1 ? 10 : size;
     ResponseData response = bookingService.searchCinemas(criteria, page, size, sort);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.status(response.getStatus()).body(response);
   }
 
   /// Hàm thực hiện tạo mới Cinema.
@@ -62,40 +64,40 @@ public class CinemaController {
     /// Kiểm tra xem account có phải là ADMIN không.
     String token = request.getHeader("X-ACCOUNT-ID");
     if (!StringUtils.hasText(token)) {
-      return ResponseEntity.ok(new ResponseData(401, "Unauthorized"));
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).body(new ResponseError(401, "Unauthorized"));
     }
 
     try {
       int id = Integer.parseInt(token);
       if (!authService.isAdmin(id)) {
-        return ResponseEntity.ok(new ResponseData(403, "Forbidden"));
+        return ResponseEntity.status(403).body(new ResponseData(403, "Forbidden"));
       }
     } catch (Exception e) {
-      return ResponseEntity.ok(new ResponseData(401, "Unauthorized"));
+      return ResponseEntity.status(401).body(new ResponseData(401, "Unauthorized"));
     }
 
 
     ResponseData response = bookingService.createCinema(createCinema);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.status(response.getStatus()).body(response);
   }
 
   @PatchMapping(value = "/{id}")
   public ResponseEntity<ResponseData> updateCinema(@PathVariable(value = "id") int id, @RequestBody UpdateCinema updateCinema, HttpServletRequest request) {
     String token = request.getHeader("X-ACCOUNT-ID");
     if (!StringUtils.hasText(token)) {
-      return ResponseEntity.ok(new ResponseData(401, "Unauthorized"));
+      return ResponseEntity.status(401).body(new ResponseData(401, "Unauthorized"));
     }
 
     try {
       int accountId = Integer.parseInt(token);
       if (!authService.isAdmin(accountId)) {
-        return ResponseEntity.ok(new ResponseData(403, "Forbidden"));
+        return ResponseEntity.status(403).body(new ResponseData(403, "Forbidden"));
       }
     } catch (Exception e) {
-      return ResponseEntity.ok(new ResponseData(401, "Unauthorized"));
+      return ResponseEntity.status(401).body(new ResponseData(401, "Unauthorized"));
     }
 
     ResponseData response = bookingService.updateCinema(id, updateCinema);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.status(response.getStatus()).body(response);
   }
 }

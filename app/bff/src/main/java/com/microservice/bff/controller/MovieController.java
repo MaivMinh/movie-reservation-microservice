@@ -48,22 +48,22 @@ public class MovieController {
     /// Kiểm tra có phải ADMIN không.
     String accountId = request.getHeader("X-ACCOUNT-ID");
     if (!StringUtils.hasText(accountId)) {
-      return ResponseEntity.status(200).body(ResponseData.builder().status(401).message("Unauthorized").build());
+      return ResponseEntity.status(401).body(ResponseData.builder().status(401).message("Unauthorized").build());
     }
 
-    Integer id = null;
+    int id;
     try {
       id = Integer.parseInt(accountId);
     } catch (NumberFormatException e) {
       log.error("Error: ", e);
-      return ResponseEntity.status(200).body(ResponseData.builder().status(401).message("Unauthorized").build());
+      return ResponseEntity.status(401).body(ResponseData.builder().status(401).message("Unauthorized").build());
     }
 
     if (!authService.isAdmin(id)) {
-      return ResponseEntity.ok(new ResponseData(HttpStatus.FORBIDDEN.value(), "Forbidden"));
+      return ResponseEntity.status(403).body(new ResponseData(HttpStatus.FORBIDDEN.value(), "Forbidden"));
     }
     ResponseData response = movieService.createMovie(newMovie);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.status(response.getStatus()).body(response);
   }
 
   @PatchMapping(value = "/{movieId}")
@@ -83,7 +83,7 @@ public class MovieController {
     /// Kiểm tra có phải ADMIN không.
     String accountId = request.getHeader("X-ACCOUNT-ID");
     if (!StringUtils.hasText(accountId)) {
-      return ResponseEntity.status(200).body(ResponseData.builder().status(401).message("Unauthorized").build());
+      return ResponseEntity.status(401).body(ResponseData.builder().status(401).message("Unauthorized").build());
     }
 
     Integer id = null;
@@ -91,14 +91,14 @@ public class MovieController {
       id = Integer.parseInt(accountId);
     } catch (NumberFormatException e) {
       log.error("Error: ", e);
-      return ResponseEntity.status(200).body(ResponseData.builder().status(401).message("Unauthorized").build());
+      return ResponseEntity.status(401).body(ResponseData.builder().status(401).message("Unauthorized").build());
     }
 
     if (!authService.isAdmin(id)) {
-      return ResponseEntity.ok(new ResponseData(HttpStatus.FORBIDDEN.value(), "Forbidden"));
+      return ResponseEntity.status(403).body(new ResponseData(HttpStatus.FORBIDDEN.value(), "Forbidden"));
     }
     ResponseData response = movieService.updateMovie(movieId, updateMovie);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.status(response.getStatus()).body(response);
   }
 
   /// ================== /ADMIN ROLE ================== ///
@@ -112,7 +112,7 @@ public class MovieController {
     page = (page > 0) ? (page - 1) : 0;
     size = (size > 0) ? size : 10;
     ResponseData response = movieService.getMovies(page, size, sort);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.status(response.getStatus()).body(response);
   }
 
 
@@ -121,7 +121,7 @@ public class MovieController {
   @GetMapping(value = "/{id}")
   public ResponseEntity<ResponseData> getMovie(@PathVariable("id") int id) {
     ResponseData response = movieService.getMovie(id);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.status(response.getStatus()).body(response);
   }
 
 
@@ -147,7 +147,7 @@ public class MovieController {
       criteria = new HashMap<>();
     }
     ResponseData response = movieService.searchMovies(criteria, page, size, sort);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.status(response.getStatus()).body(response);
   }
 
   /// Phương thức lấy danh sách suất chiếu của phim.
@@ -157,7 +157,7 @@ public class MovieController {
     page = (page > 0) ? (page - 1) : 0;
     size = (size > 0) ? size : 10;
     ResponseData response = showtimeService.getMovieShowtimes(id, page, size, sort);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.status(response.getStatus()).body(response);
   }
 
 
@@ -169,6 +169,6 @@ public class MovieController {
     page = (page > 0) ? (page - 1) : 0;
     size = (size > 0) ? size : 10;
     ResponseData response = movieService.getNowPlayingMovies(page, size, sort);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.status(response.getStatus()).body(response);
   }
 }

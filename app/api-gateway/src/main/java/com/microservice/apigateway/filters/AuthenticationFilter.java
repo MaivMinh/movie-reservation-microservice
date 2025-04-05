@@ -31,7 +31,8 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-    if (exchange.getRequest().getURI().getPath().startsWith("/auth") || exchange.getRequest().getURI().getPath().startsWith("/api-docs/") || exchange.getRequest().getURI().getPath().startsWith("/v3/api-docs")) {
+    System.out.println(exchange.getRequest().getURI().getPath());
+    if (exchange.getRequest().getURI().getPath().startsWith("/api/auth") || exchange.getRequest().getURI().getPath().startsWith("/api-docs/") || exchange.getRequest().getURI().getPath().startsWith("/v3/api-docs")) {
       return chain.filter(exchange);
     }
 
