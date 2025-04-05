@@ -286,7 +286,7 @@ private static final long serialVersionUID = 0L;
               com.microservice.websocket_proto.CreatePreSeatReservationRequest.class, com.microservice.websocket_proto.CreatePreSeatReservationRequest.Builder.class);
     }
 
-    // Construct using websocket_proto.microservice.com.java.main.src.websocket-service.CreatePreSeatReservationRequest.newBuilder()
+    // Construct using com.microservice.websocket_proto.CreatePreSeatReservationRequest.newBuilder()
     private Builder() {
 
     }

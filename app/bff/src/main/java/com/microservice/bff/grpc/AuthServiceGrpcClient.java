@@ -33,4 +33,16 @@ public class AuthServiceGrpcClient {
   public IsAdminResponse isAdmin(IsAdminRequest request) {
     return authServiceBlockingStub.isAdmin(request);
   }
+
+  public ForgotPasswordResponse forgotPassword(ForgotPasswordRequest request) {
+    return authServiceBlockingStub.forgotPassword(request);
+  }
+
+  public ResetPasswordResponse resetPassword(ResetPasswordRequest request) {
+    return authServiceBlockingStub.resetPassword(request);
+  }
+
+  public VerifyEmailResponse verifyEmail(VerifyEmailRequest request) {
+    return authServiceBlockingStub.verifyEmail(request);
+  }
 }

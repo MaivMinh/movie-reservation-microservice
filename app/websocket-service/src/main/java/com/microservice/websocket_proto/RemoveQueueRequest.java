@@ -229,7 +229,7 @@ private static final long serialVersionUID = 0L;
               com.microservice.websocket_proto.RemoveQueueRequest.class, com.microservice.websocket_proto.RemoveQueueRequest.Builder.class);
     }
 
-    // Construct using websocket_proto.microservice.com.java.main.src.websocket-service.RemoveQueueRequest.newBuilder()
+    // Construct using com.microservice.websocket_proto.RemoveQueueRequest.newBuilder()
     private Builder() {
 
     }

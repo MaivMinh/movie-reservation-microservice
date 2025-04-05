@@ -3,9 +3,11 @@ package com.microservice.bff.controller;
 import com.microservice.bff.request.LoginRequest;
 import com.microservice.bff.request.Logout;
 import com.microservice.bff.request.Register;
+import com.microservice.bff.request.ResetRequest;
 import com.microservice.bff.response.ResponseData;
 import com.microservice.bff.service.AuthService;
 import lombok.AllArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +33,24 @@ public class AuthController {
   @PostMapping(value = "/logout")
   public ResponseEntity<ResponseData> logout(@RequestBody Logout logout) {
     ResponseData response = authService.logout(logout.getToken());
+    return ResponseEntity.status(response.getStatus()).body(response);
+  }
+
+  @GetMapping(value = "/forgot-password")
+  public ResponseEntity<ResponseData> forgotPassword(@RequestParam String email, @RequestParam String host) {
+    ResponseData response = authService.forgotPassword(email, host);
+    return ResponseEntity.status(response.getStatus()).body(response);
+  }
+
+  @PostMapping(value = "/reset-password")
+  public ResponseEntity<ResponseData> resetPassword(@RequestBody ResetRequest resetRequest) {
+    ResponseData response = authService.resetPassword(resetRequest);
+    return ResponseEntity.status(response.getStatus()).body(response);
+  }
+
+  @GetMapping(value = "/verify-email")
+  public ResponseEntity<ResponseData> verifyEmail(@RequestParam String token) {
+    ResponseData response = authService.verifyEmail(token);
     return ResponseEntity.status(response.getStatus()).body(response);
   }
 }

@@ -26,6 +26,8 @@ services:
       - SPRING_DATA_REDIS_HOST=redis-api-gateway
       - SPRING_DATA_REDIS_PORT=6379
       - GRPC_SERVER_AUTH_ADDRESS=static://auth-service:9091
+      - APPLICATION_SERVER_HOST=static://api-gateway:8888
+      # APPLICATION_SERVER_PORT được dùng để gửi email tới cho người dùng mới tạo tài khoản. Xem trong chức năng register.
 
 
 

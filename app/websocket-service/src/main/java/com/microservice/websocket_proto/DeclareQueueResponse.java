@@ -278,7 +278,7 @@ private static final long serialVersionUID = 0L;
               com.microservice.websocket_proto.DeclareQueueResponse.class, com.microservice.websocket_proto.DeclareQueueResponse.Builder.class);
     }
 
-    // Construct using websocket_proto.microservice.com.java.main.src.websocket-service.DeclareQueueResponse.newBuilder()
+    // Construct using com.microservice.websocket_proto.DeclareQueueResponse.newBuilder()
     private Builder() {
 
     }

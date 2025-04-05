@@ -81,4 +81,25 @@ public class AuthServiceGrpcServer extends AuthServiceGrpc.AuthServiceImplBase {
     responseObserver.onNext(response);
     responseObserver.onCompleted();
   }
+
+  @Override
+  public void forgotPassword(ForgotPasswordRequest request, StreamObserver<ForgotPasswordResponse> responseObserver) {
+    ForgotPasswordResponse response = authService.forgotPassword(request);
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
+
+  @Override
+  public void resetPassword(ResetPasswordRequest request, StreamObserver<ResetPasswordResponse> responseObserver) {
+    ResetPasswordResponse response = authService.resetPassword(request);
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
+
+  @Override
+  public void verifyEmail(VerifyEmailRequest request, StreamObserver<VerifyEmailResponse> responseObserver) {
+    VerifyEmailResponse response = authService.verifyEmail(request);
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
 }
