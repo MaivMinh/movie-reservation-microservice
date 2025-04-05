@@ -34,13 +34,13 @@ jobs:
             mvn compile
             mvn package
             
-            docker build -t service-discovery:1.0 ./app/service-discovery/ || { echo "Failed to build service-discovery"; exit 1; }
-            docker build -t api-gateway:1.0 ./app/api-gateway/ || { echo "Failed to build api-gateway"; exit 1; }
-            docker build -t bff:1.0 ./app/bff/ || { echo "Failed to build bff"; exit 1; }
-            docker build -t auth-service:1.0 ./app/auth-service/ || { echo "Failed to build auth-service"; exit 1; }
-            docker build -t movie-service:1.0 ./app/movie-service/ || { echo "Failed to build movie-service"; exit 1; }
-            docker build -t booking-service:1.0 ./app/booking-service/ || { echo "Failed to build booking-service"; exit 1; }
-            docker build -t websocket-service:1.0 ./app/websocket-service/ || { echo "Failed to build websocket-service"; exit 1; }
+            docker build --no-cache -t service-discovery:1.0 ./app/service-discovery/ || { echo "Failed to build service-discovery"; exit 1; }
+            docker build --no-cache -t api-gateway:1.0 ./app/api-gateway/ || { echo "Failed to build api-gateway"; exit 1; }
+            docker build --no-cache -t bff:1.0 ./app/bff/ || { echo "Failed to build bff"; exit 1; }
+            docker build --no-cache -t auth-service:1.0 ./app/auth-service/ || { echo "Failed to build auth-service"; exit 1; }
+            docker build --no-cache -t movie-service:1.0 ./app/movie-service/ || { echo "Failed to build movie-service"; exit 1; }
+            docker build --no-cache -t booking-service:1.0 ./app/booking-service/ || { echo "Failed to build booking-service"; exit 1; }
+            docker build --no-cache -t websocket-service:1.0 ./app/websocket-service/ || { echo "Failed to build websocket-service"; exit 1; }
             
             echo "Deploying Spring application to DigitalOcean Droplet."
             docker compose up -d || { echo "Failed to start containers"; exit 1; }
