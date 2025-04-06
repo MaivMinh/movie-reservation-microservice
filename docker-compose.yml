@@ -66,6 +66,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
       - EUREKA_INSTANCE_PREFERIPADDRESS=true
+      - BRAVO_API_KEY=${BRAVO_API_KEY}
 
 
   movie-service:

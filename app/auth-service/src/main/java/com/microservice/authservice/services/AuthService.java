@@ -11,18 +11,23 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestClient;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -45,6 +50,8 @@ public class AuthService {
   private final RoleService roleService;
   private final AuthenticationManager authenticationManager;
   private final PasswordEncoder passwordEncoder;
+  private final RestClient restClient;
+
 
   public RegisterResponse register(RegisterRequest request) {
     /// Hàm tạo một Account mới bên trong hệ thống.
@@ -72,17 +79,64 @@ public class AuthService {
             .setIssuedAt(new Date())
             .signWith(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)))
             .compact();
-    boolean success = mailService.sendMailToVerifyEmail(account.getEmail(), host + "/api/auth", token);
-    if (!success) {
+
+
+    String emailTemplate = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff; }
+            .header { background-color: #0d253f; padding: 20px; text-align: center; }
+            .header h1 { color: #ffffff; margin: 0; }
+            .content { padding: 20px; color: #333333; }
+            .button { display: inline-block; background-color: #01b4e4; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 4px; margin: 20px 0; }
+            .footer { padding: 20px; text-align: center; font-size: 12px; color: #999999; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>Movie Reservation</h1>
+            </div>
+            <div class="content">
+                <h2>Verify Your Email</h2>
+                <p>Thank you for creating an account with our Movie Reservation service. Please verify your email address to continue.</p>
+                <div style="text-align: center;">
+                    <a href="%s/api/auth/verify-email?token=%s" class="button">Verify Email</a>
+                </div>
+                <p>If you didn't create this account, please ignore this email.</p>
+            </div>
+            <div class="footer">
+                <p>&copy; 2024 Movie Reservation. All rights reserved.</p>
+                <p>This is an automated email, please do not reply.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """.formatted(host, token);
+
+    // Then use this template in your REST client call
+    ResponseEntity<?> response = restClient.post()
+            .uri("/v3/smtp/email")
+            .body(Map.of("sender", Map.of("name", "Movie Reservation Application", "email", "maivanminh.se@gmail.com"), "to", List.of(Map.of("email", account.getEmail())), "subject", "Verify Email", "htmlContent", emailTemplate))
+            .retrieve()
+            .toBodilessEntity();
+
+    if (response.getStatusCode().is2xxSuccessful()) {
+      log.info("Send mail successfully");
+    } else {
+      log.error("Send mail failed");
       return RegisterResponse.newBuilder().setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value()).setMessage("Can not send email").build();
     }
-
 
     Account saved = accountService.save(account);
     if (saved == null) {
       return RegisterResponse.newBuilder().setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value()).setMessage("Can not create account").build();
     }
-
 
     /// Nếu gửi mail thành công thì trả về thông báo cho người dùng.
     return RegisterResponse.newBuilder().setStatus(HttpStatus.OK.value()).setMessage("Account created successfully!").build();
