@@ -82,42 +82,42 @@ public class AuthService {
 
 
     String emailTemplate = """
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-            body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff; }
-            .header { background-color: #0d253f; padding: 20px; text-align: center; }
-            .header h1 { color: #ffffff; margin: 0; }
-            .content { padding: 20px; color: #333333; }
-            .button { display: inline-block; background-color: #01b4e4; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 4px; margin: 20px 0; }
-            .footer { padding: 20px; text-align: center; font-size: 12px; color: #999999; }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="header">
-                <h1>Movie Reservation</h1>
-            </div>
-            <div class="content">
-                <h2>Verify Your Email</h2>
-                <p>Thank you for creating an account with our Movie Reservation service. Please verify your email address to continue.</p>
-                <div style="text-align: center;">
-                    <a href="%s/api/auth/verify-email?token=%s" class="button">Verify Email</a>
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                    body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
+                    .container { max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff; }
+                    .header { background-color: #0d253f; padding: 20px; text-align: center; }
+                    .header h1 { color: #ffffff; margin: 0; }
+                    .content { padding: 20px; color: #333333; }
+                    .button { display: inline-block; background-color: #01b4e4; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 4px; margin: 20px 0; }
+                    .footer { padding: 20px; text-align: center; font-size: 12px; color: #999999; }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>Movie Reservation</h1>
+                    </div>
+                    <div class="content">
+                        <h2>Verify Your Email</h2>
+                        <p>Thank you for creating an account with our Movie Reservation service. Please verify your email address to continue.</p>
+                        <div style="text-align: center;">
+                            <a href="%s/api/auth/verify-email?token=%s" class="button">Verify Email</a>
+                        </div>
+                        <p>If you didn't create this account, please ignore this email.</p>
+                    </div>
+                    <div class="footer">
+                        <p>&copy; 2024 Movie Reservation. All rights reserved.</p>
+                        <p>This is an automated email, please do not reply.</p>
+                    </div>
                 </div>
-                <p>If you didn't create this account, please ignore this email.</p>
-            </div>
-            <div class="footer">
-                <p>&copy; 2024 Movie Reservation. All rights reserved.</p>
-                <p>This is an automated email, please do not reply.</p>
-            </div>
-        </div>
-    </body>
-    </html>
-    """.formatted(host, token);
+            </body>
+            </html>
+            """.formatted(host, token);
 
     // Then use this template in your REST client call
     ResponseEntity<?> response = restClient.post()
@@ -329,13 +329,60 @@ public class AuthService {
             .compact();
 
     /// Thực hiện gửi email về cho người dùng.
-    boolean success = mailService.sendMailToResetPassword(account.getEmail(), "Reset Password", host, token);
-    if (!success) {
-      return ForgotPasswordResponse.newBuilder()
-              .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
-              .setMessage("Can not send email")
-              .build();
+
+    String resetPasswordTemplate = """
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                    body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
+                    .container { max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff; }
+                    .header { background-color: #0d253f; padding: 20px; text-align: center; }
+                    .header h1 { color: #ffffff; margin: 0; }
+                    .content { padding: 20px; color: #333333; }
+                    .button { display: inline-block; background-color: #01b4e4; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 4px; margin: 20px 0; }
+                    .footer { padding: 20px; text-align: center; font-size: 12px; color: #999999; }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>Movie Reservation</h1>
+                    </div>
+                    <div class="content">
+                        <h2>Reset Your Password</h2>
+                        <p>We received a request to reset your password. Click the button below to create a new password.</p>
+                        <div style="text-align: center;">
+                            <a href="%s/account/reset-password?token=%s" class="button">Reset Password</a>
+                        </div>
+                        <p>If you didn't request this, please ignore this email.</p>
+                    </div>
+                    <div class="footer">
+                        <p>&copy; 2024 Movie Reservation. All rights reserved.</p>
+                        <p>This is an automated email, please do not reply.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            """.formatted(host, token);
+
+    // Then use this template in your REST client call
+    ResponseEntity<?> response = restClient.post()
+            .uri("/v3/smtp/email")
+            .body(Map.of("sender", Map.of("name", "Movie Reservation Application", "email", "maivanminh.se@gmail.com"), "to", List.of(Map.of("email", account.getEmail())), "subject", "Reset Password", "htmlContent", resetPasswordTemplate))
+            .retrieve()
+            .toBodilessEntity();
+
+    if (response.getStatusCode().is2xxSuccessful()) {
+      log.info("Send mail successfully");
+    } else {
+      log.error("Send mail failed");
+      return ForgotPasswordResponse.newBuilder().setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value()).setMessage("Can not send email").build();
     }
+
+
     return ForgotPasswordResponse.newBuilder()
             .setStatus(HttpStatus.OK.value())
             .setMessage("Reset password link sent to email")
