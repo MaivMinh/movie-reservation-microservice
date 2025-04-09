@@ -16,8 +16,6 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private LoginSuccessInfo() {
-    accessToken_ = "";
-    tokenType_ = "";
   }
 
   @java.lang.Override
@@ -46,90 +44,55 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int ACCESSTOKEN_FIELD_NUMBER = 1;
-  private volatile java.lang.Object accessToken_;
+  private com.microservice.auth_proto.AccessToken accessToken_;
   /**
-   * <code>string accessToken = 1;</code>
+   * <code>.net.devh.boot.grpc.example.AccessToken accessToken = 1;</code>
+   * @return Whether the accessToken field is set.
+   */
+  @java.lang.Override
+  public boolean hasAccessToken() {
+    return accessToken_ != null;
+  }
+  /**
+   * <code>.net.devh.boot.grpc.example.AccessToken accessToken = 1;</code>
    * @return The accessToken.
    */
   @java.lang.Override
-  public java.lang.String getAccessToken() {
-    java.lang.Object ref = accessToken_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      accessToken_ = s;
-      return s;
-    }
+  public com.microservice.auth_proto.AccessToken getAccessToken() {
+    return accessToken_ == null ? com.microservice.auth_proto.AccessToken.getDefaultInstance() : accessToken_;
   }
   /**
-   * <code>string accessToken = 1;</code>
-   * @return The bytes for accessToken.
+   * <code>.net.devh.boot.grpc.example.AccessToken accessToken = 1;</code>
    */
   @java.lang.Override
-  public com.google.protobuf.ByteString
-      getAccessTokenBytes() {
-    java.lang.Object ref = accessToken_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      accessToken_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public com.microservice.auth_proto.AccessTokenOrBuilder getAccessTokenOrBuilder() {
+    return getAccessToken();
   }
 
-  public static final int EXPIRESIN_FIELD_NUMBER = 2;
-  private long expiresIn_;
+  public static final int REFRESHTOKEN_FIELD_NUMBER = 2;
+  private com.microservice.auth_proto.RefreshToken refreshToken_;
   /**
-   * <code>int64 expiresIn = 2;</code>
-   * @return The expiresIn.
+   * <code>.net.devh.boot.grpc.example.RefreshToken refreshToken = 2;</code>
+   * @return Whether the refreshToken field is set.
    */
   @java.lang.Override
-  public long getExpiresIn() {
-    return expiresIn_;
-  }
-
-  public static final int TOKENTYPE_FIELD_NUMBER = 3;
-  private volatile java.lang.Object tokenType_;
-  /**
-   * <code>string tokenType = 3;</code>
-   * @return The tokenType.
-   */
-  @java.lang.Override
-  public java.lang.String getTokenType() {
-    java.lang.Object ref = tokenType_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      tokenType_ = s;
-      return s;
-    }
+  public boolean hasRefreshToken() {
+    return refreshToken_ != null;
   }
   /**
-   * <code>string tokenType = 3;</code>
-   * @return The bytes for tokenType.
+   * <code>.net.devh.boot.grpc.example.RefreshToken refreshToken = 2;</code>
+   * @return The refreshToken.
    */
   @java.lang.Override
-  public com.google.protobuf.ByteString
-      getTokenTypeBytes() {
-    java.lang.Object ref = tokenType_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      tokenType_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public com.microservice.auth_proto.RefreshToken getRefreshToken() {
+    return refreshToken_ == null ? com.microservice.auth_proto.RefreshToken.getDefaultInstance() : refreshToken_;
+  }
+  /**
+   * <code>.net.devh.boot.grpc.example.RefreshToken refreshToken = 2;</code>
+   */
+  @java.lang.Override
+  public com.microservice.auth_proto.RefreshTokenOrBuilder getRefreshTokenOrBuilder() {
+    return getRefreshToken();
   }
 
   private byte memoizedIsInitialized = -1;
@@ -146,14 +109,11 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(accessToken_)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, accessToken_);
+    if (accessToken_ != null) {
+      output.writeMessage(1, getAccessToken());
     }
-    if (expiresIn_ != 0L) {
-      output.writeInt64(2, expiresIn_);
-    }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(tokenType_)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, tokenType_);
+    if (refreshToken_ != null) {
+      output.writeMessage(2, getRefreshToken());
     }
     getUnknownFields().writeTo(output);
   }
@@ -164,15 +124,13 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(accessToken_)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, accessToken_);
-    }
-    if (expiresIn_ != 0L) {
+    if (accessToken_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(2, expiresIn_);
+        .computeMessageSize(1, getAccessToken());
     }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(tokenType_)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, tokenType_);
+    if (refreshToken_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(2, getRefreshToken());
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -189,12 +147,16 @@ private static final long serialVersionUID = 0L;
     }
     com.microservice.auth_proto.LoginSuccessInfo other = (com.microservice.auth_proto.LoginSuccessInfo) obj;
 
-    if (!getAccessToken()
-        .equals(other.getAccessToken())) return false;
-    if (getExpiresIn()
-        != other.getExpiresIn()) return false;
-    if (!getTokenType()
-        .equals(other.getTokenType())) return false;
+    if (hasAccessToken() != other.hasAccessToken()) return false;
+    if (hasAccessToken()) {
+      if (!getAccessToken()
+          .equals(other.getAccessToken())) return false;
+    }
+    if (hasRefreshToken() != other.hasRefreshToken()) return false;
+    if (hasRefreshToken()) {
+      if (!getRefreshToken()
+          .equals(other.getRefreshToken())) return false;
+    }
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -206,13 +168,14 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + ACCESSTOKEN_FIELD_NUMBER;
-    hash = (53 * hash) + getAccessToken().hashCode();
-    hash = (37 * hash) + EXPIRESIN_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getExpiresIn());
-    hash = (37 * hash) + TOKENTYPE_FIELD_NUMBER;
-    hash = (53 * hash) + getTokenType().hashCode();
+    if (hasAccessToken()) {
+      hash = (37 * hash) + ACCESSTOKEN_FIELD_NUMBER;
+      hash = (53 * hash) + getAccessToken().hashCode();
+    }
+    if (hasRefreshToken()) {
+      hash = (37 * hash) + REFRESHTOKEN_FIELD_NUMBER;
+      hash = (53 * hash) + getRefreshToken().hashCode();
+    }
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -341,12 +304,18 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      accessToken_ = "";
-
-      expiresIn_ = 0L;
-
-      tokenType_ = "";
-
+      if (accessTokenBuilder_ == null) {
+        accessToken_ = null;
+      } else {
+        accessToken_ = null;
+        accessTokenBuilder_ = null;
+      }
+      if (refreshTokenBuilder_ == null) {
+        refreshToken_ = null;
+      } else {
+        refreshToken_ = null;
+        refreshTokenBuilder_ = null;
+      }
       return this;
     }
 
@@ -373,9 +342,16 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.microservice.auth_proto.LoginSuccessInfo buildPartial() {
       com.microservice.auth_proto.LoginSuccessInfo result = new com.microservice.auth_proto.LoginSuccessInfo(this);
-      result.accessToken_ = accessToken_;
-      result.expiresIn_ = expiresIn_;
-      result.tokenType_ = tokenType_;
+      if (accessTokenBuilder_ == null) {
+        result.accessToken_ = accessToken_;
+      } else {
+        result.accessToken_ = accessTokenBuilder_.build();
+      }
+      if (refreshTokenBuilder_ == null) {
+        result.refreshToken_ = refreshToken_;
+      } else {
+        result.refreshToken_ = refreshTokenBuilder_.build();
+      }
       onBuilt();
       return result;
     }
@@ -424,16 +400,11 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(com.microservice.auth_proto.LoginSuccessInfo other) {
       if (other == com.microservice.auth_proto.LoginSuccessInfo.getDefaultInstance()) return this;
-      if (!other.getAccessToken().isEmpty()) {
-        accessToken_ = other.accessToken_;
-        onChanged();
+      if (other.hasAccessToken()) {
+        mergeAccessToken(other.getAccessToken());
       }
-      if (other.getExpiresIn() != 0L) {
-        setExpiresIn(other.getExpiresIn());
-      }
-      if (!other.getTokenType().isEmpty()) {
-        tokenType_ = other.tokenType_;
-        onChanged();
+      if (other.hasRefreshToken()) {
+        mergeRefreshToken(other.getRefreshToken());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -462,20 +433,19 @@ private static final long serialVersionUID = 0L;
               done = true;
               break;
             case 10: {
-              accessToken_ = input.readStringRequireUtf8();
+              input.readMessage(
+                  getAccessTokenFieldBuilder().getBuilder(),
+                  extensionRegistry);
 
               break;
             } // case 10
-            case 16: {
-              expiresIn_ = input.readInt64();
+            case 18: {
+              input.readMessage(
+                  getRefreshTokenFieldBuilder().getBuilder(),
+                  extensionRegistry);
 
               break;
-            } // case 16
-            case 26: {
-              tokenType_ = input.readStringRequireUtf8();
-
-              break;
-            } // case 26
+            } // case 18
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -492,187 +462,242 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object accessToken_ = "";
+    private com.microservice.auth_proto.AccessToken accessToken_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.microservice.auth_proto.AccessToken, com.microservice.auth_proto.AccessToken.Builder, com.microservice.auth_proto.AccessTokenOrBuilder> accessTokenBuilder_;
     /**
-     * <code>string accessToken = 1;</code>
+     * <code>.net.devh.boot.grpc.example.AccessToken accessToken = 1;</code>
+     * @return Whether the accessToken field is set.
+     */
+    public boolean hasAccessToken() {
+      return accessTokenBuilder_ != null || accessToken_ != null;
+    }
+    /**
+     * <code>.net.devh.boot.grpc.example.AccessToken accessToken = 1;</code>
      * @return The accessToken.
      */
-    public java.lang.String getAccessToken() {
-      java.lang.Object ref = accessToken_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        accessToken_ = s;
-        return s;
+    public com.microservice.auth_proto.AccessToken getAccessToken() {
+      if (accessTokenBuilder_ == null) {
+        return accessToken_ == null ? com.microservice.auth_proto.AccessToken.getDefaultInstance() : accessToken_;
       } else {
-        return (java.lang.String) ref;
+        return accessTokenBuilder_.getMessage();
       }
     }
     /**
-     * <code>string accessToken = 1;</code>
-     * @return The bytes for accessToken.
+     * <code>.net.devh.boot.grpc.example.AccessToken accessToken = 1;</code>
      */
-    public com.google.protobuf.ByteString
-        getAccessTokenBytes() {
-      java.lang.Object ref = accessToken_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        accessToken_ = b;
-        return b;
+    public Builder setAccessToken(com.microservice.auth_proto.AccessToken value) {
+      if (accessTokenBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        accessToken_ = value;
+        onChanged();
       } else {
-        return (com.google.protobuf.ByteString) ref;
+        accessTokenBuilder_.setMessage(value);
       }
+
+      return this;
     }
     /**
-     * <code>string accessToken = 1;</code>
-     * @param value The accessToken to set.
-     * @return This builder for chaining.
+     * <code>.net.devh.boot.grpc.example.AccessToken accessToken = 1;</code>
      */
     public Builder setAccessToken(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      accessToken_ = value;
-      onChanged();
+        com.microservice.auth_proto.AccessToken.Builder builderForValue) {
+      if (accessTokenBuilder_ == null) {
+        accessToken_ = builderForValue.build();
+        onChanged();
+      } else {
+        accessTokenBuilder_.setMessage(builderForValue.build());
+      }
+
       return this;
     }
     /**
-     * <code>string accessToken = 1;</code>
-     * @return This builder for chaining.
+     * <code>.net.devh.boot.grpc.example.AccessToken accessToken = 1;</code>
+     */
+    public Builder mergeAccessToken(com.microservice.auth_proto.AccessToken value) {
+      if (accessTokenBuilder_ == null) {
+        if (accessToken_ != null) {
+          accessToken_ =
+            com.microservice.auth_proto.AccessToken.newBuilder(accessToken_).mergeFrom(value).buildPartial();
+        } else {
+          accessToken_ = value;
+        }
+        onChanged();
+      } else {
+        accessTokenBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.net.devh.boot.grpc.example.AccessToken accessToken = 1;</code>
      */
     public Builder clearAccessToken() {
-      
-      accessToken_ = getDefaultInstance().getAccessToken();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string accessToken = 1;</code>
-     * @param value The bytes for accessToken to set.
-     * @return This builder for chaining.
-     */
-    public Builder setAccessTokenBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      accessToken_ = value;
-      onChanged();
-      return this;
-    }
-
-    private long expiresIn_ ;
-    /**
-     * <code>int64 expiresIn = 2;</code>
-     * @return The expiresIn.
-     */
-    @java.lang.Override
-    public long getExpiresIn() {
-      return expiresIn_;
-    }
-    /**
-     * <code>int64 expiresIn = 2;</code>
-     * @param value The expiresIn to set.
-     * @return This builder for chaining.
-     */
-    public Builder setExpiresIn(long value) {
-      
-      expiresIn_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int64 expiresIn = 2;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearExpiresIn() {
-      
-      expiresIn_ = 0L;
-      onChanged();
-      return this;
-    }
-
-    private java.lang.Object tokenType_ = "";
-    /**
-     * <code>string tokenType = 3;</code>
-     * @return The tokenType.
-     */
-    public java.lang.String getTokenType() {
-      java.lang.Object ref = tokenType_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        tokenType_ = s;
-        return s;
+      if (accessTokenBuilder_ == null) {
+        accessToken_ = null;
+        onChanged();
       } else {
-        return (java.lang.String) ref;
+        accessToken_ = null;
+        accessTokenBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.net.devh.boot.grpc.example.AccessToken accessToken = 1;</code>
+     */
+    public com.microservice.auth_proto.AccessToken.Builder getAccessTokenBuilder() {
+      
+      onChanged();
+      return getAccessTokenFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.net.devh.boot.grpc.example.AccessToken accessToken = 1;</code>
+     */
+    public com.microservice.auth_proto.AccessTokenOrBuilder getAccessTokenOrBuilder() {
+      if (accessTokenBuilder_ != null) {
+        return accessTokenBuilder_.getMessageOrBuilder();
+      } else {
+        return accessToken_ == null ?
+            com.microservice.auth_proto.AccessToken.getDefaultInstance() : accessToken_;
       }
     }
     /**
-     * <code>string tokenType = 3;</code>
-     * @return The bytes for tokenType.
+     * <code>.net.devh.boot.grpc.example.AccessToken accessToken = 1;</code>
      */
-    public com.google.protobuf.ByteString
-        getTokenTypeBytes() {
-      java.lang.Object ref = tokenType_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        tokenType_ = b;
-        return b;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.microservice.auth_proto.AccessToken, com.microservice.auth_proto.AccessToken.Builder, com.microservice.auth_proto.AccessTokenOrBuilder> 
+        getAccessTokenFieldBuilder() {
+      if (accessTokenBuilder_ == null) {
+        accessTokenBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            com.microservice.auth_proto.AccessToken, com.microservice.auth_proto.AccessToken.Builder, com.microservice.auth_proto.AccessTokenOrBuilder>(
+                getAccessToken(),
+                getParentForChildren(),
+                isClean());
+        accessToken_ = null;
+      }
+      return accessTokenBuilder_;
+    }
+
+    private com.microservice.auth_proto.RefreshToken refreshToken_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.microservice.auth_proto.RefreshToken, com.microservice.auth_proto.RefreshToken.Builder, com.microservice.auth_proto.RefreshTokenOrBuilder> refreshTokenBuilder_;
+    /**
+     * <code>.net.devh.boot.grpc.example.RefreshToken refreshToken = 2;</code>
+     * @return Whether the refreshToken field is set.
+     */
+    public boolean hasRefreshToken() {
+      return refreshTokenBuilder_ != null || refreshToken_ != null;
+    }
+    /**
+     * <code>.net.devh.boot.grpc.example.RefreshToken refreshToken = 2;</code>
+     * @return The refreshToken.
+     */
+    public com.microservice.auth_proto.RefreshToken getRefreshToken() {
+      if (refreshTokenBuilder_ == null) {
+        return refreshToken_ == null ? com.microservice.auth_proto.RefreshToken.getDefaultInstance() : refreshToken_;
       } else {
-        return (com.google.protobuf.ByteString) ref;
+        return refreshTokenBuilder_.getMessage();
       }
     }
     /**
-     * <code>string tokenType = 3;</code>
-     * @param value The tokenType to set.
-     * @return This builder for chaining.
+     * <code>.net.devh.boot.grpc.example.RefreshToken refreshToken = 2;</code>
      */
-    public Builder setTokenType(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      tokenType_ = value;
-      onChanged();
+    public Builder setRefreshToken(com.microservice.auth_proto.RefreshToken value) {
+      if (refreshTokenBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        refreshToken_ = value;
+        onChanged();
+      } else {
+        refreshTokenBuilder_.setMessage(value);
+      }
+
       return this;
     }
     /**
-     * <code>string tokenType = 3;</code>
-     * @return This builder for chaining.
+     * <code>.net.devh.boot.grpc.example.RefreshToken refreshToken = 2;</code>
      */
-    public Builder clearTokenType() {
-      
-      tokenType_ = getDefaultInstance().getTokenType();
-      onChanged();
+    public Builder setRefreshToken(
+        com.microservice.auth_proto.RefreshToken.Builder builderForValue) {
+      if (refreshTokenBuilder_ == null) {
+        refreshToken_ = builderForValue.build();
+        onChanged();
+      } else {
+        refreshTokenBuilder_.setMessage(builderForValue.build());
+      }
+
       return this;
     }
     /**
-     * <code>string tokenType = 3;</code>
-     * @param value The bytes for tokenType to set.
-     * @return This builder for chaining.
+     * <code>.net.devh.boot.grpc.example.RefreshToken refreshToken = 2;</code>
      */
-    public Builder setTokenTypeBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      tokenType_ = value;
-      onChanged();
+    public Builder mergeRefreshToken(com.microservice.auth_proto.RefreshToken value) {
+      if (refreshTokenBuilder_ == null) {
+        if (refreshToken_ != null) {
+          refreshToken_ =
+            com.microservice.auth_proto.RefreshToken.newBuilder(refreshToken_).mergeFrom(value).buildPartial();
+        } else {
+          refreshToken_ = value;
+        }
+        onChanged();
+      } else {
+        refreshTokenBuilder_.mergeFrom(value);
+      }
+
       return this;
+    }
+    /**
+     * <code>.net.devh.boot.grpc.example.RefreshToken refreshToken = 2;</code>
+     */
+    public Builder clearRefreshToken() {
+      if (refreshTokenBuilder_ == null) {
+        refreshToken_ = null;
+        onChanged();
+      } else {
+        refreshToken_ = null;
+        refreshTokenBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.net.devh.boot.grpc.example.RefreshToken refreshToken = 2;</code>
+     */
+    public com.microservice.auth_proto.RefreshToken.Builder getRefreshTokenBuilder() {
+      
+      onChanged();
+      return getRefreshTokenFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.net.devh.boot.grpc.example.RefreshToken refreshToken = 2;</code>
+     */
+    public com.microservice.auth_proto.RefreshTokenOrBuilder getRefreshTokenOrBuilder() {
+      if (refreshTokenBuilder_ != null) {
+        return refreshTokenBuilder_.getMessageOrBuilder();
+      } else {
+        return refreshToken_ == null ?
+            com.microservice.auth_proto.RefreshToken.getDefaultInstance() : refreshToken_;
+      }
+    }
+    /**
+     * <code>.net.devh.boot.grpc.example.RefreshToken refreshToken = 2;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.microservice.auth_proto.RefreshToken, com.microservice.auth_proto.RefreshToken.Builder, com.microservice.auth_proto.RefreshTokenOrBuilder> 
+        getRefreshTokenFieldBuilder() {
+      if (refreshTokenBuilder_ == null) {
+        refreshTokenBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            com.microservice.auth_proto.RefreshToken, com.microservice.auth_proto.RefreshToken.Builder, com.microservice.auth_proto.RefreshTokenOrBuilder>(
+                getRefreshToken(),
+                getParentForChildren(),
+                isClean());
+        refreshToken_ = null;
+      }
+      return refreshTokenBuilder_;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

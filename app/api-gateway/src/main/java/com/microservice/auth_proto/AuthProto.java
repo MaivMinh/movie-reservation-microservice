@@ -15,6 +15,106 @@ public final class AuthProto {
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_net_devh_boot_grpc_example_RefreshTokenRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_net_devh_boot_grpc_example_RefreshTokenRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_net_devh_boot_grpc_example_RefreshTokenResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_net_devh_boot_grpc_example_RefreshTokenResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_net_devh_boot_grpc_example_VerifyEmailRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_net_devh_boot_grpc_example_VerifyEmailRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_net_devh_boot_grpc_example_VerifyEmailResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_net_devh_boot_grpc_example_VerifyEmailResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_net_devh_boot_grpc_example_ForgotPasswordRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_net_devh_boot_grpc_example_ForgotPasswordRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_net_devh_boot_grpc_example_ForgotPasswordResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_net_devh_boot_grpc_example_ForgotPasswordResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_net_devh_boot_grpc_example_ResetPasswordRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_net_devh_boot_grpc_example_ResetPasswordRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_net_devh_boot_grpc_example_ResetPasswordResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_net_devh_boot_grpc_example_ResetPasswordResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_net_devh_boot_grpc_example_IsAdminRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_net_devh_boot_grpc_example_IsAdminRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_net_devh_boot_grpc_example_IsAdminResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_net_devh_boot_grpc_example_IsAdminResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_net_devh_boot_grpc_example_ProfileRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_net_devh_boot_grpc_example_ProfileRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_net_devh_boot_grpc_example_Profile_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_net_devh_boot_grpc_example_Profile_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_net_devh_boot_grpc_example_ProfileResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_net_devh_boot_grpc_example_ProfileResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_net_devh_boot_grpc_example_AccessToken_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_net_devh_boot_grpc_example_AccessToken_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_net_devh_boot_grpc_example_RefreshToken_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_net_devh_boot_grpc_example_RefreshToken_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_net_devh_boot_grpc_example_LoginSuccessInfo_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_net_devh_boot_grpc_example_LoginSuccessInfo_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_net_devh_boot_grpc_example_LoginRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_net_devh_boot_grpc_example_LoginRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_net_devh_boot_grpc_example_LoginResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_net_devh_boot_grpc_example_LoginResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_net_devh_boot_grpc_example_RegisterRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_net_devh_boot_grpc_example_RegisterRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_net_devh_boot_grpc_example_RegisterResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_net_devh_boot_grpc_example_RegisterResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_net_devh_boot_grpc_example_AuthenticateRequest_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -44,44 +144,218 @@ public final class AuthProto {
   static {
     java.lang.String[] descriptorData = {
       "\n\nauth.proto\022\032net.devh.boot.grpc.example" +
-      "\"$\n\023AuthenticateRequest\022\r\n\005token\030\001 \001(\t\"D" +
-      "\n\024AuthenticateResponse\022\017\n\007isValid\030\001 \001(\010\022" +
-      "\016\n\006userId\030\002 \001(\t\022\013\n\003ttl\030\003 \001(\003\"!\n\017Identity" +
-      "Request\022\016\n\006userId\030\001 \001(\t\"1\n\020IdentityRespo" +
-      "nse\022\016\n\006active\030\001 \001(\010\022\r\n\005roles\030\002 \001(\t2\353\001\n\013A" +
-      "uthService\022s\n\016doAuthenticate\022/.net.devh." +
-      "boot.grpc.example.AuthenticateRequest\0320." +
-      "net.devh.boot.grpc.example.AuthenticateR" +
-      "esponse\022g\n\ndoIdentity\022+.net.devh.boot.gr" +
-      "pc.example.IdentityRequest\032,.net.devh.bo" +
-      "ot.grpc.example.IdentityResponseB*\n\033com." +
-      "microservice.auth_protoB\tAuthProtoP\001b\006pr" +
-      "oto3"
+      "\"$\n\023RefreshTokenRequest\022\r\n\005token\030\001 \001(\t\"u" +
+      "\n\024RefreshTokenResponse\022\016\n\006status\030\001 \001(\005\022\017" +
+      "\n\007message\030\002 \001(\t\022<\n\013accessToken\030\003 \001(\0132\'.n" +
+      "et.devh.boot.grpc.example.AccessToken\"#\n" +
+      "\022VerifyEmailRequest\022\r\n\005token\030\001 \001(\t\"6\n\023Ve" +
+      "rifyEmailResponse\022\016\n\006status\030\001 \001(\005\022\017\n\007mes" +
+      "sage\030\002 \001(\t\"4\n\025ForgotPasswordRequest\022\r\n\005e" +
+      "mail\030\001 \001(\t\022\014\n\004host\030\002 \001(\t\"9\n\026ForgotPasswo" +
+      "rdResponse\022\016\n\006status\030\001 \001(\005\022\017\n\007message\030\002 " +
+      "\001(\t\"7\n\024ResetPasswordRequest\022\r\n\005token\030\001 \001" +
+      "(\t\022\020\n\010password\030\002 \001(\t\"8\n\025ResetPasswordRes" +
+      "ponse\022\016\n\006status\030\001 \001(\005\022\017\n\007message\030\002 \001(\t\"#" +
+      "\n\016IsAdminRequest\022\021\n\taccountId\030\001 \001(\005\"\"\n\017I" +
+      "sAdminResponse\022\017\n\007isAdmin\030\001 \001(\010\"#\n\016Profi" +
+      "leRequest\022\021\n\taccountId\030\001 \001(\005\"9\n\007Profile\022" +
+      "\020\n\010username\030\001 \001(\t\022\r\n\005email\030\002 \001(\t\022\r\n\005role" +
+      "s\030\003 \001(\t\"h\n\017ProfileResponse\022\016\n\006status\030\001 \001" +
+      "(\005\022\017\n\007message\030\002 \001(\t\0224\n\007profile\030\003 \001(\0132#.n" +
+      "et.devh.boot.grpc.example.Profile\"B\n\013Acc" +
+      "essToken\022\r\n\005token\030\001 \001(\t\022\021\n\texpiresIn\030\002 \001" +
+      "(\003\022\021\n\ttokenType\030\003 \001(\t\"0\n\014RefreshToken\022\r\n" +
+      "\005token\030\001 \001(\t\022\021\n\texpiresIn\030\002 \001(\003\"\220\001\n\020Logi" +
+      "nSuccessInfo\022<\n\013accessToken\030\001 \001(\0132\'.net." +
+      "devh.boot.grpc.example.AccessToken\022>\n\014re" +
+      "freshToken\030\002 \001(\0132(.net.devh.boot.grpc.ex" +
+      "ample.RefreshToken\"2\n\014LoginRequest\022\020\n\010us" +
+      "ername\030\001 \001(\t\022\020\n\010password\030\002 \001(\t\"x\n\rLoginR" +
+      "esponse\022\016\n\006status\030\001 \001(\005\022\017\n\007message\030\002 \001(\t" +
+      "\022F\n\020loginSuccessInfo\030\003 \001(\0132,.net.devh.bo" +
+      "ot.grpc.example.LoginSuccessInfo\"D\n\017Regi" +
+      "sterRequest\022\020\n\010username\030\001 \001(\t\022\020\n\010passwor" +
+      "d\030\002 \001(\t\022\r\n\005email\030\003 \001(\t\"3\n\020RegisterRespon" +
+      "se\022\016\n\006status\030\001 \001(\005\022\017\n\007message\030\002 \001(\t\"$\n\023A" +
+      "uthenticateRequest\022\r\n\005token\030\001 \001(\t\"D\n\024Aut" +
+      "henticateResponse\022\017\n\007isValid\030\001 \001(\010\022\016\n\006us" +
+      "erId\030\002 \001(\t\022\013\n\003ttl\030\003 \001(\003\"!\n\017IdentityReque" +
+      "st\022\016\n\006userId\030\001 \001(\005\"1\n\020IdentityResponse\022\016" +
+      "\n\006active\030\001 \001(\010\022\r\n\005roles\030\002 \001(\t2\325\010\n\013AuthSe" +
+      "rvice\022s\n\016doAuthenticate\022/.net.devh.boot." +
+      "grpc.example.AuthenticateRequest\0320.net.d" +
+      "evh.boot.grpc.example.AuthenticateRespon" +
+      "se\022g\n\ndoIdentity\022+.net.devh.boot.grpc.ex" +
+      "ample.IdentityRequest\032,.net.devh.boot.gr" +
+      "pc.example.IdentityResponse\022b\n\007isAdmin\022*" +
+      ".net.devh.boot.grpc.example.IsAdminReque" +
+      "st\032+.net.devh.boot.grpc.example.IsAdminR" +
+      "esponse\022i\n\014postRegister\022+.net.devh.boot." +
+      "grpc.example.RegisterRequest\032,.net.devh." +
+      "boot.grpc.example.RegisterResponse\022`\n\tpo" +
+      "stLogin\022(.net.devh.boot.grpc.example.Log" +
+      "inRequest\032).net.devh.boot.grpc.example.L" +
+      "oginResponse\022e\n\ngetProfile\022*.net.devh.bo" +
+      "ot.grpc.example.ProfileRequest\032+.net.dev" +
+      "h.boot.grpc.example.ProfileResponse\022w\n\016f" +
+      "orgotPassword\0221.net.devh.boot.grpc.examp" +
+      "le.ForgotPasswordRequest\0322.net.devh.boot" +
+      ".grpc.example.ForgotPasswordResponse\022t\n\r" +
+      "resetPassword\0220.net.devh.boot.grpc.examp" +
+      "le.ResetPasswordRequest\0321.net.devh.boot." +
+      "grpc.example.ResetPasswordResponse\022n\n\013ve" +
+      "rifyEmail\022..net.devh.boot.grpc.example.V" +
+      "erifyEmailRequest\032/.net.devh.boot.grpc.e" +
+      "xample.VerifyEmailResponse\022q\n\014refreshTok" +
+      "en\022/.net.devh.boot.grpc.example.RefreshT" +
+      "okenRequest\0320.net.devh.boot.grpc.example" +
+      ".RefreshTokenResponseB*\n\033com.microservic" +
+      "e.auth_protoB\tAuthProtoP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         });
-    internal_static_net_devh_boot_grpc_example_AuthenticateRequest_descriptor =
+    internal_static_net_devh_boot_grpc_example_RefreshTokenRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
+    internal_static_net_devh_boot_grpc_example_RefreshTokenRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_net_devh_boot_grpc_example_RefreshTokenRequest_descriptor,
+        new java.lang.String[] { "Token", });
+    internal_static_net_devh_boot_grpc_example_RefreshTokenResponse_descriptor =
+      getDescriptor().getMessageTypes().get(1);
+    internal_static_net_devh_boot_grpc_example_RefreshTokenResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_net_devh_boot_grpc_example_RefreshTokenResponse_descriptor,
+        new java.lang.String[] { "Status", "Message", "AccessToken", });
+    internal_static_net_devh_boot_grpc_example_VerifyEmailRequest_descriptor =
+      getDescriptor().getMessageTypes().get(2);
+    internal_static_net_devh_boot_grpc_example_VerifyEmailRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_net_devh_boot_grpc_example_VerifyEmailRequest_descriptor,
+        new java.lang.String[] { "Token", });
+    internal_static_net_devh_boot_grpc_example_VerifyEmailResponse_descriptor =
+      getDescriptor().getMessageTypes().get(3);
+    internal_static_net_devh_boot_grpc_example_VerifyEmailResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_net_devh_boot_grpc_example_VerifyEmailResponse_descriptor,
+        new java.lang.String[] { "Status", "Message", });
+    internal_static_net_devh_boot_grpc_example_ForgotPasswordRequest_descriptor =
+      getDescriptor().getMessageTypes().get(4);
+    internal_static_net_devh_boot_grpc_example_ForgotPasswordRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_net_devh_boot_grpc_example_ForgotPasswordRequest_descriptor,
+        new java.lang.String[] { "Email", "Host", });
+    internal_static_net_devh_boot_grpc_example_ForgotPasswordResponse_descriptor =
+      getDescriptor().getMessageTypes().get(5);
+    internal_static_net_devh_boot_grpc_example_ForgotPasswordResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_net_devh_boot_grpc_example_ForgotPasswordResponse_descriptor,
+        new java.lang.String[] { "Status", "Message", });
+    internal_static_net_devh_boot_grpc_example_ResetPasswordRequest_descriptor =
+      getDescriptor().getMessageTypes().get(6);
+    internal_static_net_devh_boot_grpc_example_ResetPasswordRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_net_devh_boot_grpc_example_ResetPasswordRequest_descriptor,
+        new java.lang.String[] { "Token", "Password", });
+    internal_static_net_devh_boot_grpc_example_ResetPasswordResponse_descriptor =
+      getDescriptor().getMessageTypes().get(7);
+    internal_static_net_devh_boot_grpc_example_ResetPasswordResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_net_devh_boot_grpc_example_ResetPasswordResponse_descriptor,
+        new java.lang.String[] { "Status", "Message", });
+    internal_static_net_devh_boot_grpc_example_IsAdminRequest_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_net_devh_boot_grpc_example_IsAdminRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_net_devh_boot_grpc_example_IsAdminRequest_descriptor,
+        new java.lang.String[] { "AccountId", });
+    internal_static_net_devh_boot_grpc_example_IsAdminResponse_descriptor =
+      getDescriptor().getMessageTypes().get(9);
+    internal_static_net_devh_boot_grpc_example_IsAdminResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_net_devh_boot_grpc_example_IsAdminResponse_descriptor,
+        new java.lang.String[] { "IsAdmin", });
+    internal_static_net_devh_boot_grpc_example_ProfileRequest_descriptor =
+      getDescriptor().getMessageTypes().get(10);
+    internal_static_net_devh_boot_grpc_example_ProfileRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_net_devh_boot_grpc_example_ProfileRequest_descriptor,
+        new java.lang.String[] { "AccountId", });
+    internal_static_net_devh_boot_grpc_example_Profile_descriptor =
+      getDescriptor().getMessageTypes().get(11);
+    internal_static_net_devh_boot_grpc_example_Profile_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_net_devh_boot_grpc_example_Profile_descriptor,
+        new java.lang.String[] { "Username", "Email", "Roles", });
+    internal_static_net_devh_boot_grpc_example_ProfileResponse_descriptor =
+      getDescriptor().getMessageTypes().get(12);
+    internal_static_net_devh_boot_grpc_example_ProfileResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_net_devh_boot_grpc_example_ProfileResponse_descriptor,
+        new java.lang.String[] { "Status", "Message", "Profile", });
+    internal_static_net_devh_boot_grpc_example_AccessToken_descriptor =
+      getDescriptor().getMessageTypes().get(13);
+    internal_static_net_devh_boot_grpc_example_AccessToken_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_net_devh_boot_grpc_example_AccessToken_descriptor,
+        new java.lang.String[] { "Token", "ExpiresIn", "TokenType", });
+    internal_static_net_devh_boot_grpc_example_RefreshToken_descriptor =
+      getDescriptor().getMessageTypes().get(14);
+    internal_static_net_devh_boot_grpc_example_RefreshToken_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_net_devh_boot_grpc_example_RefreshToken_descriptor,
+        new java.lang.String[] { "Token", "ExpiresIn", });
+    internal_static_net_devh_boot_grpc_example_LoginSuccessInfo_descriptor =
+      getDescriptor().getMessageTypes().get(15);
+    internal_static_net_devh_boot_grpc_example_LoginSuccessInfo_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_net_devh_boot_grpc_example_LoginSuccessInfo_descriptor,
+        new java.lang.String[] { "AccessToken", "RefreshToken", });
+    internal_static_net_devh_boot_grpc_example_LoginRequest_descriptor =
+      getDescriptor().getMessageTypes().get(16);
+    internal_static_net_devh_boot_grpc_example_LoginRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_net_devh_boot_grpc_example_LoginRequest_descriptor,
+        new java.lang.String[] { "Username", "Password", });
+    internal_static_net_devh_boot_grpc_example_LoginResponse_descriptor =
+      getDescriptor().getMessageTypes().get(17);
+    internal_static_net_devh_boot_grpc_example_LoginResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_net_devh_boot_grpc_example_LoginResponse_descriptor,
+        new java.lang.String[] { "Status", "Message", "LoginSuccessInfo", });
+    internal_static_net_devh_boot_grpc_example_RegisterRequest_descriptor =
+      getDescriptor().getMessageTypes().get(18);
+    internal_static_net_devh_boot_grpc_example_RegisterRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_net_devh_boot_grpc_example_RegisterRequest_descriptor,
+        new java.lang.String[] { "Username", "Password", "Email", });
+    internal_static_net_devh_boot_grpc_example_RegisterResponse_descriptor =
+      getDescriptor().getMessageTypes().get(19);
+    internal_static_net_devh_boot_grpc_example_RegisterResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_net_devh_boot_grpc_example_RegisterResponse_descriptor,
+        new java.lang.String[] { "Status", "Message", });
+    internal_static_net_devh_boot_grpc_example_AuthenticateRequest_descriptor =
+      getDescriptor().getMessageTypes().get(20);
     internal_static_net_devh_boot_grpc_example_AuthenticateRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_net_devh_boot_grpc_example_AuthenticateRequest_descriptor,
         new java.lang.String[] { "Token", });
     internal_static_net_devh_boot_grpc_example_AuthenticateResponse_descriptor =
-      getDescriptor().getMessageTypes().get(1);
+      getDescriptor().getMessageTypes().get(21);
     internal_static_net_devh_boot_grpc_example_AuthenticateResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_net_devh_boot_grpc_example_AuthenticateResponse_descriptor,
         new java.lang.String[] { "IsValid", "UserId", "Ttl", });
     internal_static_net_devh_boot_grpc_example_IdentityRequest_descriptor =
-      getDescriptor().getMessageTypes().get(2);
+      getDescriptor().getMessageTypes().get(22);
     internal_static_net_devh_boot_grpc_example_IdentityRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_net_devh_boot_grpc_example_IdentityRequest_descriptor,
         new java.lang.String[] { "UserId", });
     internal_static_net_devh_boot_grpc_example_IdentityResponse_descriptor =
-      getDescriptor().getMessageTypes().get(3);
+      getDescriptor().getMessageTypes().get(23);
     internal_static_net_devh_boot_grpc_example_IdentityResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_net_devh_boot_grpc_example_IdentityResponse_descriptor,

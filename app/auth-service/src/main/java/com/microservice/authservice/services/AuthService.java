@@ -1,7 +1,6 @@
 package com.microservice.authservice.services;
 
 import com.microservice.auth_proto.*;
-import com.microservice.authservice.model.AccessToken;
 import com.microservice.authservice.model.Account;
 import com.microservice.authservice.model.Role;
 import com.microservice.authservice.records.ROLE;
@@ -11,8 +10,6 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,7 +22,6 @@ import org.springframework.web.client.RestClient;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -34,14 +30,15 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-
-  private final AccessTokenService accessTokenService;
   private final JwtUtilsService jwtUtilsService;
-  private final MailService mailService;
-  @Value("${application.security.jwt.secret-key}")
-  private String secret;
+  @Value("${application.security.jwt.access-token-key}")
+  private String accessToken;
+  @Value("${application.security.jwt.refresh-token-key}")
+  private String refreshToken;
   @Value("${application.security.jwt.expiration}")
   private long expiration;
+  @Value("${application.security.jwt.refresh-token-expiration}")
+  private long refreshTokenExpiration;
 
   @Value("${application.server.host}")
   private String host;
@@ -51,6 +48,7 @@ public class AuthService {
   private final AuthenticationManager authenticationManager;
   private final PasswordEncoder passwordEncoder;
   private final RestClient restClient;
+  private final RedisService redisService;
 
 
   public RegisterResponse register(RegisterRequest request) {
@@ -77,7 +75,7 @@ public class AuthService {
             .addClaims(Map.of("email", account.getEmail()))
             .setExpiration(new Date(System.currentTimeMillis() + 30 * 60 * 1000)) // 30 minutes
             .setIssuedAt(new Date())
-            .signWith(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)))
+            .signWith(Keys.hmacShaKeyFor(accessToken.getBytes(StandardCharsets.UTF_8)))
             .compact();
 
 
@@ -151,11 +149,10 @@ public class AuthService {
       log.error("Unauthenticated user");
       return LoginResponse.newBuilder()
               .setStatus(HttpStatus.UNAUTHORIZED.value())
-              .setMessage("Unauthorized")
+              .setMessage("Unauthenticated user")
               .build();
     }
 
-    /// Thực hiện revoke access token cũ nếu có.
     Account account = accountService.findAccountByUsername(authenticated.getName());
     if (account.getActive() == null || !account.getActive()) {
       return LoginResponse.newBuilder()
@@ -163,76 +160,51 @@ public class AuthService {
               .setMessage("Account is not active")
               .build();
     }
-    accessTokenService.revokeAll(account);
+
 
     /// Thực hiện việc tạo acces token và gửi về cho client.
-    SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    SecretKey secretKey = Keys.hmacShaKeyFor(accessToken.getBytes(StandardCharsets.UTF_8));
+    SecretKey refreshKey = Keys.hmacShaKeyFor(refreshToken.getBytes(StandardCharsets.UTF_8));
 
     String token = Jwts.builder()
             .setIssuer("Auth-Service")
             .setSubject("Access Token")
             .addClaims(Map.of("account_id", account.getId()))
-            .setExpiration(new Date(System.currentTimeMillis() + expiration))
+            .setExpiration(new Date(System.currentTimeMillis() + expiration)) ///  1 hour.
             .setIssuedAt(new Date())
             .signWith(secretKey)
             .compact();
 
-    AccessToken accessToken = AccessToken.builder()
-            .token(token)
-            .account(account)
-            .tokenType("Bearer")
-            .expiresIn(new Timestamp(System.currentTimeMillis() + expiration))
-            .isRevoked(false)
-            .build();
+    String refreshToken = Jwts.builder()
+            .setIssuer("Auth-Service")
+            .setSubject("Refresh Token")
+            .addClaims(Map.of("account_id", account.getId()))
+            .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiration)) ///  24 hours.
+            .setIssuedAt(new Date())
+            .signWith(refreshKey)
+            .compact();
 
-    try {
-      accessTokenService.save(accessToken);
-    } catch (RuntimeException e) {
-      return LoginResponse.newBuilder()
-              .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
-              .setMessage("Can not create access token")
-              .build();
-    }
+    /// Lưu access token vào redis.
+    redisService.set(token, account.getId().toString(), expiration / 1000);
 
     return LoginResponse.newBuilder()
             .setStatus(HttpStatus.OK.value())
             .setMessage("Success")
             .setLoginSuccessInfo(LoginSuccessInfo.newBuilder()
-                    .setAccessToken(token)
-                    .setTokenType("Bearer")
-                    .setExpiresIn(new Timestamp(System.currentTimeMillis() + expiration).getTime())
+                    .setAccessToken(
+                            AccessToken.newBuilder()
+                                    .setToken(token)
+                                    .setExpiresIn(expiration)
+                                    .setTokenType("Bearer")
+                                    .build()
+                    )
+                    .setRefreshToken(
+                            RefreshToken.newBuilder()
+                                    .setToken(refreshToken)
+                                    .setExpiresIn(refreshTokenExpiration)
+                                    .build()
+                    )
                     .build())
-            .build();
-  }
-
-  public LogoutResponse logout(LogoutRequest request) {
-    /// Hàm thực hiện việc đăng xuất người dùng.
-    String accessToken = request.getAccessToken();
-    if (!StringUtils.hasText(accessToken)) {
-      return LogoutResponse.newBuilder()
-              .setStatus(HttpStatus.BAD_REQUEST.value())
-              .setMessage("Bad request")
-              .build();
-    }
-
-    AccessToken saved = accessTokenService.findAccessTokenByToken(accessToken);
-    if (saved == null) {
-      return LogoutResponse.newBuilder()
-              .setStatus(HttpStatus.BAD_REQUEST.value())
-              .setMessage("Access token not found")
-              .build();
-    }
-    try {
-      accessTokenService.revoke(saved);
-    } catch (RuntimeException e) {
-      return LogoutResponse.newBuilder()
-              .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
-              .setMessage("Can not revoke access token")
-              .build();
-    }
-    return LogoutResponse.newBuilder()
-            .setStatus(HttpStatus.OK.value())
-            .setMessage("Logout successfully")
             .build();
   }
 
@@ -325,7 +297,7 @@ public class AuthService {
             .addClaims(Map.of("email", account.getEmail()))
             .setExpiration(new Date(System.currentTimeMillis() + 30 * 60 * 1000)) // 30 minutes
             .setIssuedAt(new Date())
-            .signWith(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)))
+            .signWith(Keys.hmacShaKeyFor(accessToken.getBytes(StandardCharsets.UTF_8)))
             .compact();
 
     /// Thực hiện gửi email về cho người dùng.
@@ -406,7 +378,7 @@ public class AuthService {
     Claims claims;
     try {
       claims = Jwts.parserBuilder()
-              .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)))
+              .setSigningKey(Keys.hmacShaKeyFor(accessToken.getBytes(StandardCharsets.UTF_8)))
               .build()
               .parseClaimsJws(token)
               .getBody();
@@ -452,7 +424,7 @@ public class AuthService {
     Claims claims;
     try {
       claims = Jwts.parserBuilder()
-              .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)))
+              .setSigningKey(Keys.hmacShaKeyFor(accessToken.getBytes(StandardCharsets.UTF_8)))
               .build()
               .parseClaimsJws(token)
               .getBody();
@@ -484,6 +456,63 @@ public class AuthService {
     return VerifyEmailResponse.newBuilder()
             .setStatus(HttpStatus.OK.value())
             .setMessage("Verify email successfully!")
+            .build();
+  }
+
+  public RefreshTokenResponse refreshToken(RefreshTokenRequest request) {
+    /// Hàm thực hiện làm mới access token dựa vào refresh token.
+    String token = request.getToken();
+    if (!StringUtils.hasText(token)) {
+      return RefreshTokenResponse.newBuilder()
+              .setStatus(499)
+              .setMessage("Refresh token is empty")
+              .build();
+    }
+
+    Claims claims;
+    try {
+      claims = Jwts.parserBuilder()
+              .setSigningKey(Keys.hmacShaKeyFor(refreshToken.getBytes(StandardCharsets.UTF_8)))
+              .build()
+              .parseClaimsJws(token)
+              .getBody();
+    } catch (RuntimeException e) {
+      return RefreshTokenResponse.newBuilder()
+              .setStatus(499)
+              .setMessage("Refresh token is invalid or expired")
+              .build();
+    }
+
+    String accountId = claims.get("account_id").toString();
+    Account account = accountService.findAccountById(Integer.parseInt(accountId));
+    if (account == null || account.getId() <= 0) {
+      return RefreshTokenResponse.newBuilder()
+              .setStatus(499)
+              .setMessage("Account is invalid")
+              .build();
+    }
+
+    String newAccessToken = Jwts.builder()
+            .setIssuer("Auth-Service")
+            .setSubject("Access Token")
+            .addClaims(Map.of("account_id", account.getId()))
+            .setExpiration(new Date(System.currentTimeMillis() + expiration)) ///  1 hour.
+            .setIssuedAt(new Date())
+            .signWith(Keys.hmacShaKeyFor(accessToken.getBytes(StandardCharsets.UTF_8)))
+            .compact();
+
+    /// Lưu access token vào redis.
+    redisService.set(newAccessToken, account.getId().toString(), expiration / 1000);
+
+    /// Trả về cho client access token mới.
+    return RefreshTokenResponse.newBuilder()
+            .setStatus(HttpStatus.OK.value())
+            .setMessage("Refresh token successfully!")
+            .setAccessToken(AccessToken.newBuilder()
+                    .setToken(newAccessToken)
+                    .setTokenType("Bearer")
+                    .setExpiresIn(expiration)
+                    .build())
             .build();
   }
 }
