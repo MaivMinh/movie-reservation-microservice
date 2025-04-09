@@ -1,3 +1,21 @@
+===================== Cơ chế Authentication của ứng dụng. =====================
+1. Khi người dùng thực hiện đăng nhập vào ứng dụng thì nếu thành công:
+   - Auth service sẽ lưu acess token vào trong Redis với thời gian sống tương ứng.
+   - Sau này, API Gateway sẽ verify access token này thông qua việc tìm trong Redis.
+   - Auth service sẽ gửi về cho client access token và refresh token.
+   - Client sẽ lưu lại access token và refresh token vào local storage.
+2. Khi người dùng thực hiện một request hợp lệ (public page hoặc chứa token hợp lệ) thì API Gateway sẽ verify thông qua việc tim, và chuyển xuống các service tương ứng.
+3. Khi người dùng thực hiện một request chứa access token hết hạn:
+   - Ban đầu, API Gateway sẽ lấy access token này trong header. Sau đó, nó sẽ tìm trong Redis xem access token này có
+     tồn tại hay không. Và do token đã hết hạn nên không tìm thấy. API Gateway sẽ trả về mã lỗi 498 cho Client.
+   - Client sẽ nhận được mã lỗi 498 và sẽ thực hiện gọi tới Auth service để lấy lại access token mới thông qua refresh token.
+   - Auth service sẽ kiểm tra xem refresh token này có hợp lệ hay không. Nếu hợp lệ thì Auth service sẽ tạo ra một access token mới và gửi về cho Client. Đồng thời cũng sẽ lưu access token mới này vào Redis với thời gian sống tương ứng.
+   - Client sẽ nhận được access token mới và sẽ thực hiện lại request tới API Gateway với access token mới này.
+   - API Gateway sẽ tìm access token này trong Redis và thấy rằng nó đã tồn tại. Do đó, API Gateway sẽ chuyển request
+     xuống các service tương ứng.
+   - Trong trường hợp refresh token cũng đã hết hạn thì Auth service sẽ trả về mã lỗi 499 cho Client. Client sẽ phải thực hiện lại
+     quá trình đăng nhập để lấy lại access token và refresh token mới.
+
 ===================== Docker compose file =====================
 
 1. Chú ý quan trọng rằng, đối với các service của spring boot thì phải đưa về port mặc định là 8080, sau đó expose ra
