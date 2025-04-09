@@ -12,12 +12,22 @@ service AuthService {
 
   rpc postRegister(RegisterRequest) returns (RegisterResponse);
   rpc postLogin(LoginRequest) returns (LoginResponse);
-  rpc postLogout(LogoutRequest) returns (LogoutResponse);
   rpc getProfile(ProfileRequest) returns (ProfileResponse);
   rpc forgotPassword(ForgotPasswordRequest) returns (ForgotPasswordResponse);
   rpc resetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
   rpc verifyEmail(VerifyEmailRequest) returns (VerifyEmailResponse);
+  rpc refreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
 }
+
+message RefreshTokenRequest {
+  string token = 1;
+}
+message RefreshTokenResponse {
+  int32 status = 1;
+  string message = 2;
+  AccessToken accessToken = 3;
+}
+
 
 message VerifyEmailRequest {
   string token = 1;
@@ -66,20 +76,19 @@ message ProfileResponse {
   Profile profile = 3;
 }
 
-
-message LogoutRequest {
-  string accessToken = 1;
-}
-message LogoutResponse {
-  int32 status = 1;
-  string message = 2;
-}
-
-
-message LoginSuccessInfo {
-  string accessToken = 1;
+message AccessToken {
+  string token = 1;
   int64 expiresIn = 2;
   string tokenType = 3;
+}
+message RefreshToken {
+  string token = 1;
+  int64 expiresIn = 2;
+}
+
+message LoginSuccessInfo {
+  AccessToken accessToken = 1;
+  RefreshToken refreshToken = 2;
 }
 message LoginRequest {
   string username = 1;

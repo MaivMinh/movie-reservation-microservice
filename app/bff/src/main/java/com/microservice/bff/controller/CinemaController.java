@@ -73,7 +73,7 @@ public class CinemaController {
         return ResponseEntity.status(403).body(new ResponseData(403, "Forbidden"));
       }
     } catch (Exception e) {
-      return ResponseEntity.status(401).body(new ResponseData(401, "Unauthorized"));
+      return ResponseEntity.status(403).body(new ResponseData(403, "Forbidden"));
     }
 
 
@@ -94,7 +94,7 @@ public class CinemaController {
         return ResponseEntity.status(403).body(new ResponseData(403, "Forbidden"));
       }
     } catch (Exception e) {
-      return ResponseEntity.status(401).body(new ResponseData(401, "Unauthorized"));
+      return ResponseEntity.status(403).body(new ResponseData(403, "Forbidden"));
     }
 
     ResponseData response = bookingService.updateCinema(id, updateCinema);

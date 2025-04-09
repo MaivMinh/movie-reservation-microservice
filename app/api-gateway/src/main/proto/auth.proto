@@ -8,6 +8,107 @@ option java_package = "com.microservice.auth_proto";
 service AuthService {
   rpc doAuthenticate(AuthenticateRequest) returns (AuthenticateResponse);
   rpc doIdentity(IdentityRequest) returns (IdentityResponse);
+  rpc isAdmin(IsAdminRequest) returns (IsAdminResponse);
+
+  rpc postRegister(RegisterRequest) returns (RegisterResponse);
+  rpc postLogin(LoginRequest) returns (LoginResponse);
+  rpc getProfile(ProfileRequest) returns (ProfileResponse);
+  rpc forgotPassword(ForgotPasswordRequest) returns (ForgotPasswordResponse);
+  rpc resetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
+  rpc verifyEmail(VerifyEmailRequest) returns (VerifyEmailResponse);
+  rpc refreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
+}
+
+message RefreshTokenRequest {
+  string token = 1;
+}
+message RefreshTokenResponse {
+  int32 status = 1;
+  string message = 2;
+  AccessToken accessToken = 3;
+}
+
+
+message VerifyEmailRequest {
+  string token = 1;
+}
+
+message VerifyEmailResponse {
+  int32 status = 1;
+  string message = 2;
+}
+
+message ForgotPasswordRequest {
+  string email = 1;
+  string host = 2;
+}
+message ForgotPasswordResponse {
+  int32 status = 1;
+  string message = 2;
+}
+message ResetPasswordRequest {
+  string token = 1;
+  string password = 2;
+}
+message ResetPasswordResponse {
+  int32 status = 1;
+  string message = 2;
+}
+
+message IsAdminRequest {
+  int32 accountId = 1;
+}
+message IsAdminResponse {
+  bool isAdmin = 1;
+}
+
+message ProfileRequest {
+  int32 accountId = 1;
+}
+message Profile {
+  string username = 1;
+  string email = 2;
+  string roles = 3;
+}
+message ProfileResponse {
+  int32 status = 1;
+  string message = 2;
+  Profile profile = 3;
+}
+
+message AccessToken {
+  string token = 1;
+  int64 expiresIn = 2;
+  string tokenType = 3;
+}
+message RefreshToken {
+  string token = 1;
+  int64 expiresIn = 2;
+}
+
+message LoginSuccessInfo {
+  AccessToken accessToken = 1;
+  RefreshToken refreshToken = 2;
+}
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+message LoginResponse {
+  int32 status = 1;
+  string message = 2;
+  LoginSuccessInfo loginSuccessInfo = 3;
+}
+
+
+message RegisterRequest {
+  string username = 1;
+  string password = 2;
+  string email = 3;
+}
+message RegisterResponse {
+  int32 status = 1;
+  string message = 2;
 }
 
 message AuthenticateRequest {
@@ -21,7 +122,7 @@ message AuthenticateResponse {
 }
 
 message IdentityRequest {
-  string userId = 1;
+  int32 userId = 1;
 }
 
 message IdentityResponse {

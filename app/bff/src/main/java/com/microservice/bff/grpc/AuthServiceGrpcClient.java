@@ -26,10 +26,6 @@ public class AuthServiceGrpcClient {
     return authServiceBlockingStub.getProfile(request);
   }
 
-  public LogoutResponse logout(LogoutRequest request) {
-    return authServiceBlockingStub.postLogout(request);
-  }
-
   public IsAdminResponse isAdmin(IsAdminRequest request) {
     return authServiceBlockingStub.isAdmin(request);
   }
@@ -44,5 +40,9 @@ public class AuthServiceGrpcClient {
 
   public VerifyEmailResponse verifyEmail(VerifyEmailRequest request) {
     return authServiceBlockingStub.verifyEmail(request);
+  }
+
+  public RefreshTokenResponse refreshToken(RefreshTokenRequest request) {
+    return authServiceBlockingStub.refreshToken(request);
   }
 }

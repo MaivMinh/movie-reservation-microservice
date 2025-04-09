@@ -8,14 +8,8 @@ public interface IdentityRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>string userId = 1;</code>
+   * <code>int32 userId = 1;</code>
    * @return The userId.
    */
-  java.lang.String getUserId();
-  /**
-   * <code>string userId = 1;</code>
-   * @return The bytes for userId.
-   */
-  com.google.protobuf.ByteString
-      getUserIdBytes();
+  int getUserId();
 }

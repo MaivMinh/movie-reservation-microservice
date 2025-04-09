@@ -61,12 +61,6 @@ public class AuthServiceGrpcServer extends AuthServiceGrpc.AuthServiceImplBase {
     responseObserver.onCompleted();
   }
 
-  @Override
-  public void postLogout(LogoutRequest request, StreamObserver<LogoutResponse> responseObserver) {
-    LogoutResponse response = authService.logout(request);
-    responseObserver.onNext(response);
-    responseObserver.onCompleted();
-  }
 
   @Override
   public void getProfile(ProfileRequest request, StreamObserver<ProfileResponse> responseObserver) {
@@ -99,6 +93,13 @@ public class AuthServiceGrpcServer extends AuthServiceGrpc.AuthServiceImplBase {
   @Override
   public void verifyEmail(VerifyEmailRequest request, StreamObserver<VerifyEmailResponse> responseObserver) {
     VerifyEmailResponse response = authService.verifyEmail(request);
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
+
+  @Override
+  public void refreshToken(RefreshTokenRequest request, StreamObserver<RefreshTokenResponse> responseObserver) {
+    RefreshTokenResponse response = authService.refreshToken(request);
     responseObserver.onNext(response);
     responseObserver.onCompleted();
   }

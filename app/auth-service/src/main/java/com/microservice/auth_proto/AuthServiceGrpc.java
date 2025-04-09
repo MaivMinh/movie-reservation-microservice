@@ -170,37 +170,6 @@ public final class AuthServiceGrpc {
     return getPostLoginMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<com.microservice.auth_proto.LogoutRequest,
-      com.microservice.auth_proto.LogoutResponse> getPostLogoutMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "postLogout",
-      requestType = com.microservice.auth_proto.LogoutRequest.class,
-      responseType = com.microservice.auth_proto.LogoutResponse.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<com.microservice.auth_proto.LogoutRequest,
-      com.microservice.auth_proto.LogoutResponse> getPostLogoutMethod() {
-    io.grpc.MethodDescriptor<com.microservice.auth_proto.LogoutRequest, com.microservice.auth_proto.LogoutResponse> getPostLogoutMethod;
-    if ((getPostLogoutMethod = AuthServiceGrpc.getPostLogoutMethod) == null) {
-      synchronized (AuthServiceGrpc.class) {
-        if ((getPostLogoutMethod = AuthServiceGrpc.getPostLogoutMethod) == null) {
-          AuthServiceGrpc.getPostLogoutMethod = getPostLogoutMethod =
-              io.grpc.MethodDescriptor.<com.microservice.auth_proto.LogoutRequest, com.microservice.auth_proto.LogoutResponse>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "postLogout"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.microservice.auth_proto.LogoutRequest.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.microservice.auth_proto.LogoutResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new AuthServiceMethodDescriptorSupplier("postLogout"))
-              .build();
-        }
-      }
-    }
-    return getPostLogoutMethod;
-  }
-
   private static volatile io.grpc.MethodDescriptor<com.microservice.auth_proto.ProfileRequest,
       com.microservice.auth_proto.ProfileResponse> getGetProfileMethod;
 
@@ -325,6 +294,37 @@ public final class AuthServiceGrpc {
     return getVerifyEmailMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.microservice.auth_proto.RefreshTokenRequest,
+      com.microservice.auth_proto.RefreshTokenResponse> getRefreshTokenMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "refreshToken",
+      requestType = com.microservice.auth_proto.RefreshTokenRequest.class,
+      responseType = com.microservice.auth_proto.RefreshTokenResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.microservice.auth_proto.RefreshTokenRequest,
+      com.microservice.auth_proto.RefreshTokenResponse> getRefreshTokenMethod() {
+    io.grpc.MethodDescriptor<com.microservice.auth_proto.RefreshTokenRequest, com.microservice.auth_proto.RefreshTokenResponse> getRefreshTokenMethod;
+    if ((getRefreshTokenMethod = AuthServiceGrpc.getRefreshTokenMethod) == null) {
+      synchronized (AuthServiceGrpc.class) {
+        if ((getRefreshTokenMethod = AuthServiceGrpc.getRefreshTokenMethod) == null) {
+          AuthServiceGrpc.getRefreshTokenMethod = getRefreshTokenMethod =
+              io.grpc.MethodDescriptor.<com.microservice.auth_proto.RefreshTokenRequest, com.microservice.auth_proto.RefreshTokenResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "refreshToken"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.microservice.auth_proto.RefreshTokenRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.microservice.auth_proto.RefreshTokenResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new AuthServiceMethodDescriptorSupplier("refreshToken"))
+              .build();
+        }
+      }
+    }
+    return getRefreshTokenMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -410,13 +410,6 @@ public final class AuthServiceGrpc {
 
     /**
      */
-    default void postLogout(com.microservice.auth_proto.LogoutRequest request,
-        io.grpc.stub.StreamObserver<com.microservice.auth_proto.LogoutResponse> responseObserver) {
-      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getPostLogoutMethod(), responseObserver);
-    }
-
-    /**
-     */
     default void getProfile(com.microservice.auth_proto.ProfileRequest request,
         io.grpc.stub.StreamObserver<com.microservice.auth_proto.ProfileResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetProfileMethod(), responseObserver);
@@ -441,6 +434,13 @@ public final class AuthServiceGrpc {
     default void verifyEmail(com.microservice.auth_proto.VerifyEmailRequest request,
         io.grpc.stub.StreamObserver<com.microservice.auth_proto.VerifyEmailResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getVerifyEmailMethod(), responseObserver);
+    }
+
+    /**
+     */
+    default void refreshToken(com.microservice.auth_proto.RefreshTokenRequest request,
+        io.grpc.stub.StreamObserver<com.microservice.auth_proto.RefreshTokenResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getRefreshTokenMethod(), responseObserver);
     }
   }
 
@@ -513,14 +513,6 @@ public final class AuthServiceGrpc {
 
     /**
      */
-    public void postLogout(com.microservice.auth_proto.LogoutRequest request,
-        io.grpc.stub.StreamObserver<com.microservice.auth_proto.LogoutResponse> responseObserver) {
-      io.grpc.stub.ClientCalls.asyncUnaryCall(
-          getChannel().newCall(getPostLogoutMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
     public void getProfile(com.microservice.auth_proto.ProfileRequest request,
         io.grpc.stub.StreamObserver<com.microservice.auth_proto.ProfileResponse> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
@@ -549,6 +541,14 @@ public final class AuthServiceGrpc {
         io.grpc.stub.StreamObserver<com.microservice.auth_proto.VerifyEmailResponse> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getVerifyEmailMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void refreshToken(com.microservice.auth_proto.RefreshTokenRequest request,
+        io.grpc.stub.StreamObserver<com.microservice.auth_proto.RefreshTokenResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getRefreshTokenMethod(), getCallOptions()), request, responseObserver);
     }
   }
 
@@ -605,13 +605,6 @@ public final class AuthServiceGrpc {
 
     /**
      */
-    public com.microservice.auth_proto.LogoutResponse postLogout(com.microservice.auth_proto.LogoutRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
-          getChannel(), getPostLogoutMethod(), getCallOptions(), request);
-    }
-
-    /**
-     */
     public com.microservice.auth_proto.ProfileResponse getProfile(com.microservice.auth_proto.ProfileRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getGetProfileMethod(), getCallOptions(), request);
@@ -636,6 +629,13 @@ public final class AuthServiceGrpc {
     public com.microservice.auth_proto.VerifyEmailResponse verifyEmail(com.microservice.auth_proto.VerifyEmailRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getVerifyEmailMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.microservice.auth_proto.RefreshTokenResponse refreshToken(com.microservice.auth_proto.RefreshTokenRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getRefreshTokenMethod(), getCallOptions(), request);
     }
   }
 
@@ -697,14 +697,6 @@ public final class AuthServiceGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<com.microservice.auth_proto.LogoutResponse> postLogout(
-        com.microservice.auth_proto.LogoutRequest request) {
-      return io.grpc.stub.ClientCalls.futureUnaryCall(
-          getChannel().newCall(getPostLogoutMethod(), getCallOptions()), request);
-    }
-
-    /**
-     */
     public com.google.common.util.concurrent.ListenableFuture<com.microservice.auth_proto.ProfileResponse> getProfile(
         com.microservice.auth_proto.ProfileRequest request) {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
@@ -734,6 +726,14 @@ public final class AuthServiceGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getVerifyEmailMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.microservice.auth_proto.RefreshTokenResponse> refreshToken(
+        com.microservice.auth_proto.RefreshTokenRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getRefreshTokenMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_DO_AUTHENTICATE = 0;
@@ -741,11 +741,11 @@ public final class AuthServiceGrpc {
   private static final int METHODID_IS_ADMIN = 2;
   private static final int METHODID_POST_REGISTER = 3;
   private static final int METHODID_POST_LOGIN = 4;
-  private static final int METHODID_POST_LOGOUT = 5;
-  private static final int METHODID_GET_PROFILE = 6;
-  private static final int METHODID_FORGOT_PASSWORD = 7;
-  private static final int METHODID_RESET_PASSWORD = 8;
-  private static final int METHODID_VERIFY_EMAIL = 9;
+  private static final int METHODID_GET_PROFILE = 5;
+  private static final int METHODID_FORGOT_PASSWORD = 6;
+  private static final int METHODID_RESET_PASSWORD = 7;
+  private static final int METHODID_VERIFY_EMAIL = 8;
+  private static final int METHODID_REFRESH_TOKEN = 9;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -784,10 +784,6 @@ public final class AuthServiceGrpc {
           serviceImpl.postLogin((com.microservice.auth_proto.LoginRequest) request,
               (io.grpc.stub.StreamObserver<com.microservice.auth_proto.LoginResponse>) responseObserver);
           break;
-        case METHODID_POST_LOGOUT:
-          serviceImpl.postLogout((com.microservice.auth_proto.LogoutRequest) request,
-              (io.grpc.stub.StreamObserver<com.microservice.auth_proto.LogoutResponse>) responseObserver);
-          break;
         case METHODID_GET_PROFILE:
           serviceImpl.getProfile((com.microservice.auth_proto.ProfileRequest) request,
               (io.grpc.stub.StreamObserver<com.microservice.auth_proto.ProfileResponse>) responseObserver);
@@ -803,6 +799,10 @@ public final class AuthServiceGrpc {
         case METHODID_VERIFY_EMAIL:
           serviceImpl.verifyEmail((com.microservice.auth_proto.VerifyEmailRequest) request,
               (io.grpc.stub.StreamObserver<com.microservice.auth_proto.VerifyEmailResponse>) responseObserver);
+          break;
+        case METHODID_REFRESH_TOKEN:
+          serviceImpl.refreshToken((com.microservice.auth_proto.RefreshTokenRequest) request,
+              (io.grpc.stub.StreamObserver<com.microservice.auth_proto.RefreshTokenResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -858,13 +858,6 @@ public final class AuthServiceGrpc {
               com.microservice.auth_proto.LoginResponse>(
                 service, METHODID_POST_LOGIN)))
         .addMethod(
-          getPostLogoutMethod(),
-          io.grpc.stub.ServerCalls.asyncUnaryCall(
-            new MethodHandlers<
-              com.microservice.auth_proto.LogoutRequest,
-              com.microservice.auth_proto.LogoutResponse>(
-                service, METHODID_POST_LOGOUT)))
-        .addMethod(
           getGetProfileMethod(),
           io.grpc.stub.ServerCalls.asyncUnaryCall(
             new MethodHandlers<
@@ -892,6 +885,13 @@ public final class AuthServiceGrpc {
               com.microservice.auth_proto.VerifyEmailRequest,
               com.microservice.auth_proto.VerifyEmailResponse>(
                 service, METHODID_VERIFY_EMAIL)))
+        .addMethod(
+          getRefreshTokenMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              com.microservice.auth_proto.RefreshTokenRequest,
+              com.microservice.auth_proto.RefreshTokenResponse>(
+                service, METHODID_REFRESH_TOKEN)))
         .build();
   }
 
@@ -945,11 +945,11 @@ public final class AuthServiceGrpc {
               .addMethod(getIsAdminMethod())
               .addMethod(getPostRegisterMethod())
               .addMethod(getPostLoginMethod())
-              .addMethod(getPostLogoutMethod())
               .addMethod(getGetProfileMethod())
               .addMethod(getForgotPasswordMethod())
               .addMethod(getResetPasswordMethod())
               .addMethod(getVerifyEmailMethod())
+              .addMethod(getRefreshTokenMethod())
               .build();
         }
       }

@@ -2,11 +2,14 @@ package com.microservice.bff.service;
 
 import com.microservice.auth_proto.*;
 import com.microservice.bff.grpc.AuthServiceGrpcClient;
+import com.microservice.bff.request.RefreshTokenRequest;
 import com.microservice.bff.request.Register;
 import com.microservice.bff.request.ResetRequest;
 import com.microservice.bff.response.ResponseData;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.sql.Timestamp;
 
@@ -34,15 +37,23 @@ public class AuthService {
             .setPassword(loginRequest.getPassword())
             .build();
     LoginResponse response = grpcClient.login(request);
-    com.microservice.bff.response.LoginResponse loginResponse = null;
-    if (response.hasLoginSuccessInfo()) {
-      LoginSuccessInfo loginSuccessInfo = response.getLoginSuccessInfo();
-      loginResponse = com.microservice.bff.response.LoginResponse.builder()
-              .accessToken(loginSuccessInfo.getAccessToken())
-              .tokenType(loginSuccessInfo.getTokenType())
-              .expiresIn(new Timestamp(loginSuccessInfo.getExpiresIn()))
+    if (!response.hasLoginSuccessInfo()) {
+      return ResponseData.builder()
+              .status(response.getStatus())
+              .message(response.getMessage())
               .build();
     }
+
+    LoginSuccessInfo loginSuccessInfo = response.getLoginSuccessInfo();
+    AccessToken accessToken = loginSuccessInfo.getAccessToken();
+    RefreshToken refreshToken = loginSuccessInfo.getRefreshToken();
+    com.microservice.bff.response.LoginResponse loginResponse = com.microservice.bff.response.LoginResponse.builder()
+            .accessToken(accessToken.getToken())
+            .refreshToken(refreshToken.getToken())
+            .tokenType(accessToken.getTokenType())
+            .expiresIn(new Timestamp(accessToken.getExpiresIn()))
+            .build();
+
     return ResponseData.builder()
             .status(response.getStatus())
             .message(response.getMessage())
@@ -71,19 +82,8 @@ public class AuthService {
             .build();
   }
 
-  public ResponseData logout(String token) {
-    LogoutRequest request = LogoutRequest.newBuilder()
-            .setAccessToken(token)
-            .build();
-    LogoutResponse response = grpcClient.logout(request);
-    return ResponseData.builder()
-            .status(response.getStatus())
-            .message(response.getMessage())
-            .build();
-  }
 
-
-  public boolean isAdmin(Integer id)  {
+  public boolean isAdmin(Integer id) {
     /// Hàm thực hiện kiểm tra xem account có ROLE là ADMIN không.
     IsAdminRequest request = IsAdminRequest.newBuilder()
             .setAccountId(id)
@@ -125,6 +125,32 @@ public class AuthService {
     return ResponseData.builder()
             .status(response.getStatus())
             .message(response.getMessage())
+            .build();
+  }
+
+  public ResponseData refreshToken(RefreshTokenRequest refreshTokenRequest) {
+    com.microservice.auth_proto.RefreshTokenRequest request = com.microservice.auth_proto.RefreshTokenRequest.newBuilder()
+            .setToken(refreshTokenRequest.getRefreshToken())
+            .build();
+    RefreshTokenResponse response = grpcClient.refreshToken(request);
+    if (!response.hasAccessToken()) {
+      return ResponseData.builder()
+              .status(response.getStatus())
+              .message(response.getMessage())
+              .build();
+    }
+
+    AccessToken accessToken = response.getAccessToken();
+    com.microservice.bff.response.RefreshTokenResponse refreshTokenResponse = com.microservice.bff.response.RefreshTokenResponse.builder()
+            .accessToken(accessToken.getToken())
+            .tokenType(accessToken.getTokenType())
+            .expiresIn(new Timestamp(accessToken.getExpiresIn()))
+            .build();
+
+    return ResponseData.builder()
+            .status(response.getStatus())
+            .message(response.getMessage())
+            .data(refreshTokenResponse)
             .build();
   }
 }

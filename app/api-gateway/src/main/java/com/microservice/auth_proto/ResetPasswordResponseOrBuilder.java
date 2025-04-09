@@ -3,8 +3,8 @@
 
 package com.microservice.auth_proto;
 
-public interface LogoutResponseOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:net.devh.boot.grpc.example.LogoutResponse)
+public interface ResetPasswordResponseOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:net.devh.boot.grpc.example.ResetPasswordResponse)
     com.google.protobuf.MessageOrBuilder {
 
   /**

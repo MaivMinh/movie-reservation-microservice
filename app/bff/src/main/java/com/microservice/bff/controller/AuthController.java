@@ -1,14 +1,12 @@
 package com.microservice.bff.controller;
 
-import com.microservice.bff.request.LoginRequest;
-import com.microservice.bff.request.Logout;
-import com.microservice.bff.request.Register;
-import com.microservice.bff.request.ResetRequest;
+import com.microservice.bff.request.*;
 import com.microservice.bff.response.ResponseData;
 import com.microservice.bff.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/auth")
@@ -29,13 +27,6 @@ public class AuthController {
     return ResponseEntity.status(response.getStatus()).body(response);
   }
 
-
-  @PostMapping(value = "/logout")
-  public ResponseEntity<ResponseData> logout(@RequestBody Logout logout) {
-    ResponseData response = authService.logout(logout.getToken());
-    return ResponseEntity.status(response.getStatus()).body(response);
-  }
-
   @GetMapping(value = "/forgot-password")
   public ResponseEntity<ResponseData> forgotPassword(@RequestParam String email, @RequestParam String host) {
     ResponseData response = authService.forgotPassword(email, host);
@@ -51,6 +42,12 @@ public class AuthController {
   @GetMapping(value = "/verify-email")
   public ResponseEntity<ResponseData> verifyEmail(@RequestParam String token) {
     ResponseData response = authService.verifyEmail(token);
+    return ResponseEntity.status(response.getStatus()).body(response);
+  }
+
+  @PostMapping(value = "/refresh-token")
+  public ResponseEntity<ResponseData> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+    ResponseData response = authService.refreshToken(refreshTokenRequest);
     return ResponseEntity.status(response.getStatus()).body(response);
   }
 }

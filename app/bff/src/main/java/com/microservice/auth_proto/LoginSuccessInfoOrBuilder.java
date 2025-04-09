@@ -8,32 +8,32 @@ public interface LoginSuccessInfoOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>string accessToken = 1;</code>
+   * <code>.net.devh.boot.grpc.example.AccessToken accessToken = 1;</code>
+   * @return Whether the accessToken field is set.
+   */
+  boolean hasAccessToken();
+  /**
+   * <code>.net.devh.boot.grpc.example.AccessToken accessToken = 1;</code>
    * @return The accessToken.
    */
-  java.lang.String getAccessToken();
+  com.microservice.auth_proto.AccessToken getAccessToken();
   /**
-   * <code>string accessToken = 1;</code>
-   * @return The bytes for accessToken.
+   * <code>.net.devh.boot.grpc.example.AccessToken accessToken = 1;</code>
    */
-  com.google.protobuf.ByteString
-      getAccessTokenBytes();
+  com.microservice.auth_proto.AccessTokenOrBuilder getAccessTokenOrBuilder();
 
   /**
-   * <code>int64 expiresIn = 2;</code>
-   * @return The expiresIn.
+   * <code>.net.devh.boot.grpc.example.RefreshToken refreshToken = 2;</code>
+   * @return Whether the refreshToken field is set.
    */
-  long getExpiresIn();
-
+  boolean hasRefreshToken();
   /**
-   * <code>string tokenType = 3;</code>
-   * @return The tokenType.
+   * <code>.net.devh.boot.grpc.example.RefreshToken refreshToken = 2;</code>
+   * @return The refreshToken.
    */
-  java.lang.String getTokenType();
+  com.microservice.auth_proto.RefreshToken getRefreshToken();
   /**
-   * <code>string tokenType = 3;</code>
-   * @return The bytes for tokenType.
+   * <code>.net.devh.boot.grpc.example.RefreshToken refreshToken = 2;</code>
    */
-  com.google.protobuf.ByteString
-      getTokenTypeBytes();
+  com.microservice.auth_proto.RefreshTokenOrBuilder getRefreshTokenOrBuilder();
 }

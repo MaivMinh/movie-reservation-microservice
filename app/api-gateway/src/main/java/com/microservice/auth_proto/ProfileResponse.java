@@ -4,18 +4,18 @@
 package com.microservice.auth_proto;
 
 /**
- * Protobuf type {@code net.devh.boot.grpc.example.LogoutResponse}
+ * Protobuf type {@code net.devh.boot.grpc.example.ProfileResponse}
  */
-public final class LogoutResponse extends
+public final class ProfileResponse extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:net.devh.boot.grpc.example.LogoutResponse)
-    LogoutResponseOrBuilder {
+    // @@protoc_insertion_point(message_implements:net.devh.boot.grpc.example.ProfileResponse)
+    ProfileResponseOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use LogoutResponse.newBuilder() to construct.
-  private LogoutResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use ProfileResponse.newBuilder() to construct.
+  private ProfileResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private LogoutResponse() {
+  private ProfileResponse() {
     message_ = "";
   }
 
@@ -23,7 +23,7 @@ private static final long serialVersionUID = 0L;
   @SuppressWarnings({"unused"})
   protected java.lang.Object newInstance(
       UnusedPrivateParameter unused) {
-    return new LogoutResponse();
+    return new ProfileResponse();
   }
 
   @java.lang.Override
@@ -33,15 +33,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.microservice.auth_proto.AuthProto.internal_static_net_devh_boot_grpc_example_LogoutResponse_descriptor;
+    return com.microservice.auth_proto.AuthProto.internal_static_net_devh_boot_grpc_example_ProfileResponse_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.microservice.auth_proto.AuthProto.internal_static_net_devh_boot_grpc_example_LogoutResponse_fieldAccessorTable
+    return com.microservice.auth_proto.AuthProto.internal_static_net_devh_boot_grpc_example_ProfileResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            com.microservice.auth_proto.LogoutResponse.class, com.microservice.auth_proto.LogoutResponse.Builder.class);
+            com.microservice.auth_proto.ProfileResponse.class, com.microservice.auth_proto.ProfileResponse.Builder.class);
   }
 
   public static final int STATUS_FIELD_NUMBER = 1;
@@ -93,6 +93,32 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int PROFILE_FIELD_NUMBER = 3;
+  private com.microservice.auth_proto.Profile profile_;
+  /**
+   * <code>.net.devh.boot.grpc.example.Profile profile = 3;</code>
+   * @return Whether the profile field is set.
+   */
+  @java.lang.Override
+  public boolean hasProfile() {
+    return profile_ != null;
+  }
+  /**
+   * <code>.net.devh.boot.grpc.example.Profile profile = 3;</code>
+   * @return The profile.
+   */
+  @java.lang.Override
+  public com.microservice.auth_proto.Profile getProfile() {
+    return profile_ == null ? com.microservice.auth_proto.Profile.getDefaultInstance() : profile_;
+  }
+  /**
+   * <code>.net.devh.boot.grpc.example.Profile profile = 3;</code>
+   */
+  @java.lang.Override
+  public com.microservice.auth_proto.ProfileOrBuilder getProfileOrBuilder() {
+    return getProfile();
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -113,6 +139,9 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(message_)) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 2, message_);
     }
+    if (profile_ != null) {
+      output.writeMessage(3, getProfile());
+    }
     getUnknownFields().writeTo(output);
   }
 
@@ -129,6 +158,10 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(message_)) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, message_);
     }
+    if (profile_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(3, getProfile());
+    }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
@@ -139,15 +172,20 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof com.microservice.auth_proto.LogoutResponse)) {
+    if (!(obj instanceof com.microservice.auth_proto.ProfileResponse)) {
       return super.equals(obj);
     }
-    com.microservice.auth_proto.LogoutResponse other = (com.microservice.auth_proto.LogoutResponse) obj;
+    com.microservice.auth_proto.ProfileResponse other = (com.microservice.auth_proto.ProfileResponse) obj;
 
     if (getStatus()
         != other.getStatus()) return false;
     if (!getMessage()
         .equals(other.getMessage())) return false;
+    if (hasProfile() != other.hasProfile()) return false;
+    if (hasProfile()) {
+      if (!getProfile()
+          .equals(other.getProfile())) return false;
+    }
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -163,74 +201,78 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getStatus();
     hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
     hash = (53 * hash) + getMessage().hashCode();
+    if (hasProfile()) {
+      hash = (37 * hash) + PROFILE_FIELD_NUMBER;
+      hash = (53 * hash) + getProfile().hashCode();
+    }
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static com.microservice.auth_proto.LogoutResponse parseFrom(
+  public static com.microservice.auth_proto.ProfileResponse parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.microservice.auth_proto.LogoutResponse parseFrom(
+  public static com.microservice.auth_proto.ProfileResponse parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.microservice.auth_proto.LogoutResponse parseFrom(
+  public static com.microservice.auth_proto.ProfileResponse parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.microservice.auth_proto.LogoutResponse parseFrom(
+  public static com.microservice.auth_proto.ProfileResponse parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.microservice.auth_proto.LogoutResponse parseFrom(byte[] data)
+  public static com.microservice.auth_proto.ProfileResponse parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.microservice.auth_proto.LogoutResponse parseFrom(
+  public static com.microservice.auth_proto.ProfileResponse parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.microservice.auth_proto.LogoutResponse parseFrom(java.io.InputStream input)
+  public static com.microservice.auth_proto.ProfileResponse parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.microservice.auth_proto.LogoutResponse parseFrom(
+  public static com.microservice.auth_proto.ProfileResponse parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.microservice.auth_proto.LogoutResponse parseDelimitedFrom(java.io.InputStream input)
+  public static com.microservice.auth_proto.ProfileResponse parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static com.microservice.auth_proto.LogoutResponse parseDelimitedFrom(
+  public static com.microservice.auth_proto.ProfileResponse parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.microservice.auth_proto.LogoutResponse parseFrom(
+  public static com.microservice.auth_proto.ProfileResponse parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.microservice.auth_proto.LogoutResponse parseFrom(
+  public static com.microservice.auth_proto.ProfileResponse parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -243,7 +285,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(com.microservice.auth_proto.LogoutResponse prototype) {
+  public static Builder newBuilder(com.microservice.auth_proto.ProfileResponse prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -259,26 +301,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code net.devh.boot.grpc.example.LogoutResponse}
+   * Protobuf type {@code net.devh.boot.grpc.example.ProfileResponse}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:net.devh.boot.grpc.example.LogoutResponse)
-      com.microservice.auth_proto.LogoutResponseOrBuilder {
+      // @@protoc_insertion_point(builder_implements:net.devh.boot.grpc.example.ProfileResponse)
+      com.microservice.auth_proto.ProfileResponseOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.microservice.auth_proto.AuthProto.internal_static_net_devh_boot_grpc_example_LogoutResponse_descriptor;
+      return com.microservice.auth_proto.AuthProto.internal_static_net_devh_boot_grpc_example_ProfileResponse_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.microservice.auth_proto.AuthProto.internal_static_net_devh_boot_grpc_example_LogoutResponse_fieldAccessorTable
+      return com.microservice.auth_proto.AuthProto.internal_static_net_devh_boot_grpc_example_ProfileResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.microservice.auth_proto.LogoutResponse.class, com.microservice.auth_proto.LogoutResponse.Builder.class);
+              com.microservice.auth_proto.ProfileResponse.class, com.microservice.auth_proto.ProfileResponse.Builder.class);
     }
 
-    // Construct using com.microservice.auth_proto.LogoutResponse.newBuilder()
+    // Construct using com.microservice.auth_proto.ProfileResponse.newBuilder()
     private Builder() {
 
     }
@@ -295,23 +337,29 @@ private static final long serialVersionUID = 0L;
 
       message_ = "";
 
+      if (profileBuilder_ == null) {
+        profile_ = null;
+      } else {
+        profile_ = null;
+        profileBuilder_ = null;
+      }
       return this;
     }
 
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.microservice.auth_proto.AuthProto.internal_static_net_devh_boot_grpc_example_LogoutResponse_descriptor;
+      return com.microservice.auth_proto.AuthProto.internal_static_net_devh_boot_grpc_example_ProfileResponse_descriptor;
     }
 
     @java.lang.Override
-    public com.microservice.auth_proto.LogoutResponse getDefaultInstanceForType() {
-      return com.microservice.auth_proto.LogoutResponse.getDefaultInstance();
+    public com.microservice.auth_proto.ProfileResponse getDefaultInstanceForType() {
+      return com.microservice.auth_proto.ProfileResponse.getDefaultInstance();
     }
 
     @java.lang.Override
-    public com.microservice.auth_proto.LogoutResponse build() {
-      com.microservice.auth_proto.LogoutResponse result = buildPartial();
+    public com.microservice.auth_proto.ProfileResponse build() {
+      com.microservice.auth_proto.ProfileResponse result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -319,10 +367,15 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public com.microservice.auth_proto.LogoutResponse buildPartial() {
-      com.microservice.auth_proto.LogoutResponse result = new com.microservice.auth_proto.LogoutResponse(this);
+    public com.microservice.auth_proto.ProfileResponse buildPartial() {
+      com.microservice.auth_proto.ProfileResponse result = new com.microservice.auth_proto.ProfileResponse(this);
       result.status_ = status_;
       result.message_ = message_;
+      if (profileBuilder_ == null) {
+        result.profile_ = profile_;
+      } else {
+        result.profile_ = profileBuilder_.build();
+      }
       onBuilt();
       return result;
     }
@@ -361,22 +414,25 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof com.microservice.auth_proto.LogoutResponse) {
-        return mergeFrom((com.microservice.auth_proto.LogoutResponse)other);
+      if (other instanceof com.microservice.auth_proto.ProfileResponse) {
+        return mergeFrom((com.microservice.auth_proto.ProfileResponse)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(com.microservice.auth_proto.LogoutResponse other) {
-      if (other == com.microservice.auth_proto.LogoutResponse.getDefaultInstance()) return this;
+    public Builder mergeFrom(com.microservice.auth_proto.ProfileResponse other) {
+      if (other == com.microservice.auth_proto.ProfileResponse.getDefaultInstance()) return this;
       if (other.getStatus() != 0) {
         setStatus(other.getStatus());
       }
       if (!other.getMessage().isEmpty()) {
         message_ = other.message_;
         onChanged();
+      }
+      if (other.hasProfile()) {
+        mergeProfile(other.getProfile());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -414,6 +470,13 @@ private static final long serialVersionUID = 0L;
 
               break;
             } // case 18
+            case 26: {
+              input.readMessage(
+                  getProfileFieldBuilder().getBuilder(),
+                  extensionRegistry);
+
+              break;
+            } // case 26
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -536,6 +599,125 @@ private static final long serialVersionUID = 0L;
       onChanged();
       return this;
     }
+
+    private com.microservice.auth_proto.Profile profile_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.microservice.auth_proto.Profile, com.microservice.auth_proto.Profile.Builder, com.microservice.auth_proto.ProfileOrBuilder> profileBuilder_;
+    /**
+     * <code>.net.devh.boot.grpc.example.Profile profile = 3;</code>
+     * @return Whether the profile field is set.
+     */
+    public boolean hasProfile() {
+      return profileBuilder_ != null || profile_ != null;
+    }
+    /**
+     * <code>.net.devh.boot.grpc.example.Profile profile = 3;</code>
+     * @return The profile.
+     */
+    public com.microservice.auth_proto.Profile getProfile() {
+      if (profileBuilder_ == null) {
+        return profile_ == null ? com.microservice.auth_proto.Profile.getDefaultInstance() : profile_;
+      } else {
+        return profileBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.net.devh.boot.grpc.example.Profile profile = 3;</code>
+     */
+    public Builder setProfile(com.microservice.auth_proto.Profile value) {
+      if (profileBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        profile_ = value;
+        onChanged();
+      } else {
+        profileBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.net.devh.boot.grpc.example.Profile profile = 3;</code>
+     */
+    public Builder setProfile(
+        com.microservice.auth_proto.Profile.Builder builderForValue) {
+      if (profileBuilder_ == null) {
+        profile_ = builderForValue.build();
+        onChanged();
+      } else {
+        profileBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.net.devh.boot.grpc.example.Profile profile = 3;</code>
+     */
+    public Builder mergeProfile(com.microservice.auth_proto.Profile value) {
+      if (profileBuilder_ == null) {
+        if (profile_ != null) {
+          profile_ =
+            com.microservice.auth_proto.Profile.newBuilder(profile_).mergeFrom(value).buildPartial();
+        } else {
+          profile_ = value;
+        }
+        onChanged();
+      } else {
+        profileBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.net.devh.boot.grpc.example.Profile profile = 3;</code>
+     */
+    public Builder clearProfile() {
+      if (profileBuilder_ == null) {
+        profile_ = null;
+        onChanged();
+      } else {
+        profile_ = null;
+        profileBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.net.devh.boot.grpc.example.Profile profile = 3;</code>
+     */
+    public com.microservice.auth_proto.Profile.Builder getProfileBuilder() {
+      
+      onChanged();
+      return getProfileFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.net.devh.boot.grpc.example.Profile profile = 3;</code>
+     */
+    public com.microservice.auth_proto.ProfileOrBuilder getProfileOrBuilder() {
+      if (profileBuilder_ != null) {
+        return profileBuilder_.getMessageOrBuilder();
+      } else {
+        return profile_ == null ?
+            com.microservice.auth_proto.Profile.getDefaultInstance() : profile_;
+      }
+    }
+    /**
+     * <code>.net.devh.boot.grpc.example.Profile profile = 3;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.microservice.auth_proto.Profile, com.microservice.auth_proto.Profile.Builder, com.microservice.auth_proto.ProfileOrBuilder> 
+        getProfileFieldBuilder() {
+      if (profileBuilder_ == null) {
+        profileBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            com.microservice.auth_proto.Profile, com.microservice.auth_proto.Profile.Builder, com.microservice.auth_proto.ProfileOrBuilder>(
+                getProfile(),
+                getParentForChildren(),
+                isClean());
+        profile_ = null;
+      }
+      return profileBuilder_;
+    }
     @java.lang.Override
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -549,23 +731,23 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:net.devh.boot.grpc.example.LogoutResponse)
+    // @@protoc_insertion_point(builder_scope:net.devh.boot.grpc.example.ProfileResponse)
   }
 
-  // @@protoc_insertion_point(class_scope:net.devh.boot.grpc.example.LogoutResponse)
-  private static final com.microservice.auth_proto.LogoutResponse DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:net.devh.boot.grpc.example.ProfileResponse)
+  private static final com.microservice.auth_proto.ProfileResponse DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new com.microservice.auth_proto.LogoutResponse();
+    DEFAULT_INSTANCE = new com.microservice.auth_proto.ProfileResponse();
   }
 
-  public static com.microservice.auth_proto.LogoutResponse getDefaultInstance() {
+  public static com.microservice.auth_proto.ProfileResponse getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<LogoutResponse>
-      PARSER = new com.google.protobuf.AbstractParser<LogoutResponse>() {
+  private static final com.google.protobuf.Parser<ProfileResponse>
+      PARSER = new com.google.protobuf.AbstractParser<ProfileResponse>() {
     @java.lang.Override
-    public LogoutResponse parsePartialFrom(
+    public ProfileResponse parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -584,17 +766,17 @@ private static final long serialVersionUID = 0L;
     }
   };
 
-  public static com.google.protobuf.Parser<LogoutResponse> parser() {
+  public static com.google.protobuf.Parser<ProfileResponse> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<LogoutResponse> getParserForType() {
+  public com.google.protobuf.Parser<ProfileResponse> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.microservice.auth_proto.LogoutResponse getDefaultInstanceForType() {
+  public com.microservice.auth_proto.ProfileResponse getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

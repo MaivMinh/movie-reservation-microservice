@@ -4,26 +4,26 @@
 package com.microservice.auth_proto;
 
 /**
- * Protobuf type {@code net.devh.boot.grpc.example.LogoutRequest}
+ * Protobuf type {@code net.devh.boot.grpc.example.VerifyEmailResponse}
  */
-public final class LogoutRequest extends
+public final class VerifyEmailResponse extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:net.devh.boot.grpc.example.LogoutRequest)
-    LogoutRequestOrBuilder {
+    // @@protoc_insertion_point(message_implements:net.devh.boot.grpc.example.VerifyEmailResponse)
+    VerifyEmailResponseOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use LogoutRequest.newBuilder() to construct.
-  private LogoutRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use VerifyEmailResponse.newBuilder() to construct.
+  private VerifyEmailResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private LogoutRequest() {
-    accessToken_ = "";
+  private VerifyEmailResponse() {
+    message_ = "";
   }
 
   @java.lang.Override
   @SuppressWarnings({"unused"})
   protected java.lang.Object newInstance(
       UnusedPrivateParameter unused) {
-    return new LogoutRequest();
+    return new VerifyEmailResponse();
   }
 
   @java.lang.Override
@@ -33,49 +33,60 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.microservice.auth_proto.AuthProto.internal_static_net_devh_boot_grpc_example_LogoutRequest_descriptor;
+    return com.microservice.auth_proto.AuthProto.internal_static_net_devh_boot_grpc_example_VerifyEmailResponse_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.microservice.auth_proto.AuthProto.internal_static_net_devh_boot_grpc_example_LogoutRequest_fieldAccessorTable
+    return com.microservice.auth_proto.AuthProto.internal_static_net_devh_boot_grpc_example_VerifyEmailResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            com.microservice.auth_proto.LogoutRequest.class, com.microservice.auth_proto.LogoutRequest.Builder.class);
+            com.microservice.auth_proto.VerifyEmailResponse.class, com.microservice.auth_proto.VerifyEmailResponse.Builder.class);
   }
 
-  public static final int ACCESSTOKEN_FIELD_NUMBER = 1;
-  private volatile java.lang.Object accessToken_;
+  public static final int STATUS_FIELD_NUMBER = 1;
+  private int status_;
   /**
-   * <code>string accessToken = 1;</code>
-   * @return The accessToken.
+   * <code>int32 status = 1;</code>
+   * @return The status.
    */
   @java.lang.Override
-  public java.lang.String getAccessToken() {
-    java.lang.Object ref = accessToken_;
+  public int getStatus() {
+    return status_;
+  }
+
+  public static final int MESSAGE_FIELD_NUMBER = 2;
+  private volatile java.lang.Object message_;
+  /**
+   * <code>string message = 2;</code>
+   * @return The message.
+   */
+  @java.lang.Override
+  public java.lang.String getMessage() {
+    java.lang.Object ref = message_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      accessToken_ = s;
+      message_ = s;
       return s;
     }
   }
   /**
-   * <code>string accessToken = 1;</code>
-   * @return The bytes for accessToken.
+   * <code>string message = 2;</code>
+   * @return The bytes for message.
    */
   @java.lang.Override
   public com.google.protobuf.ByteString
-      getAccessTokenBytes() {
-    java.lang.Object ref = accessToken_;
+      getMessageBytes() {
+    java.lang.Object ref = message_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      accessToken_ = b;
+      message_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
@@ -96,8 +107,11 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(accessToken_)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, accessToken_);
+    if (status_ != 0) {
+      output.writeInt32(1, status_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(message_)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, message_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -108,8 +122,12 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(accessToken_)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, accessToken_);
+    if (status_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(1, status_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(message_)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, message_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -121,13 +139,15 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof com.microservice.auth_proto.LogoutRequest)) {
+    if (!(obj instanceof com.microservice.auth_proto.VerifyEmailResponse)) {
       return super.equals(obj);
     }
-    com.microservice.auth_proto.LogoutRequest other = (com.microservice.auth_proto.LogoutRequest) obj;
+    com.microservice.auth_proto.VerifyEmailResponse other = (com.microservice.auth_proto.VerifyEmailResponse) obj;
 
-    if (!getAccessToken()
-        .equals(other.getAccessToken())) return false;
+    if (getStatus()
+        != other.getStatus()) return false;
+    if (!getMessage()
+        .equals(other.getMessage())) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -139,76 +159,78 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + ACCESSTOKEN_FIELD_NUMBER;
-    hash = (53 * hash) + getAccessToken().hashCode();
+    hash = (37 * hash) + STATUS_FIELD_NUMBER;
+    hash = (53 * hash) + getStatus();
+    hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
+    hash = (53 * hash) + getMessage().hashCode();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static com.microservice.auth_proto.LogoutRequest parseFrom(
+  public static com.microservice.auth_proto.VerifyEmailResponse parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.microservice.auth_proto.LogoutRequest parseFrom(
+  public static com.microservice.auth_proto.VerifyEmailResponse parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.microservice.auth_proto.LogoutRequest parseFrom(
+  public static com.microservice.auth_proto.VerifyEmailResponse parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.microservice.auth_proto.LogoutRequest parseFrom(
+  public static com.microservice.auth_proto.VerifyEmailResponse parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.microservice.auth_proto.LogoutRequest parseFrom(byte[] data)
+  public static com.microservice.auth_proto.VerifyEmailResponse parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.microservice.auth_proto.LogoutRequest parseFrom(
+  public static com.microservice.auth_proto.VerifyEmailResponse parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.microservice.auth_proto.LogoutRequest parseFrom(java.io.InputStream input)
+  public static com.microservice.auth_proto.VerifyEmailResponse parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.microservice.auth_proto.LogoutRequest parseFrom(
+  public static com.microservice.auth_proto.VerifyEmailResponse parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.microservice.auth_proto.LogoutRequest parseDelimitedFrom(java.io.InputStream input)
+  public static com.microservice.auth_proto.VerifyEmailResponse parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static com.microservice.auth_proto.LogoutRequest parseDelimitedFrom(
+  public static com.microservice.auth_proto.VerifyEmailResponse parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.microservice.auth_proto.LogoutRequest parseFrom(
+  public static com.microservice.auth_proto.VerifyEmailResponse parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.microservice.auth_proto.LogoutRequest parseFrom(
+  public static com.microservice.auth_proto.VerifyEmailResponse parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -221,7 +243,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(com.microservice.auth_proto.LogoutRequest prototype) {
+  public static Builder newBuilder(com.microservice.auth_proto.VerifyEmailResponse prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -237,26 +259,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code net.devh.boot.grpc.example.LogoutRequest}
+   * Protobuf type {@code net.devh.boot.grpc.example.VerifyEmailResponse}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:net.devh.boot.grpc.example.LogoutRequest)
-      com.microservice.auth_proto.LogoutRequestOrBuilder {
+      // @@protoc_insertion_point(builder_implements:net.devh.boot.grpc.example.VerifyEmailResponse)
+      com.microservice.auth_proto.VerifyEmailResponseOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.microservice.auth_proto.AuthProto.internal_static_net_devh_boot_grpc_example_LogoutRequest_descriptor;
+      return com.microservice.auth_proto.AuthProto.internal_static_net_devh_boot_grpc_example_VerifyEmailResponse_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.microservice.auth_proto.AuthProto.internal_static_net_devh_boot_grpc_example_LogoutRequest_fieldAccessorTable
+      return com.microservice.auth_proto.AuthProto.internal_static_net_devh_boot_grpc_example_VerifyEmailResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.microservice.auth_proto.LogoutRequest.class, com.microservice.auth_proto.LogoutRequest.Builder.class);
+              com.microservice.auth_proto.VerifyEmailResponse.class, com.microservice.auth_proto.VerifyEmailResponse.Builder.class);
     }
 
-    // Construct using com.microservice.auth_proto.LogoutRequest.newBuilder()
+    // Construct using com.microservice.auth_proto.VerifyEmailResponse.newBuilder()
     private Builder() {
 
     }
@@ -269,7 +291,9 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      accessToken_ = "";
+      status_ = 0;
+
+      message_ = "";
 
       return this;
     }
@@ -277,17 +301,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.microservice.auth_proto.AuthProto.internal_static_net_devh_boot_grpc_example_LogoutRequest_descriptor;
+      return com.microservice.auth_proto.AuthProto.internal_static_net_devh_boot_grpc_example_VerifyEmailResponse_descriptor;
     }
 
     @java.lang.Override
-    public com.microservice.auth_proto.LogoutRequest getDefaultInstanceForType() {
-      return com.microservice.auth_proto.LogoutRequest.getDefaultInstance();
+    public com.microservice.auth_proto.VerifyEmailResponse getDefaultInstanceForType() {
+      return com.microservice.auth_proto.VerifyEmailResponse.getDefaultInstance();
     }
 
     @java.lang.Override
-    public com.microservice.auth_proto.LogoutRequest build() {
-      com.microservice.auth_proto.LogoutRequest result = buildPartial();
+    public com.microservice.auth_proto.VerifyEmailResponse build() {
+      com.microservice.auth_proto.VerifyEmailResponse result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -295,9 +319,10 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public com.microservice.auth_proto.LogoutRequest buildPartial() {
-      com.microservice.auth_proto.LogoutRequest result = new com.microservice.auth_proto.LogoutRequest(this);
-      result.accessToken_ = accessToken_;
+    public com.microservice.auth_proto.VerifyEmailResponse buildPartial() {
+      com.microservice.auth_proto.VerifyEmailResponse result = new com.microservice.auth_proto.VerifyEmailResponse(this);
+      result.status_ = status_;
+      result.message_ = message_;
       onBuilt();
       return result;
     }
@@ -336,18 +361,21 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof com.microservice.auth_proto.LogoutRequest) {
-        return mergeFrom((com.microservice.auth_proto.LogoutRequest)other);
+      if (other instanceof com.microservice.auth_proto.VerifyEmailResponse) {
+        return mergeFrom((com.microservice.auth_proto.VerifyEmailResponse)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(com.microservice.auth_proto.LogoutRequest other) {
-      if (other == com.microservice.auth_proto.LogoutRequest.getDefaultInstance()) return this;
-      if (!other.getAccessToken().isEmpty()) {
-        accessToken_ = other.accessToken_;
+    public Builder mergeFrom(com.microservice.auth_proto.VerifyEmailResponse other) {
+      if (other == com.microservice.auth_proto.VerifyEmailResponse.getDefaultInstance()) return this;
+      if (other.getStatus() != 0) {
+        setStatus(other.getStatus());
+      }
+      if (!other.getMessage().isEmpty()) {
+        message_ = other.message_;
         onChanged();
       }
       this.mergeUnknownFields(other.getUnknownFields());
@@ -376,11 +404,16 @@ private static final long serialVersionUID = 0L;
             case 0:
               done = true;
               break;
-            case 10: {
-              accessToken_ = input.readStringRequireUtf8();
+            case 8: {
+              status_ = input.readInt32();
 
               break;
-            } // case 10
+            } // case 8
+            case 18: {
+              message_ = input.readStringRequireUtf8();
+
+              break;
+            } // case 18
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -397,78 +430,109 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object accessToken_ = "";
+    private int status_ ;
     /**
-     * <code>string accessToken = 1;</code>
-     * @return The accessToken.
+     * <code>int32 status = 1;</code>
+     * @return The status.
      */
-    public java.lang.String getAccessToken() {
-      java.lang.Object ref = accessToken_;
+    @java.lang.Override
+    public int getStatus() {
+      return status_;
+    }
+    /**
+     * <code>int32 status = 1;</code>
+     * @param value The status to set.
+     * @return This builder for chaining.
+     */
+    public Builder setStatus(int value) {
+      
+      status_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 status = 1;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearStatus() {
+      
+      status_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object message_ = "";
+    /**
+     * <code>string message = 2;</code>
+     * @return The message.
+     */
+    public java.lang.String getMessage() {
+      java.lang.Object ref = message_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        accessToken_ = s;
+        message_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
       }
     }
     /**
-     * <code>string accessToken = 1;</code>
-     * @return The bytes for accessToken.
+     * <code>string message = 2;</code>
+     * @return The bytes for message.
      */
     public com.google.protobuf.ByteString
-        getAccessTokenBytes() {
-      java.lang.Object ref = accessToken_;
+        getMessageBytes() {
+      java.lang.Object ref = message_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        accessToken_ = b;
+        message_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>string accessToken = 1;</code>
-     * @param value The accessToken to set.
+     * <code>string message = 2;</code>
+     * @param value The message to set.
      * @return This builder for chaining.
      */
-    public Builder setAccessToken(
+    public Builder setMessage(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      accessToken_ = value;
+      message_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>string accessToken = 1;</code>
+     * <code>string message = 2;</code>
      * @return This builder for chaining.
      */
-    public Builder clearAccessToken() {
+    public Builder clearMessage() {
       
-      accessToken_ = getDefaultInstance().getAccessToken();
+      message_ = getDefaultInstance().getMessage();
       onChanged();
       return this;
     }
     /**
-     * <code>string accessToken = 1;</code>
-     * @param value The bytes for accessToken to set.
+     * <code>string message = 2;</code>
+     * @param value The bytes for message to set.
      * @return This builder for chaining.
      */
-    public Builder setAccessTokenBytes(
+    public Builder setMessageBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      accessToken_ = value;
+      message_ = value;
       onChanged();
       return this;
     }
@@ -485,23 +549,23 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:net.devh.boot.grpc.example.LogoutRequest)
+    // @@protoc_insertion_point(builder_scope:net.devh.boot.grpc.example.VerifyEmailResponse)
   }
 
-  // @@protoc_insertion_point(class_scope:net.devh.boot.grpc.example.LogoutRequest)
-  private static final com.microservice.auth_proto.LogoutRequest DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:net.devh.boot.grpc.example.VerifyEmailResponse)
+  private static final com.microservice.auth_proto.VerifyEmailResponse DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new com.microservice.auth_proto.LogoutRequest();
+    DEFAULT_INSTANCE = new com.microservice.auth_proto.VerifyEmailResponse();
   }
 
-  public static com.microservice.auth_proto.LogoutRequest getDefaultInstance() {
+  public static com.microservice.auth_proto.VerifyEmailResponse getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<LogoutRequest>
-      PARSER = new com.google.protobuf.AbstractParser<LogoutRequest>() {
+  private static final com.google.protobuf.Parser<VerifyEmailResponse>
+      PARSER = new com.google.protobuf.AbstractParser<VerifyEmailResponse>() {
     @java.lang.Override
-    public LogoutRequest parsePartialFrom(
+    public VerifyEmailResponse parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -520,17 +584,17 @@ private static final long serialVersionUID = 0L;
     }
   };
 
-  public static com.google.protobuf.Parser<LogoutRequest> parser() {
+  public static com.google.protobuf.Parser<VerifyEmailResponse> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<LogoutRequest> getParserForType() {
+  public com.google.protobuf.Parser<VerifyEmailResponse> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.microservice.auth_proto.LogoutRequest getDefaultInstanceForType() {
+  public com.microservice.auth_proto.VerifyEmailResponse getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.Objects;
+
 @Slf4j
 @Component
 public class AuthenticationFilter implements GlobalFilter, Ordered {
@@ -31,7 +33,6 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-    System.out.println(exchange.getRequest().getURI().getPath());
     if (exchange.getRequest().getURI().getPath().startsWith("/api/auth") || exchange.getRequest().getURI().getPath().startsWith("/api-docs/") || exchange.getRequest().getURI().getPath().startsWith("/v3/api-docs")) {
       return chain.filter(exchange);
     }
@@ -39,7 +40,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     String authorization = exchange.getRequest().getHeaders().getFirst("Authorization");
     if (authorization != null) {
       String token = authorization.substring(7);
-      // Tìm token trong Redis
+      // Tìm token trong Redis. {token} -> {account_id}
       String value = null;
       try {
         value = redisService.get(token);
@@ -54,30 +55,9 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         ServerWebExchange updated = exchange.mutate().request(request).build();
         return chain.filter(updated);
       } else {
-        AuthenticateResponse response = null;
-        try {
-          response = authenticationService.doAuthenticate(token);
-        } catch (Exception e) {
-          throw new RuntimeException(e);
-        }
-        if (!response.getIsValid()) {
-          exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-          return exchange.getResponse().setComplete();
-        }
-        String user_id = response.getUserId();
-        long ttl = response.getTtl();
-
-        return redisService.set(token, user_id, ttl).flatMap(result -> {
-          if (!result) {
-            log.error("Cannot set token to Redis");
-          } else log.info("Set token to Redis successfully");
-          ServerHttpRequest request = exchange.getRequest()
-                  .mutate()
-                  .header("X-ACCOUNT-ID", user_id)
-                  .build();
-          ServerWebExchange updated = exchange.mutate().request(request).build();
-          return chain.filter(updated);
-        });
+        /// Nếu không có token trong Redis thì có nghĩa hoặc là token không hợp lệ, hoặc là token hết hạn.
+        exchange.getResponse().setRawStatusCode(498);
+        return exchange.getResponse().setComplete();
       }
     }
     return chain.filter(exchange);
