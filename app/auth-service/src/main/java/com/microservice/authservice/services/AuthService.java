@@ -35,7 +35,7 @@ public class AuthService {
   private String accessToken;
   @Value("${application.security.jwt.refresh-token-key}")
   private String refreshToken;
-  @Value("${application.security.jwt.expiration}")
+  @Value("${application.security.jwt.access-token-expiration}")
   private long expiration;
   @Value("${application.security.jwt.refresh-token-expiration}")
   private long refreshTokenExpiration;
