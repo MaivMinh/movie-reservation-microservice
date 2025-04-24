@@ -21,7 +21,7 @@ services:
       - service-discovery
       - redis-api-gateway
     environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
       - EUREKA_INSTANCE_PREFERIPADDRESS=true
       - SPRING_DATA_REDIS_HOST=redis-api-gateway
       - SPRING_DATA_REDIS_PORT=6379
@@ -42,7 +42,7 @@ services:
       - service-discovery
       - api-gateway
     environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
       - EUREKA_INSTANCE_PREFERIPADDRESS=true
       - GRPC_SERVER_AUTH_ADDRESS=static://auth-service:9091
       - GRPC_SERVER_MOVIE_ADDRESS=static://movie-service:9092
@@ -65,7 +65,7 @@ services:
       - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
       - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
       - EUREKA_INSTANCE_PREFERIPADDRESS=true
       - BRAVO_API_KEY=${BRAVO_API_KEY}
       - SPRING_DATA_REDIS_HOST=redis-api-gateway
@@ -90,7 +90,7 @@ services:
       - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
       - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
       - EUREKA_INSTANCE_PREFERIPADDRESS=true
       - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
       - AWS_SECRET_KEY=${AWS_SECRET_KEY}
@@ -127,7 +127,7 @@ services:
       - "8084:8084"
       - "9094:9094"
     environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
       - EUREKA_INSTANCE_PREFERIPADDRESS=true
       - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
       - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
@@ -154,7 +154,7 @@ services:
       - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
       - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
       - EUREKA_INSTANCE_PREFERIPADDRESS=true
       - GRPC_SERVER_MOVIE_ADDRESS=static://movie-service:9092
       - GRPC_SERVER_WEBSOCKET_ADDRESS=static://websocket-service:9094
