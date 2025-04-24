@@ -1,3 +1,10 @@
+===================== EUREKA SELF-PRESERVATION MODE =====================
+![self-preservation-theory.png](image/self-preservation-theory.png)
+1. Khi một service bị down thì Eureka sẽ không thể nhận được thông tin heartbeats này từ service đó. Do đó, Eureka sẽ không thể xóa service này ra khỏi danh sách các service đang hoạt động ngay lập tức. Bởi vì nó cần phải đảm bảo rằng vẫn tồn tại các registered instances có sẵn trong Service Registry để tránh gây ra các exceptions trong quá trình hoạt động của toàn bộ hệ thống.
+2. Khi đó, Eureka sẽ đưa service này vào trạng thái "down" và sẽ không cho phép các client khác gọi tới service này nữa. Tuy nhiên, Eureka vẫn sẽ giữ lại thông tin của service này trong danh sách các service đang hoạt động trong một khoảng thời gian nhất định (thời gian này được cấu hình trong Eureka Server).
+3. Nếu tới hạn thời gian của EvictionTask. Thì Eureka Server sẽ kiểm tra xem hệ thống có đang ở trạng thái "self-preservation" hay không. Nếu có thì Eureka Server sẽ không xóa service này ra khỏi danh sách các service đang hoạt động. Ngược lại, nếu không thì Eureka Server sẽ xóa service này ra khỏi danh sách các service đang hoạt động.
+![self-preservation-configurations.png](image/self-preservation-configurations.png)
+
 ===================== Cơ chế Authentication của ứng dụng. =====================
 1. Khi người dùng thực hiện đăng nhập vào ứng dụng thì nếu thành công:
    - Auth service sẽ lưu acess token vào trong Redis với thời gian sống tương ứng.
