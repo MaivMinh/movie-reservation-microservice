@@ -1,27 +1,61 @@
+management:
+  metrics:
+    distribution:
+      percentiles-histogram:
+        resilience4j:
+          circuitbreaker:
+            enabled: true
+        http:
+          server:
+          requests:
+            enabled: true
+
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    circuitbreakers:
+      enabled: true
+    ratelimiters:
+      enabled: true
+    diskspace:
+      enabled: true
+    redis:
+      enabled: true
+
+
 spring:
   cloud:
+    circuitbreaker:
+      resilience4j:
+        blocking:
+          enabled: true
     gateway:
+      httpclient:
+        connect-timeout: 1000
+        response-timeout: 2s
       routes:
-        - id: fps
-          uri: lb://fps
-          predicates:
-            - Path=/fps/**
-            - Method=GET,POST,PUT,DELETE,PATCH
-          filters:
-            - PrefixPath=/api
-
         - id: api-documentation
           uri: lb://bff
           predicates:
             - Path=/api-docs/**,/v3/api-docs/**
             - Method=GET,POST,PUT,DELETE,PATCH
 
-
         - id: bff
           uri: lb://bff
           predicates:
             - Path=/**
             - Method=GET,POST,PUT,DELETE,PATCH
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: default
+                fallbackUri: "forward:/contact-support"
+
 
   application:
     name: api-gateway
@@ -47,3 +81,16 @@ grpc:
     authService:
       address: ${GRPC_SERVER_AUTH_ADDRESS:static://localhost:9091}
       negotiation-type: plaintext
+
+# Resilience configuration
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      registerHealthIndicator: true
+      slidingWindowSize: 10
+      minimumNumberOfCalls: 5
+      permittedNumberOfCallsInHalfOpenState: 3
+      automaticTransitionFromOpenToHalfOpenEnabled: true
+      waitDurationInOpenState: 10000
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10
