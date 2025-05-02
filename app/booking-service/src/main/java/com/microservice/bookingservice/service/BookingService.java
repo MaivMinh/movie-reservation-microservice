@@ -37,7 +37,6 @@ import static org.springframework.data.jpa.domain.Specification.where;
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED)
 public class BookingService {
-
   private final ProvinceRepo provinceRepo;
   private final PhotoRepo photoRepo;
   private final CinemaRepo cinemaRepo;
@@ -48,117 +47,126 @@ public class BookingService {
   private final WebSocketServiceGrpcClient webSocketServiceGrpcClient;
 
   public CreateCinemaResponse createCinema(CreateCinemaRequest request) {
-
-    Province province = provinceRepo.findById(request.getProvinceId()).orElse(null);
-    if (province == null) {
-      return CreateCinemaResponse.newBuilder()
-              .setStatus(400)
-              .setMessage("Province not found")
-              .build();
-    }
-
-    List<String> photos = request.getPhotosList().stream().toList();
-
-    Cinema cinema = Cinema.builder()
-            .name(request.getName())
-            .address(request.getAddress())
-            .province(province)
-            .build();
-
     try {
+      Province province = provinceRepo.findById(request.getProvinceId()).orElse(null);
+      if (province == null) {
+        return CreateCinemaResponse.newBuilder()
+                .setStatus(HttpStatus.NOT_FOUND.value())
+                .setMessage("Province not found")
+                .build();
+      }
+      List<String> photos = request.getPhotosList().stream().toList();
+      Cinema cinema = Cinema.builder()
+              .name(request.getName())
+              .address(request.getAddress())
+              .province(province)
+              .build();
       cinemaRepo.save(cinema);
+      for (String photo : photos) {
+        Photo p = Photo.builder()
+                .url(photo)
+                .cinema(cinema)
+                .build();
+        photoRepo.save(p);
+      }
+      return CreateCinemaResponse.newBuilder()
+              .setStatus(200)
+              .setMessage("Success")
+              .build();
     } catch (Exception e) {
       return CreateCinemaResponse.newBuilder()
               .setStatus(500)
               .setMessage("Can not create cinema")
               .build();
     }
-
-    for (String photo : photos) {
-      Photo p = Photo.builder()
-              .url(photo)
-              .cinema(cinema)
-              .build();
-      photoRepo.save(p);
-    }
-    return CreateCinemaResponse.newBuilder()
-            .setStatus(200)
-            .setMessage("Success")
-            .build();
   }
 
   public GetCinemasResponse getCinemas(GetCinemasRequest request) {
-    int size = request.getSize();
-    int page = request.getPage();
-    String sort = request.getSort();
+    try {
+      int size = request.getSize();
+      int page = request.getPage();
+      String sort = request.getSort();
 
-    Pageable pageable = null;
-    if (StringUtils.hasText(sort)) {
-      /// sort=id:desc
-      List<Sort.Order> orders = new ArrayList<>();
-      String[] list = sort.split(",");
-      for (String element : list) {
-        orders.add(new Sort.Order(Sort.Direction.fromString(element.split(":")[1].toUpperCase()), element.split(":")[0]));
+      Pageable pageable = null;
+      if (StringUtils.hasText(sort)) {
+        /// sort=id:desc
+        List<Sort.Order> orders = new ArrayList<>();
+        String[] list = sort.split(",");
+        for (String element : list) {
+          orders.add(new Sort.Order(Sort.Direction.fromString(element.split(":")[1].toUpperCase()), element.split(":")[0]));
+        }
+        pageable = PageRequest.of(page, size, Sort.by(orders));
+      } else pageable = org.springframework.data.domain.PageRequest.of(page, size);
+
+      Page<Cinema> pageCinema = cinemaRepo.findAll(pageable);
+      List<Cinema> cinemas = pageCinema.getContent();
+
+      List<com.microservice.booking_proto.Cinema> cinemaList = new ArrayList<>();
+      for (Cinema cinema : cinemas) {
+        List<String> photos = new ArrayList<>();
+        for (Photo photo : cinema.getPhotos()) {
+          photos.add(photo.getUrl());
+        }
+        com.microservice.booking_proto.Cinema c = com.microservice.booking_proto.Cinema.newBuilder()
+                .setId(cinema.getId())
+                .setName(cinema.getName())
+                .setAddress(cinema.getAddress())
+                .setProvince(com.microservice.booking_proto.Province.newBuilder()
+                        .setId(cinema.getProvince().getId())
+                        .setName(cinema.getProvince().getName())
+                        .build())
+                .addAllPhotos(photos)
+                .build();
+        cinemaList.add(c);
       }
-      pageable = PageRequest.of(page, size, Sort.by(orders));
-    } else pageable = org.springframework.data.domain.PageRequest.of(page, size);
 
-    Page<Cinema> pageCinema = cinemaRepo.findAll(pageable);
-    List<Cinema> cinemas = pageCinema.getContent();
-
-    List<com.microservice.booking_proto.Cinema> cinemaList = new ArrayList<>();
-    for (Cinema cinema : cinemas) {
-      List<String> photos = new ArrayList<>();
-      for (Photo photo : cinema.getPhotos()) {
-        photos.add(photo.getUrl());
-      }
-      com.microservice.booking_proto.Cinema c = com.microservice.booking_proto.Cinema.newBuilder()
-              .setId(cinema.getId())
-              .setName(cinema.getName())
-              .setAddress(cinema.getAddress())
-              .setProvince(com.microservice.booking_proto.Province.newBuilder()
-                      .setId(cinema.getProvince().getId())
-                      .setName(cinema.getProvince().getName())
-                      .build())
-              .addAllPhotos(photos)
+      return GetCinemasResponse.newBuilder()
+              .setStatus(200)
+              .setMessage("Success")
+              .addAllCinemas(cinemaList)
+              .setTotalElement(pageCinema.getTotalElements())
+              .setTotalPage(pageCinema.getTotalPages())
               .build();
-      cinemaList.add(c);
+    } catch (Exception e) {
+      return GetCinemasResponse.newBuilder()
+              .setStatus(500)
+              .setMessage("Can not get cinemas")
+              .build();
     }
-
-    return GetCinemasResponse.newBuilder()
-            .setStatus(200)
-            .setMessage("Success")
-            .addAllCinemas(cinemaList)
-            .setTotalElement(pageCinema.getTotalElements())
-            .setTotalPage(pageCinema.getTotalPages())
-            .build();
   }
 
   public GetCinemaResponse getCinema(GetCinemaRequest request) {
     /// Hàm thực hiện lấy thông tin rạp cụ thể.
-    int id = request.getId();
-    Cinema cinema = cinemaRepo.findById(id).orElse(null);
-    if (cinema == null) {
+    try {
+      int id = request.getId();
+      Cinema cinema = cinemaRepo.findById(id).orElse(null);
+      if (cinema == null) {
+        return GetCinemaResponse.newBuilder()
+                .setStatus(404)
+                .setMessage("Not found")
+                .build();
+      }
+
       return GetCinemaResponse.newBuilder()
-              .setStatus(404)
-              .setMessage("Not found")
+              .setStatus(200)
+              .setMessage("Success")
+              .setCinema(com.microservice.booking_proto.Cinema.newBuilder()
+                      .setId(cinema.getId())
+                      .setName(cinema.getName())
+                      .setAddress(cinema.getAddress())
+                      .setProvince(com.microservice.booking_proto.Province.newBuilder()
+                              .setId(cinema.getProvince().getId())
+                              .setName(cinema.getProvince().getName())
+                              .build())
+                      .addAllPhotos(cinema.getPhotos().stream().map(Photo::getUrl).toList())
+                      .build())
+              .build();
+    } catch (Exception e) {
+      return GetCinemaResponse.newBuilder()
+              .setStatus(500)
+              .setMessage("Can not get cinema")
               .build();
     }
-
-    return GetCinemaResponse.newBuilder()
-            .setStatus(200)
-            .setMessage("Success")
-            .setCinema(com.microservice.booking_proto.Cinema.newBuilder()
-                    .setId(cinema.getId())
-                    .setName(cinema.getName())
-                    .setAddress(cinema.getAddress())
-                    .setProvince(com.microservice.booking_proto.Province.newBuilder()
-                            .setId(cinema.getProvince().getId())
-                            .setName(cinema.getProvince().getName())
-                            .build())
-                    .addAllPhotos(cinema.getPhotos().stream().map(Photo::getUrl).toList())
-                    .build())
-            .build();
   }
 
   public SearchCinemasResponse searchCinemas(SearchCinemasRequest request) {
@@ -226,42 +234,41 @@ public class BookingService {
   }
 
   public UpdateCinemaResponse updateCinema(UpdateCinemaRequest request) {
-    int id = request.getId();
-    Cinema cinema = cinemaRepo.findById(id).orElse(null);
-    if (cinema == null) {
-      return UpdateCinemaResponse.newBuilder()
-              .setStatus(404)
-              .setMessage("Not found")
-              .build();
-    }
-
-    if (request.hasProvince()) {
-      Province province = provinceRepo.findById(request.getProvince().getId()).orElse(null);
-      if (province == null) {
+    try {
+      int id = request.getId();
+      Cinema cinema = cinemaRepo.findById(id).orElse(null);
+      if (cinema == null) {
         return UpdateCinemaResponse.newBuilder()
-                .setStatus(400)
-                .setMessage("Province not found")
+                .setStatus(404)
+                .setMessage("Not found")
                 .build();
       }
-      cinema.setProvince(province);
-    }
 
-    if (request.hasName()) cinema.setName(request.getName().getValue());
-    if (request.hasAddress()) cinema.setAddress(request.getAddress().getValue());
+      if (request.hasProvince()) {
+        Province province = provinceRepo.findById(request.getProvince().getId()).orElse(null);
+        if (province == null) {
+          return UpdateCinemaResponse.newBuilder()
+                  .setStatus(404)
+                  .setMessage("Province not found")
+                  .build();
+        }
+        cinema.setProvince(province);
+      }
 
-    try {
+      if (request.hasName()) cinema.setName(request.getName().getValue());
+      if (request.hasAddress()) cinema.setAddress(request.getAddress().getValue());
+
       cinemaRepo.save(cinema);
+      return UpdateCinemaResponse.newBuilder()
+              .setStatus(200)
+              .setMessage("Success")
+              .build();
     } catch (Exception e) {
       return UpdateCinemaResponse.newBuilder()
               .setStatus(500)
               .setMessage("Can not update cinema")
               .build();
     }
-
-    return UpdateCinemaResponse.newBuilder()
-            .setStatus(200)
-            .setMessage("Success")
-            .build();
   }
 
   public GetBookingByShowtimeResponse getBookingByShowtime(GetBookingByShowtimeRequest request) {

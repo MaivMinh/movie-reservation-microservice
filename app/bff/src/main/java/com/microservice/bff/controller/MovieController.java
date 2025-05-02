@@ -32,9 +32,8 @@ public class MovieController {
   /// Done
   @PostMapping(value = "")
   public ResponseEntity<ResponseData> createMovie(@RequestBody NewMovie newMovie, HttpServletRequest request) {
-   /*
-    {
-      "movie": {
+    /*
+    "movie": {
           "name": String,
           "description": String,
           "trailer": String,
@@ -43,25 +42,9 @@ public class MovieController {
           "backdrop": String,
           "genres": int[]
       },
-   */
-
-    /// Kiểm tra có phải ADMIN không.
-    String accountId = request.getHeader("X-ACCOUNT-ID");
-    if (!StringUtils.hasText(accountId)) {
-      return ResponseEntity.status(401).body(ResponseData.builder().status(401).message("Unauthorized").build());
-    }
-
-    int id;
-    try {
-      id = Integer.parseInt(accountId);
-    } catch (NumberFormatException e) {
-      log.error("Error: ", e);
-      return ResponseEntity.status(401).body(ResponseData.builder().status(401).message("Unauthorized").build());
-    }
-
-    if (!authService.isAdmin(id)) {
-      return ResponseEntity.status(403).body(new ResponseData(HttpStatus.FORBIDDEN.value(), "Forbidden"));
-    }
+    * */
+    ResponseEntity<ResponseData> result = authService.isAdmin(request);
+    if (result != null)  return  result;
     ResponseData response = movieService.createMovie(newMovie);
     return ResponseEntity.status(response.getStatus()).body(response);
   }
@@ -80,23 +63,8 @@ public class MovieController {
     }
     */
 
-    /// Kiểm tra có phải ADMIN không.
-    String accountId = request.getHeader("X-ACCOUNT-ID");
-    if (!StringUtils.hasText(accountId)) {
-      return ResponseEntity.status(401).body(ResponseData.builder().status(401).message("Unauthorized").build());
-    }
-
-    Integer id = null;
-    try {
-      id = Integer.parseInt(accountId);
-    } catch (NumberFormatException e) {
-      log.error("Error: ", e);
-      return ResponseEntity.status(401).body(ResponseData.builder().status(401).message("Unauthorized").build());
-    }
-
-    if (!authService.isAdmin(id)) {
-      return ResponseEntity.status(403).body(new ResponseData(HttpStatus.FORBIDDEN.value(), "Forbidden"));
-    }
+    ResponseEntity<ResponseData> result = authService.isAdmin(request);
+    if (result != null)  return  result;
     ResponseData response = movieService.updateMovie(movieId, updateMovie);
     return ResponseEntity.status(response.getStatus()).body(response);
   }

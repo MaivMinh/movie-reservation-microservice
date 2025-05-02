@@ -1,5 +1,6 @@
 package com.microservice.bff.service;
 
+import com.microservice.bff.exceptions.ResourceNotFoundException;
 import com.microservice.bff.grpc.BookingServiceGrpcClient;
 import com.microservice.bff.grpc.MovieServiceGrpcClient;
 import com.microservice.bff.request.Movie;
@@ -29,7 +30,7 @@ public class BuyTicketService {
     GetMovieResponse movieResponse = movieServiceGrpcClient.getMovie(GetMovieRequest.newBuilder().setId(movieId).build());
     if (!movieResponse.hasMovie()) {
       /// Nếu không có thông tin movie thì trả về luôn.
-      return ResponseData.builder().status(movieResponse.getStatus()).message(movieResponse.getMessage()).build();
+      throw new ResourceNotFoundException(movieResponse.getMessage());
     }
     com.microservice.movie_proto.Movie respondingMovie = movieResponse.getMovie();
     Movie movie = Movie.builder()

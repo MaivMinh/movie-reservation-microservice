@@ -211,7 +211,6 @@ public class AuthService {
   public ProfileResponse profile(ProfileRequest request) {
     /// Hàm thực hiện việc lấy thông tin profile của người dùng.
     int accountId = request.getAccountId();
-
     Account account = accountService.findAccountById(accountId);
     if (account == null) {
       return ProfileResponse.newBuilder()

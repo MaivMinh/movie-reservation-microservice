@@ -1,22 +1,47 @@
 package com.microservice.bff.service;
 
 import com.microservice.auth_proto.*;
+import com.microservice.bff.exceptions.BadRequestException;
 import com.microservice.bff.grpc.AuthServiceGrpcClient;
 import com.microservice.bff.request.RefreshTokenRequest;
 import com.microservice.bff.request.Register;
 import com.microservice.bff.request.ResetRequest;
 import com.microservice.bff.response.ResponseData;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.sql.Timestamp;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class AuthService {
   private final AuthServiceGrpcClient grpcClient;
+
+  public ResponseEntity<ResponseData> isAdmin(HttpServletRequest request) {
+    /// Hàm thực hiện kiểm tra xem request có được thực hiện bởi ADMIN.
+    String accountId = request.getHeader("X-ACCOUNT-ID");
+    if (!StringUtils.hasText(accountId)) {
+      return ResponseEntity.status(401).body(ResponseData.builder().status(401).message("Unauthorized").build());
+    }
+    int id;
+    try {
+      id = Integer.parseInt(accountId);
+    } catch (NumberFormatException e) {
+      log.error("Error: ", e);
+      return ResponseEntity.status(400).body(ResponseData.builder().status(400).message("Bad request!").build());
+    }
+
+    if (!this.gRPCIsAdmin(id)) {
+      return ResponseEntity.status(403).body(new ResponseData(HttpStatus.FORBIDDEN.value(), "Forbidden"));
+    }
+    return null;
+  }
 
   public ResponseData register(Register register) {
     RegisterRequest request = RegisterRequest.newBuilder()
@@ -25,6 +50,7 @@ public class AuthService {
             .setEmail(register.getEmail())
             .build();
     RegisterResponse response = grpcClient.register(request);
+    if (response.getStatus() != 200) throw new RuntimeException(response.getMessage());
     return ResponseData.builder()
             .status(response.getStatus())
             .message(response.getMessage())
@@ -38,10 +64,8 @@ public class AuthService {
             .build();
     LoginResponse response = grpcClient.login(request);
     if (!response.hasLoginSuccessInfo()) {
-      return ResponseData.builder()
-              .status(response.getStatus())
-              .message(response.getMessage())
-              .build();
+      /// Login failed.
+      throw new BadRequestException(response.getMessage());
     }
 
     LoginSuccessInfo loginSuccessInfo = response.getLoginSuccessInfo();
@@ -67,14 +91,15 @@ public class AuthService {
             .build();
     ProfileResponse response = grpcClient.getProfile(request);
     com.microservice.bff.response.ProfileResponse profileResponse = null;
-    if (response.hasProfile()) {
-      Profile profile = response.getProfile();
-      profileResponse = com.microservice.bff.response.ProfileResponse.builder()
-              .username(profile.getUsername())
-              .email(profile.getEmail())
-              .roles(profile.getRoles())
-              .build();
+    if (!response.hasProfile()) {
+      throw new BadRequestException(response.getMessage());
     }
+    Profile profile = response.getProfile();
+    profileResponse = com.microservice.bff.response.ProfileResponse.builder()
+            .username(profile.getUsername())
+            .email(profile.getEmail())
+            .roles(profile.getRoles())
+            .build();
     return ResponseData.builder()
             .status(response.getStatus())
             .message(response.getMessage())
@@ -83,7 +108,7 @@ public class AuthService {
   }
 
 
-  public boolean isAdmin(Integer id) {
+  private boolean gRPCIsAdmin(Integer id) {
     /// Hàm thực hiện kiểm tra xem account có ROLE là ADMIN không.
     IsAdminRequest request = IsAdminRequest.newBuilder()
             .setAccountId(id)
@@ -98,6 +123,9 @@ public class AuthService {
             .setHost(host)
             .build();
     ForgotPasswordResponse response = grpcClient.forgotPassword(request);
+    if (response.getStatus() != 200) {
+      throw new RuntimeException(response.getMessage());
+    }
     return ResponseData.builder()
             .status(response.getStatus())
             .message(response.getMessage())
@@ -111,6 +139,11 @@ public class AuthService {
             .build();
 
     ResetPasswordResponse response = grpcClient.resetPassword(request);
+
+    if (response.getStatus() == 500) throw new RuntimeException(response.getMessage());
+    if (response.getStatus() != 200) {
+      throw new BadRequestException(response.getMessage());
+    }
     return ResponseData.builder()
             .status(response.getStatus())
             .message(response.getMessage())
@@ -122,6 +155,10 @@ public class AuthService {
             .setToken(token)
             .build();
     VerifyEmailResponse response = grpcClient.verifyEmail(request);
+    if (response.getStatus() == 500) throw new RuntimeException(response.getMessage());
+    if (response.getStatus() != 200) {
+      throw new BadRequestException(response.getMessage());
+    }
     return ResponseData.builder()
             .status(response.getStatus())
             .message(response.getMessage())
@@ -134,10 +171,7 @@ public class AuthService {
             .build();
     RefreshTokenResponse response = grpcClient.refreshToken(request);
     if (!response.hasAccessToken()) {
-      return ResponseData.builder()
-              .status(response.getStatus())
-              .message(response.getMessage())
-              .build();
+      throw new BadRequestException(response.getMessage());
     }
 
     AccessToken accessToken = response.getAccessToken();

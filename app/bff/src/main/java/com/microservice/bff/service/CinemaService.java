@@ -1,6 +1,7 @@
 package com.microservice.bff.service;
 
 import com.google.protobuf.StringValue;
+import com.microservice.bff.exceptions.ResourceNotFoundException;
 import com.microservice.bff.grpc.BookingServiceGrpcClient;
 import com.microservice.bff.request.CreateCinema;
 import com.microservice.bff.request.UpdateCinema;
@@ -9,6 +10,7 @@ import com.microservice.bff.response.Province;
 import com.microservice.bff.response.ResponseData;
 import com.microservice.booking_proto.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -31,6 +33,12 @@ public class CinemaService {
             .build();
 
     CreateCinemaResponse response = bookingServiceGrpcClient.createCinema(request);
+    if (response.getStatus() == HttpStatus.NOT_FOUND.value()) {
+      throw new ResourceNotFoundException(response.getMessage());
+    }
+    if (response.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+      throw new RuntimeException(response.getMessage());
+    }
     return ResponseData.builder()
             .status(response.getStatus())
             .message(response.getMessage())
@@ -45,6 +53,9 @@ public class CinemaService {
             .build();
 
     GetCinemasResponse response = bookingServiceGrpcClient.getCinemas(request);
+    if (response.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+      throw new RuntimeException(response.getMessage());
+    }
     List<Cinema> cinemas = response.getCinemasList().stream().map(
             cinema -> {
               return Cinema.builder()
@@ -59,13 +70,6 @@ public class CinemaService {
                       .build();
             }
     ).toList();
-
-    if (cinemas.isEmpty()) {
-      return ResponseData.builder()
-              .status(404)
-              .message("Not found")
-              .build();
-    }
     return ResponseData.builder()
             .status(200)
             .message("Success")
@@ -85,11 +89,11 @@ public class CinemaService {
             .build();
 
     GetCinemaResponse response = bookingServiceGrpcClient.getCinema(request);
-    if (!response.hasCinema()) {
-      return ResponseData.builder()
-              .status(response.getStatus())
-              .message(response.getMessage())
-              .build();
+    if (response.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+      throw new RuntimeException(response.getMessage());
+    }
+    if (response.getStatus() == HttpStatus.NOT_FOUND.value()) {
+      throw new ResourceNotFoundException(response.getMessage());
     }
 
     Cinema cinema = Cinema.builder()
@@ -122,6 +126,9 @@ public class CinemaService {
             .build();
 
     SearchCinemasResponse response = bookingServiceGrpcClient.searchCinemas(request);
+    if (response.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+      throw new RuntimeException(response.getMessage());
+    }
     List<Cinema> cinemas = response.getCinemasList().stream().map(
             cinema -> {
               return Cinema.builder()
@@ -164,10 +171,14 @@ public class CinemaService {
               .setId(updateCinema.getProvince().getId())
               .build());
     }
-
     UpdateCinemaRequest request = builder.build();
-
     UpdateCinemaResponse response = bookingServiceGrpcClient.updateCinema(request);
+    if (response.getStatus() == HttpStatus.NOT_FOUND.value()) {
+      throw new ResourceNotFoundException(response.getMessage());
+    }
+    if (response.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+      throw new RuntimeException(response.getMessage());
+    }
     return ResponseData.builder()
             .status(response.getStatus())
             .message(response.getMessage())

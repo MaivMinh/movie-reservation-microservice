@@ -34,7 +34,6 @@ public class AuthServiceGrpcServer extends AuthServiceGrpc.AuthServiceImplBase {
 
   @Override
   public void doAuthenticate(AuthenticateRequest request, StreamObserver<AuthenticateResponse> streamObserver) {
-    System.out.println("doAuthenticate AuthService");
     AuthenticateResponse response = authService.doAuthenticate(request);
     streamObserver.onNext(response);
     streamObserver.onCompleted();
