@@ -15,7 +15,7 @@ management:
     health:
       show-details: always
     loggers:
-      access: read_only
+      access: unrestricted
     beans:
       cache:
         time-to-live: 10s
@@ -92,12 +92,12 @@ resilience4j:
   # Điều này có nghĩa là TimeLimiter cũng sẽ là một Resiliency Pattern trong Resilience4j.
   # Do đó, chúng ta cũng có thể sử dụng auto-configuration của Spring Boot để tự động cấu hình cho TimeLimiter.
   timelimiter:
-    configs:
+    instances:
       default:
-        timeout-duration: 5s
+        timeout-duration: 10s
         cancel-running-future: false
   circuitbreaker:
-    configs:
+    instances:
       default:
         registerHealthIndicator: true
         slidingWindowSize: 6 # 6 cái request gần nhất

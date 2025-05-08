@@ -78,6 +78,20 @@ springdoc:
 
 # Circuit Breaker Configurations
 resilience4j:
+  timelimiter:
+    instances:
+      default:
+        timeout-duration: 8s
+        cancel-running-future: true
+      authService:
+        timeout-duration: 8s
+        cancel-running-future: true
+      movieService:
+        timeout-duration: 8s
+        cancel-running-future: true
+      bookingService:
+        timeout-duration: 8s
+        cancel-running-future: true
   circuitbreaker:
     instances:
       authService:
@@ -91,6 +105,7 @@ resilience4j:
         record-exceptions:
           - java.lang.Throwable
           - io.grpc.StatusRuntimeException
+          - java.lang.Exception
           - java.io.IOException
       movieService:
         register-health-indicator: true
@@ -103,6 +118,7 @@ resilience4j:
         record-exceptions:
           - java.lang.Throwable
           - io.grpc.StatusRuntimeException
+          - java.lang.Exception
           - java.io.IOException
       bookingService:
         register-health-indicator: true
@@ -115,4 +131,5 @@ resilience4j:
         record-exceptions:
           - java.lang.Throwable
           - io.grpc.StatusRuntimeException
+          - java.lang.Exception
           - java.io.IOException

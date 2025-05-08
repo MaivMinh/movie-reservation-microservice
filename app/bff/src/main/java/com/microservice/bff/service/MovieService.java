@@ -37,14 +37,18 @@ public class MovieService {
   public ResponseData getMovies(int page, int size, String sort) {
     GetMoviesRequest request = GetMoviesRequest.newBuilder().setPage(page).setSize(size).setSort(sort).build();
 
-    GetMoviesResponse response = movieServiceGrpcClient.getMovies(request);
-    List<Movie> movies = response.getMoviesList().stream().map(movie -> Movie.builder().id(movie.getId()).name(movie.getName()).description(movie.getDescription()).trailer(movie.getTrailer()).releaseDate(new Date(movie.getReleaseDate())).poster(movie.getPoster()).backdrop(movie.getBackdrop()).status(movie.getStatus()).genres(movie.getGenreList().stream().map(genre -> com.microservice.bff.request.Genre.builder().id(genre.getId()).name(genre.getName()).build()).toList()).build()).toList();
+    try {
+      GetMoviesResponse response = movieServiceGrpcClient.getMovies(request);
+      List<Movie> movies = response.getMoviesList().stream().map(movie -> Movie.builder().id(movie.getId()).name(movie.getName()).description(movie.getDescription()).trailer(movie.getTrailer()).releaseDate(new Date(movie.getReleaseDate())).poster(movie.getPoster()).backdrop(movie.getBackdrop()).status(movie.getStatus()).genres(movie.getGenreList().stream().map(genre -> com.microservice.bff.request.Genre.builder().id(genre.getId()).name(genre.getName()).build()).toList()).build()).toList();
 
-    if (movies.isEmpty()) {
-      return ResponseData.builder().status(response.getStatus()).message(response.getMessage()).build();
+      if (movies.isEmpty()) {
+        return ResponseData.builder().status(response.getStatus()).message(response.getMessage()).build();
+      }
+
+      return ResponseData.builder().status(response.getStatus()).message(response.getMessage()).data(Map.of("movies", movies, "totalPages", response.getTotalElement(), "totalElements", response.getTotalPage(), "page", page + 1, "size", size)).build();
+    } catch (Exception e) {
+      throw new RuntimeException("Error fetching movies", e);
     }
-
-    return ResponseData.builder().status(response.getStatus()).message(response.getMessage()).data(Map.of("movies", movies, "totalPages", response.getTotalElement(), "totalElements", response.getTotalPage(), "page", page + 1, "size", size)).build();
   }
 
   public ResponseData getMovie(int id) {
