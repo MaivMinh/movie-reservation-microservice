@@ -380,7 +380,7 @@ public class MovieService {
 
     int movieId = request.getId();
     Movie movie = movieRepo.findById(movieId).orElse(null);
-    if (movie == null || movie.getId() <= 0 || !movie.getStatus().equals(MovieStatus.NOW_PLAYING))  {
+    if (movie == null || movie.getId() <= 0 || !movie.getStatus().equals(MovieStatus.NOW_PLAYING)) {
       return IsMoviePlayingNowResponse.newBuilder()
               .setStatus(HttpStatus.OK.value())
               .setMessage("Success")

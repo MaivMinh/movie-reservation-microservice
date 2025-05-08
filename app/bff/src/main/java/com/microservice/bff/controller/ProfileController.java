@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/profile")
 @AllArgsConstructor
@@ -26,5 +28,11 @@ public class ProfileController {
     int id = Integer.parseInt(accountId);
     ResponseData response = authService.getProfile(id);
     return ResponseEntity.status(response.getStatus()).body(response);
+  }
+
+
+  @GetMapping(value = "/contact-info")
+  public ResponseEntity<ResponseData> getContactInfo(HttpServletRequest request) {
+    return ResponseEntity.status(HttpStatus.OK.value()).body(new ResponseData(HttpStatus.OK.value(), "OK", Map.of("email", "maivanminh.se@gmail.com", "name", "Mai Van Minh", "phone", "0987654321")));
   }
 }

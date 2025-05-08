@@ -26,15 +26,24 @@ public class RabbitMQService {
     if (sessionQueues.containsKey(queueName)) {
       return HttpStatus.CREATED.value();
     }
-    Queue queue = new Queue(queueName, true, false, true, null);
-    amqpAdmin.declareQueue(queue);
-    amqpAdmin.declareBinding(BindingBuilder.bind(queue).to(holdingExchange));
-    sessionQueues.put(queueName, queue);
-    return HttpStatus.OK.value();
+    try {
+      Queue queue = new Queue(queueName, true, false, true, null);
+      amqpAdmin.declareQueue(queue);
+      amqpAdmin.declareBinding(BindingBuilder.bind(queue).to(holdingExchange));
+      sessionQueues.put(queueName, queue);
+      return HttpStatus.OK.value();
+    } catch (Exception e) {
+      return HttpStatus.INTERNAL_SERVER_ERROR.value();
+    }
   }
 
-  public void removeQueue(String queueName) {
-    amqpAdmin.deleteQueue(queueName);
-    sessionQueues.remove(queueName);
+  public boolean removeQueue(String queueName) {
+    try {
+      amqpAdmin.deleteQueue(queueName);
+      sessionQueues.remove(queueName);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
   }
 }

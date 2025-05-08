@@ -4,6 +4,8 @@
 2. Khi đó, Eureka sẽ đưa service này vào trạng thái "down" và sẽ không cho phép các client khác gọi tới service này nữa. Tuy nhiên, Eureka vẫn sẽ giữ lại thông tin của service này trong danh sách các service đang hoạt động trong một khoảng thời gian nhất định (thời gian này được cấu hình trong Eureka Server).
 3. Nếu tới hạn thời gian của EvictionTask. Thì Eureka Server sẽ kiểm tra xem hệ thống có đang ở trạng thái "self-preservation" hay không. Nếu có thì Eureka Server sẽ không xóa service này ra khỏi danh sách các service đang hoạt động. Ngược lại, nếu không thì Eureka Server sẽ xóa service này ra khỏi danh sách các service đang hoạt động.
 ![self-preservation-configurations.png](image/self-preservation-configurations.png)
+4. Ví dụ: 
+![self-preservation-example.png](image/self-preservation-example.png)
 
 ===================== Cơ chế Authentication của ứng dụng. =====================
 1. Khi người dùng thực hiện đăng nhập vào ứng dụng thì nếu thành công:

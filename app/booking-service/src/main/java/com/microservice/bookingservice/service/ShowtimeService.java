@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -119,37 +120,46 @@ public class ShowtimeService {
       pageable = PageRequest.of(page, size, Sort.by(orders));
     } else pageable = PageRequest.of(page, size);
 
-    Page<Showtime> pageShowtime = showtimeRepo.findAll(pageable);
-    List<Showtime> showtimes = pageShowtime.getContent();
-
-    return GetShowtimesResponse.newBuilder()
-            .setStatus(200)
-            .setMessage("Success")
-            .addAllShowtimes(showtimes.stream().map(showtime -> com.microservice.booking_proto.Showtime.newBuilder()
-                            .setId(showtime.getId())
-                            .setRoom(com.microservice.booking_proto.Room.newBuilder()
-                                    .setId(showtime.getRoom().getId())
-                                    .setName(showtime.getRoom().getName())
-                                    .setLocation(showtime.getRoom().getLocation())
-                                    .setCinema(com.microservice.booking_proto.Cinema.newBuilder()
-                                            .setId(showtime.getRoom().getCinema().getId())
-                                            .setName(showtime.getRoom().getCinema().getName())
-                                            .setAddress(showtime.getRoom().getCinema().getAddress())
-                                            .setProvince(com.microservice.booking_proto.Province.newBuilder()
-                                                    .setId(showtime.getRoom().getCinema().getProvince().getId())
-                                                    .setName(showtime.getRoom().getCinema().getProvince().getName())
-                                                    .build())
-                                            .build())
-                                    .build())
-                            .setMovieId(showtime.getMovieId())
-                            .setDate(showtime.getDate().getTime())
-                            .setStartTime(showtime.getStartTime().getTime())
-                            .setEndTime(showtime.getEndTime().getTime())
-                            .build())
-                    .toList())
-            .setTotalElement(pageShowtime.getTotalElements())
-            .setTotalPage(pageShowtime.getTotalPages())
-            .build();
+    try {
+      Page<Showtime> pageShowtime = showtimeRepo.findAll(pageable);
+      List<Showtime> showtimes = pageShowtime.getContent();
+      return GetShowtimesResponse.newBuilder()
+              .setStatus(200)
+              .setMessage("Success")
+              .addAllShowtimes(showtimes.stream().map(showtime -> com.microservice.booking_proto.Showtime.newBuilder()
+                              .setId(showtime.getId())
+                              .setRoom(com.microservice.booking_proto.Room.newBuilder()
+                                      .setId(showtime.getRoom().getId())
+                                      .setName(showtime.getRoom().getName())
+                                      .setLocation(showtime.getRoom().getLocation())
+                                      .setCinema(com.microservice.booking_proto.Cinema.newBuilder()
+                                              .setId(showtime.getRoom().getCinema().getId())
+                                              .setName(showtime.getRoom().getCinema().getName())
+                                              .setAddress(showtime.getRoom().getCinema().getAddress())
+                                              .setProvince(com.microservice.booking_proto.Province.newBuilder()
+                                                      .setId(showtime.getRoom().getCinema().getProvince().getId())
+                                                      .setName(showtime.getRoom().getCinema().getProvince().getName())
+                                                      .build())
+                                              .build())
+                                      .build())
+                              .setMovieId(showtime.getMovieId())
+                              .setDate(showtime.getDate().getTime())
+                              .setStartTime(showtime.getStartTime().getTime())
+                              .setEndTime(showtime.getEndTime().getTime())
+                              .build())
+                      .toList())
+              .setTotalElement(pageShowtime.getTotalElements())
+              .setTotalPage(pageShowtime.getTotalPages())
+              .build();
+    } catch (Exception e) {
+      return GetShowtimesResponse.newBuilder()
+              .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
+              .setMessage("Can not get showtimes")
+              .setTotalElement(0)
+              .setTotalPage(0)
+              .addAllShowtimes(new ArrayList<>())
+              .build();
+    }
   }
 
   public UpdateShowtimeResponse updateShowtime(UpdateShowtimeRequest request) {
@@ -166,7 +176,7 @@ public class ShowtimeService {
       Room room = roomRepo.findById(request.getRoomId().getValue()).orElse(null);
       if (room == null) {
         return UpdateShowtimeResponse.newBuilder()
-                .setStatus(400)
+                .setStatus(404)
                 .setMessage("Room not found")
                 .build();
       }
@@ -183,7 +193,7 @@ public class ShowtimeService {
         IsMoviePlayingNowResponse isMoviePlayingNowResponse = movieServiceGrpcClient.isMoviePlayingNow(isMoviePlayingNowRequest);
         if (!isMoviePlayingNowResponse.getIsNowPlaying()) {
           return UpdateShowtimeResponse.newBuilder()
-                  .setStatus(400)
+                  .setStatus(HttpStatus.BAD_REQUEST.value())
                   .setMessage("Movie is not playing now")
                   .build();
         }
@@ -207,7 +217,7 @@ public class ShowtimeService {
       showtimeRepo.save(showtime);
     } catch (Exception e) {
       return UpdateShowtimeResponse.newBuilder()
-              .setStatus(500)
+              .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
               .setMessage("Can not update showtime")
               .build();
     }
@@ -222,38 +232,45 @@ public class ShowtimeService {
   public GetShowtimeResponse getShowtime(GetShowtimeRequest request) {
     /// Hàm thực hiện lấy thông tin 1 showtime.
     int id = request.getId();
-    Showtime showtime = showtimeRepo.findById(id).orElse(null);
-    if (showtime == null || showtime.getId() <= 0) {
+    try {
+      Showtime showtime = showtimeRepo.findById(id).orElse(null);
+      if (showtime == null || showtime.getId() <= 0) {
+        return GetShowtimeResponse.newBuilder()
+                .setStatus(HttpStatus.NOT_FOUND.value())
+                .setMessage("Showtime not found")
+                .build();
+      }
       return GetShowtimeResponse.newBuilder()
-              .setStatus(404)
-              .setMessage("Showtime not found")
+              .setStatus(200)
+              .setMessage("Success")
+              .setShowtime(com.microservice.booking_proto.Showtime.newBuilder()
+                      .setId(showtime.getId())
+                      .setRoom(com.microservice.booking_proto.Room.newBuilder()
+                              .setId(showtime.getRoom().getId())
+                              .setName(showtime.getRoom().getName())
+                              .setLocation(showtime.getRoom().getLocation())
+                              .setCinema(com.microservice.booking_proto.Cinema.newBuilder()
+                                      .setId(showtime.getRoom().getCinema().getId())
+                                      .setName(showtime.getRoom().getCinema().getName())
+                                      .setAddress(showtime.getRoom().getCinema().getAddress())
+                                      .setProvince(com.microservice.booking_proto.Province.newBuilder()
+                                              .setId(showtime.getRoom().getCinema().getProvince().getId())
+                                              .setName(showtime.getRoom().getCinema().getProvince().getName())
+                                              .build())
+                                      .build())
+                              .build())
+                      .setMovieId(showtime.getMovieId())
+                      .setDate(showtime.getDate().getTime())
+                      .setStartTime(showtime.getStartTime().getTime())
+                      .setEndTime(showtime.getEndTime().getTime())
+                      .build())
+              .build();
+    } catch (Exception e) {
+      return GetShowtimeResponse.newBuilder()
+              .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
+              .setMessage("Can not get showtime")
               .build();
     }
-    return GetShowtimeResponse.newBuilder()
-            .setStatus(200)
-            .setMessage("Success")
-            .setShowtime(com.microservice.booking_proto.Showtime.newBuilder()
-                    .setId(showtime.getId())
-                    .setRoom(com.microservice.booking_proto.Room.newBuilder()
-                            .setId(showtime.getRoom().getId())
-                            .setName(showtime.getRoom().getName())
-                            .setLocation(showtime.getRoom().getLocation())
-                            .setCinema(com.microservice.booking_proto.Cinema.newBuilder()
-                                    .setId(showtime.getRoom().getCinema().getId())
-                                    .setName(showtime.getRoom().getCinema().getName())
-                                    .setAddress(showtime.getRoom().getCinema().getAddress())
-                                    .setProvince(com.microservice.booking_proto.Province.newBuilder()
-                                            .setId(showtime.getRoom().getCinema().getProvince().getId())
-                                            .setName(showtime.getRoom().getCinema().getProvince().getName())
-                                            .build())
-                                    .build())
-                            .build())
-                    .setMovieId(showtime.getMovieId())
-                    .setDate(showtime.getDate().getTime())
-                    .setStartTime(showtime.getStartTime().getTime())
-                    .setEndTime(showtime.getEndTime().getTime())
-                    .build())
-            .build();
   }
 
   public DeleteShowtimeResponse deleteShowtime(DeleteShowtimeRequest request) {
@@ -359,38 +376,40 @@ public class ShowtimeService {
   @Transactional(readOnly = true)
   public GetMovieShowtimesResponse getMovieShowtimes(GetMovieShowtimesRequest request) {
     /// Hàm thực hiện lấy tất cả suất chiếu của 1 phim cụ thể tính từ thời điểm hiện tại.
-    int movieId = request.getMovieId();
-    List<Showtime> result = showtimeRepo.findCurrentAndFutureShowtimesByMovieId(movieId);
+    try {
+      int movieId = request.getMovieId();
+      List<Showtime> result = showtimeRepo.findCurrentAndFutureShowtimesByMovieId(movieId);
 
-    System.out.println(result.size());
-
-    List<com.microservice.booking_proto.Showtime> showtimes = result.stream().map(showtime -> com.microservice.booking_proto.Showtime.newBuilder()
-            .setId(showtime.getId())
-            .setRoom(com.microservice.booking_proto.Room.newBuilder()
-                    .setId(showtime.getRoom().getId())
-                    .setName(showtime.getRoom().getName())
-                    .setLocation(showtime.getRoom().getLocation())
-                    .setCinema(com.microservice.booking_proto.Cinema.newBuilder()
-                            .setId(showtime.getRoom().getCinema().getId())
-                            .setName(showtime.getRoom().getCinema().getName())
-                            .setAddress(showtime.getRoom().getCinema().getAddress())
-                            .setProvince(com.microservice.booking_proto.Province.newBuilder()
-                                    .setId(showtime.getRoom().getCinema().getProvince().getId())
-                                    .setName(showtime.getRoom().getCinema().getProvince().getName())
-                                    .build())
-                            .build())
-                    .build())
-            .setMovieId(showtime.getMovieId())
-            .setDate(showtime.getDate().getTime())
-            .setStartTime(showtime.getStartTime().getTime())
-            .setEndTime(showtime.getEndTime().getTime())
-            .build())
-            .toList();
+      List<com.microservice.booking_proto.Showtime> showtimes = result.stream().map(showtime -> com.microservice.booking_proto.Showtime.newBuilder()
+                      .setId(showtime.getId())
+                      .setRoom(com.microservice.booking_proto.Room.newBuilder()
+                              .setId(showtime.getRoom().getId())
+                              .setName(showtime.getRoom().getName())
+                              .setLocation(showtime.getRoom().getLocation())
+                              .setCinema(com.microservice.booking_proto.Cinema.newBuilder()
+                                      .setId(showtime.getRoom().getCinema().getId())
+                                      .setName(showtime.getRoom().getCinema().getName())
+                                      .setAddress(showtime.getRoom().getCinema().getAddress())
+                                      .setProvince(com.microservice.booking_proto.Province.newBuilder()
+                                              .setId(showtime.getRoom().getCinema().getProvince().getId())
+                                              .setName(showtime.getRoom().getCinema().getProvince().getName())
+                                              .build())
+                                      .build())
+                              .build())
+                      .setMovieId(showtime.getMovieId())
+                      .setDate(showtime.getDate().getTime())
+                      .setStartTime(showtime.getStartTime().getTime())
+                      .setEndTime(showtime.getEndTime().getTime())
+                      .build())
+              .toList();
 
       return GetMovieShowtimesResponse.newBuilder()
               .setStatus(200)
               .setMessage("Success")
               .addAllShowtimes(showtimes)
               .build();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 }

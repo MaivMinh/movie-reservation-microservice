@@ -2,6 +2,7 @@ package com.microservice.bff.service;
 
 import com.google.protobuf.Int64Value;
 import com.google.protobuf.StringValue;
+import com.microservice.bff.exceptions.ResourceNotFoundException;
 import com.microservice.bff.grpc.BookingServiceGrpcClient;
 import com.microservice.bff.grpc.MovieServiceGrpcClient;
 import com.microservice.bff.request.Movie;
@@ -50,7 +51,7 @@ public class MovieService {
     GetMovieRequest request = GetMovieRequest.newBuilder().setId(id).build();
     GetMovieResponse response = movieServiceGrpcClient.getMovie(request);
     if (!response.hasMovie()) {
-      return ResponseData.builder().status(response.getStatus()).message(response.getMessage()).build();
+      throw new ResourceNotFoundException(response.getMessage());
     }
     com.microservice.movie_proto.Movie movieResponse = response.getMovie();
     Movie movie = Movie.builder().id(movieResponse.getId()).name(movieResponse.getName()).description(movieResponse.getDescription()).trailer(movieResponse.getTrailer()).releaseDate(new Date(movieResponse.getReleaseDate())).poster(movieResponse.getPoster()).backdrop(movieResponse.getBackdrop()).status(movieResponse.getStatus()).genres(movieResponse.getGenreList().stream().map(genre -> com.microservice.bff.request.Genre.builder().id(genre.getId()).name(genre.getName()).build()).toList()).build();

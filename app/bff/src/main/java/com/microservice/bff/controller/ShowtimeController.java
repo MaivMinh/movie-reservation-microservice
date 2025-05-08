@@ -20,6 +20,7 @@ import java.util.Map;
 @RequestMapping(value = "/api/showtimes")
 public class ShowtimeController {
   private final ShowtimeService showtimeService;
+  private final AuthService authService;
 
   /// Hàm lấy thông tin 1 suất chiếu.
   /// Done.
@@ -29,7 +30,6 @@ public class ShowtimeController {
     if (!StringUtils.hasText(servletRequest.getHeader("X-ACCOUNT-ID"))) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseError(HttpStatus.UNAUTHORIZED.value(), "Unauthenticated user"));
     }
-
     ResponseData response = showtimeService.getShowtime(id);
     return ResponseEntity.status(response.getStatus()).body(response);
   }
@@ -59,8 +59,9 @@ public class ShowtimeController {
   /// Hàm thực hiện tạo mới một suất chiếu
   /// Done
   @PostMapping(value = "")
-  public ResponseEntity<ResponseData> createShowtime(@RequestBody CreateShowtime createShowtime) {
-
+  public ResponseEntity<ResponseData> createShowtime(@RequestBody CreateShowtime createShowtime, HttpServletRequest request) {
+    ResponseEntity<ResponseData> result = authService.isAdmin(request);
+    if (result != null) return result;
     ResponseData response = showtimeService.createShowtime(createShowtime);
     return ResponseEntity.status(response.getStatus()).body(response);
   }
@@ -69,7 +70,9 @@ public class ShowtimeController {
   /// Hàm cập nhật thông tin của một suất chiếu
   /// Done
   @PatchMapping(value = "/{id}")
-  public ResponseEntity<ResponseData> updateShowtime(@PathVariable(name = "id") int id, @RequestBody UpdateShowtime updateShowtime) {
+  public ResponseEntity<ResponseData> updateShowtime(@PathVariable(name = "id") int id, @RequestBody UpdateShowtime updateShowtime, HttpServletRequest request) {
+    ResponseEntity<ResponseData> result = authService.isAdmin(request);
+    if (result != null) return result;
     ResponseData response = showtimeService.updateShowtime(id, updateShowtime);
     return ResponseEntity.status(response.getStatus()).body(response);
   }
@@ -77,7 +80,9 @@ public class ShowtimeController {
   /// Hàm xoá một suất chiếu
   /// Done
   @DeleteMapping(value = "/{id}")
-  public ResponseEntity<ResponseData> deleteShowtime(@PathVariable(name = "id") int id) {
+  public ResponseEntity<ResponseData> deleteShowtime(@PathVariable(name = "id") int id, HttpServletRequest request) {
+    ResponseEntity<ResponseData> result = authService.isAdmin(request);
+    if (result != null) return result;
     ResponseData response = showtimeService.deleteShowtime(id);
     return ResponseEntity.status(response.getStatus()).body(response);
   }

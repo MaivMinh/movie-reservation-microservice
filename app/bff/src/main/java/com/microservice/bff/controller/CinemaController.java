@@ -60,43 +60,16 @@ public class CinemaController {
   /// Done.
   @PostMapping("")
   public ResponseEntity<ResponseData> createCinema(@RequestBody CreateCinema createCinema, HttpServletRequest request) {
-
-    /// Kiểm tra xem account có phải là ADMIN không.
-    String token = request.getHeader("X-ACCOUNT-ID");
-    if (!StringUtils.hasText(token)) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).body(new ResponseError(401, "Unauthorized"));
-    }
-
-    try {
-      int id = Integer.parseInt(token);
-      if (!authService.isAdmin(id)) {
-        return ResponseEntity.status(403).body(new ResponseData(403, "Forbidden"));
-      }
-    } catch (Exception e) {
-      return ResponseEntity.status(403).body(new ResponseData(403, "Forbidden"));
-    }
-
-
+    ResponseEntity<ResponseData> result = authService.isAdmin(request);
+    if (result != null) return result;
     ResponseData response = bookingService.createCinema(createCinema);
     return ResponseEntity.status(response.getStatus()).body(response);
   }
 
   @PatchMapping(value = "/{id}")
   public ResponseEntity<ResponseData> updateCinema(@PathVariable(value = "id") int id, @RequestBody UpdateCinema updateCinema, HttpServletRequest request) {
-    String token = request.getHeader("X-ACCOUNT-ID");
-    if (!StringUtils.hasText(token)) {
-      return ResponseEntity.status(401).body(new ResponseData(401, "Unauthorized"));
-    }
-
-    try {
-      int accountId = Integer.parseInt(token);
-      if (!authService.isAdmin(accountId)) {
-        return ResponseEntity.status(403).body(new ResponseData(403, "Forbidden"));
-      }
-    } catch (Exception e) {
-      return ResponseEntity.status(403).body(new ResponseData(403, "Forbidden"));
-    }
-
+    ResponseEntity<ResponseData> result = authService.isAdmin(request);
+    if (result != null) return result;
     ResponseData response = bookingService.updateCinema(id, updateCinema);
     return ResponseEntity.status(response.getStatus()).body(response);
   }

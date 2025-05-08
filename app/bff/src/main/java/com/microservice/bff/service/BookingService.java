@@ -1,5 +1,7 @@
 package com.microservice.bff.service;
 
+import com.microservice.bff.exceptions.BadRequestException;
+import com.microservice.bff.exceptions.ResourceNotFoundException;
 import com.microservice.bff.grpc.BookingServiceGrpcClient;
 import com.microservice.bff.grpc.MovieServiceGrpcClient;
 import com.microservice.bff.request.DeclareQueueRequest;
@@ -35,7 +37,7 @@ public class BookingService {
 
     GetBookingByShowtimeResponse response = bookingServiceGrpcClient.getBookingByShowtime(request);
     if (!response.hasShowtime()) {
-      return new ResponseError(HttpStatus.NOT_FOUND.value(), "Showtime not found");
+      throw new ResourceNotFoundException(response.getMessage());
     }
 
     com.microservice.booking_proto.Showtime showtimeResponse = response.getShowtime();
@@ -77,28 +79,27 @@ public class BookingService {
     /// Lấy thông tin movie.
     int movieId = showtime.getMovieId();
     GetMovieResponse movieResponse = movieServiceGrpcClient.getMovie(GetMovieRequest.newBuilder().setId(movieId).build());
-    Movie movie = null;
     if (movieResponse.hasMovie()) {
-      movie = Movie.builder()
+      Movie movie = Movie.builder()
               .id(movieResponse.getMovie().getId())
               .name(movieResponse.getMovie().getName())
               .poster(movieResponse.getMovie().getPoster())
               .backdrop(movieResponse.getMovie().getBackdrop())
               .build();
+      return new ResponseData(HttpStatus.OK.value(), "Success", Map.of(
+              "movie", movie,
+              "showtime", showtime,
+              "seats", seats
+      ));
     }
-
-    return new ResponseData(HttpStatus.OK.value(), "Success", Map.of(
-            "movie", movie,
-            "showtime", showtime,
-            "seats", seats
-    ));
+    throw new ResourceNotFoundException(movieResponse.getMessage());
   }
 
   public ResponseData handlePreSeatReservation(ReserveRequest reserve) {
     Integer showtimeId = reserve.getShowtimeId();
     List<Integer> seats = reserve.getSeats();
     if (showtimeId == null || seats == null || seats.isEmpty()) {
-      return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Invalid request");
+      throw new BadRequestException("Invalid request");
     }
 
     HandlePreSeatReservationRequest request = HandlePreSeatReservationRequest.newBuilder()
@@ -107,6 +108,9 @@ public class BookingService {
             .build();
 
     HandlePreSeatReservationResponse response = bookingServiceGrpcClient.handlePreSeatReservation(request);
+    if (response.getStatus() != HttpStatus.OK.value()) {
+      throw new RuntimeException(response.getMessage());
+    }
     return new ResponseData(response.getStatus(), response.getMessage());
   }
 
@@ -117,22 +121,26 @@ public class BookingService {
   public ResponseData declareQueue(DeclareQueueRequest request) {
     String accountString = request.getAccountId();
     if (!StringUtils.hasText(accountString)) {
-      return new ResponseData(HttpStatus.BAD_REQUEST.value(), "Unauthenticated user");
+      throw new BadRequestException("Unauthenticated user");
     }
     int accountId = Integer.parseInt(request.getAccountId());
     HandleDeclareQueueResponse response = bookingServiceGrpcClient.handleDeclareQueue(HandleDeclareQueueRequest.newBuilder()
             .setAccountId(accountId)
             .build());
+    if (response.getStatus() != HttpStatus.OK.value() || response.getStatus() != HttpStatus.CREATED.value()) {
+      throw new RuntimeException(response.getMessage());
+    }
     return new ResponseData(response.getStatus(), response.getMessage());
   }
 
   public ResponseData removeQueue(DeclareQueueRequest request) {
     int accountId = Integer.parseInt(request.getAccountId());
-
     HandleRemoveQueueResponse response = bookingServiceGrpcClient.handleRemoveQueue(HandleRemoveQueueRequest.newBuilder()
             .setAccountId(accountId)
             .build());
-
+    if (response.getStatus() != HttpStatus.OK.value()) {
+      throw new RuntimeException(response.getMessage());
+    }
     return new ResponseData(response.getStatus(), response.getMessage());
   }
 }

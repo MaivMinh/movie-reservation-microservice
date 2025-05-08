@@ -118,7 +118,6 @@ public class SeatReservationService {
     /// Hàm thực hiện tạo ra một queue tương ứng mới dựa vào session-id.
 
     String queueName = "holding." + request.getAccountId();
-
     int status = rabbitMQService.declareQueue(queueName);
     return DeclareQueueResponse.newBuilder()
             .setStatus(status)
@@ -128,10 +127,17 @@ public class SeatReservationService {
 
   public RemoveQueueResponse removeQueue(RemoveQueueRequest request) {
     String queueName = "holding." + request.getAccountId();
-    rabbitMQService.removeQueue(queueName);
-    return RemoveQueueResponse.newBuilder()
-            .setStatus(200)
-            .setMessage("Xóa queue thành công!")
-            .build();
+    boolean isRemoved = rabbitMQService.removeQueue(queueName);
+    if (isRemoved) {
+      return RemoveQueueResponse.newBuilder()
+              .setStatus(HttpStatus.OK.value())
+              .setMessage("Xóa queue thành công!")
+              .build();
+    } else {
+      return RemoveQueueResponse.newBuilder()
+              .setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
+              .setMessage("Xóa queue thất bại!")
+              .build();
+    }
   }
 }

@@ -3,6 +3,7 @@ package com.microservice.bff.service;
 import com.google.protobuf.Int32Value;
 import com.google.protobuf.Int64Value;
 import com.google.protobuf.StringValue;
+import com.microservice.bff.exceptions.ResourceNotFoundException;
 import com.microservice.bff.grpc.BookingServiceGrpcClient;
 import com.microservice.bff.request.CreateShowtime;
 import com.microservice.bff.request.UpdateShowtime;
@@ -12,6 +13,7 @@ import com.microservice.bff.response.Room;
 import com.microservice.bff.response.Showtime;
 import com.microservice.booking_proto.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
@@ -37,6 +39,12 @@ public class ShowtimeService {
             .build();
 
     CreateShowtimeResponse response = bookingServiceGrpcClient.createShowtime(request);
+    if (response.getStatus() == HttpStatus.BAD_REQUEST.value()) {
+      throw new RuntimeException(response.getMessage());
+    }
+    if (response.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+      throw new RuntimeException(response.getMessage());
+    }
     return ResponseData.builder()
             .status(response.getStatus())
             .message(response.getMessage())
@@ -53,7 +61,9 @@ public class ShowtimeService {
             .build();
 
     GetShowtimesResponse response = bookingServiceGrpcClient.getShowtimes(request);
-
+    if (response.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+      throw new RuntimeException(response.getMessage());
+    }
     List<Showtime> showtimes = response.getShowtimesList().stream().map(showtime -> Showtime.builder()
             .id(showtime.getId())
             .movieId(showtime.getMovieId())
@@ -122,6 +132,13 @@ public class ShowtimeService {
     UpdateShowtimeRequest request = builder.build();
 
     UpdateShowtimeResponse response = bookingServiceGrpcClient.updateShowtime(request);
+    if (response.getStatus() == HttpStatus.BAD_REQUEST.value()) {
+      throw new RuntimeException(response.getMessage());
+    }
+    if (response.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+      throw new RuntimeException(response.getMessage());
+    }
+
     return ResponseData.builder()
             .status(response.getStatus())
             .message(response.getMessage())
@@ -129,17 +146,16 @@ public class ShowtimeService {
   }
 
   public ResponseData getShowtime(int id) {
-
     GetShowtimeRequest request = GetShowtimeRequest.newBuilder()
             .setId(id)
             .build();
 
     GetShowtimeResponse response = bookingServiceGrpcClient.getShowtime(request);
-    if (!response.hasShowtime()) {
-      return ResponseData.builder()
-              .status(response.getStatus())
-              .message(response.getMessage())
-              .build();
+    if (response.getStatus() == HttpStatus.NOT_FOUND.value()) {
+      throw new ResourceNotFoundException(response.getMessage());
+    }
+    if (response.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+      throw new RuntimeException(response.getMessage());
     }
 
     com.microservice.booking_proto.Showtime showtimeMsg = response.getShowtime();
@@ -179,6 +195,12 @@ public class ShowtimeService {
             .build();
 
     DeleteShowtimeResponse response = bookingServiceGrpcClient.deleteShowtime(request);
+    if (response.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+      throw new RuntimeException(response.getMessage());
+    }
+    if (response.getStatus() == HttpStatus.NOT_FOUND.value()) {
+      throw new ResourceNotFoundException(response.getMessage());
+    }
     return ResponseData.builder()
             .status(response.getStatus())
             .message(response.getMessage())
@@ -194,6 +216,9 @@ public class ShowtimeService {
             .build();
 
     SearchShowtimesResponse response = bookingServiceGrpcClient.searchShowtimes(request);
+    if (response.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+      throw new RuntimeException(response.getMessage());
+    }
 
     List<Showtime> showtimes = response.getShowtimesList().stream().map(showtime -> Showtime.builder()
             .id(showtime.getId())
@@ -244,6 +269,9 @@ public class ShowtimeService {
             .build();
 
     GetMovieShowtimesResponse response = bookingServiceGrpcClient.getMovieShowtimes(request);
+    if (response.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+      throw new RuntimeException(response.getMessage());
+    }
     List<Showtime> showtimes = response.getShowtimesList().stream().map(showtime -> Showtime.builder()
                     .id(showtime.getId())
                     .movieId(showtime.getMovieId())
