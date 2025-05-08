@@ -5,7 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @RestController
-public class FallbackController {
+@RequestMapping("/bff")
+public class BffServiceFallbackController {
   @RequestMapping(value = "/contact-support")
   public Mono<String> contactSupport() {
     return Mono.just("BFF Service is currently unavailable. Please contact support team!");

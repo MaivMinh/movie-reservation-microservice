@@ -32,12 +32,12 @@ spring:
   cloud:
     circuitbreaker:
       resilience4j:
-        blocking:
+        reactive:
           enabled: true
     gateway:
       httpclient:
         connect-timeout: 1000
-        response-timeout: 2s
+        response-timeout: 5s
       routes:
         - id: api-documentation
           uri: lb://bff
@@ -54,7 +54,7 @@ spring:
             - name: CircuitBreaker
               args:
                 name: default
-                fallbackUri: "forward:/contact-support"
+                fallbackUri: "forward:/bff/contact-support"
 
 
   application:
@@ -83,14 +83,21 @@ grpc:
       negotiation-type: plaintext
 
 # Resilience configuration
-resilience4j.circuitbreaker:
-  configs:
-    default:
-      registerHealthIndicator: true
-      slidingWindowSize: 10
-      minimumNumberOfCalls: 5
-      permittedNumberOfCallsInHalfOpenState: 3
-      automaticTransitionFromOpenToHalfOpenEnabled: true
-      waitDurationInOpenState: 10000
-      failureRateThreshold: 50
-      eventConsumerBufferSize: 10
+resilience4j:
+  timelimiter:
+    configs:
+      default:
+        timeout-duration: 5s
+        cancel-running-future: false
+  circuitbreaker:
+    configs:
+      default:
+        registerHealthIndicator: true
+        slidingWindowSize: 6 # 6 cái request gần nhất
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 20000
+        failureRateThreshold: 50
+        slow-call-duration-threshold:
+          seconds: 3
+        slow-call-rate-threshold: 50
