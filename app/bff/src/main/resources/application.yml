@@ -96,40 +96,27 @@ resilience4j:
     instances:
       authService:
         register-health-indicator: true
-        sliding-window-size: 12 # Bởi vì circuit breaker sử dụng gRPC, nên sẽ gấp đôi so với số lượng của REST thông thường.
-        minimum-number-of-calls: 12
+        sliding-window-size: 6
+        minimum-number-of-calls: 6
         failure-rate-threshold: 50
         wait-duration-in-open-state: 20000
-        permitted-number-of-calls-in-half-open-state: 6
+        permitted-number-of-calls-in-half-open-state: 3
         sliding-window-type: COUNT_BASED
-        record-exceptions:
-          - java.lang.Throwable
-          - io.grpc.StatusRuntimeException
-          - java.lang.Exception
-          - java.io.IOException
       movieService:
         register-health-indicator: true
-        sliding-window-size: 12
-        minimum-number-of-calls: 12
+        sliding-window-size: 6
+        minimum-number-of-calls: 6
         failure-rate-threshold: 50
         wait-duration-in-open-state: 20000
-        permitted-number-of-calls-in-half-open-state: 6
+        permitted-number-of-calls-in-half-open-state: 3
         sliding-window-type: COUNT_BASED
-        record-exceptions:
-          - java.lang.Throwable
-          - io.grpc.StatusRuntimeException
-          - java.lang.Exception
-          - java.io.IOException
       bookingService:
         register-health-indicator: true
-        sliding-window-size: 12
+        sliding-window-size: 6
         minimum-number-of-calls: 12
         failure-rate-threshold: 50
         wait-duration-in-open-state: 20000
-        permitted-number-of-calls-in-half-open-state: 6
+        permitted-number-of-calls-in-half-open-state: 3
         sliding-window-type: COUNT_BASED
         record-exceptions:
-          - java.lang.Throwable
-          - io.grpc.StatusRuntimeException
           - java.lang.Exception
-          - java.io.IOException

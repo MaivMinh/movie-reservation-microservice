@@ -32,67 +32,71 @@ public class BookingService {
   private final MovieServiceGrpcClient movieServiceGrpcClient;
 
   public ResponseData getBookingByShowtime(int showtimeId) {
-    GetBookingByShowtimeRequest request = GetBookingByShowtimeRequest.newBuilder()
-            .setShowtimeId(showtimeId).build();
+    try {
+      GetBookingByShowtimeRequest request = GetBookingByShowtimeRequest.newBuilder()
+              .setShowtimeId(showtimeId).build();
 
-    GetBookingByShowtimeResponse response = bookingServiceGrpcClient.getBookingByShowtime(request);
-    if (!response.hasShowtime()) {
-      throw new ResourceNotFoundException(response.getMessage());
-    }
+      GetBookingByShowtimeResponse response = bookingServiceGrpcClient.getBookingByShowtime(request);
+      if (!response.hasShowtime()) {
+        throw new ResourceNotFoundException(response.getMessage());
+      }
 
-    com.microservice.booking_proto.Showtime showtimeResponse = response.getShowtime();
-    Showtime showtime = Showtime.builder()
-            .id(showtimeResponse.getId())
-            .movieId(showtimeResponse.getMovieId())
-            .date(new Date(showtimeResponse.getDate()))
-            .startTime(new Time(showtimeResponse.getStartTime()))
-            .endTime(new Time(showtimeResponse.getEndTime()))
-            .room(Room.builder()
-                    .id(showtimeResponse.getRoom().getId())
-                    .name(showtimeResponse.getRoom().getName())
-                    .location(showtimeResponse.getRoom().getLocation())
-                    .cinema(Cinema.builder()
-                            .id(showtimeResponse.getRoom().getCinema().getId())
-                            .name(showtimeResponse.getRoom().getCinema().getName())
-                            .address(showtimeResponse.getRoom().getCinema().getAddress())
-                            .name(showtimeResponse.getRoom().getCinema().getName())
-                            .province(Province.builder()
-                                    .id(showtimeResponse.getRoom().getCinema().getProvince().getId())
-                                    .name(showtimeResponse.getRoom().getCinema().getProvince().getName())
-                                    .build())
-                            .build())
-                    .build())
-            .build();
-
-    List<Seat> seats = response.getSeatsList().stream().map(seat -> Seat.builder()
-                    .id(seat.getId())
-                    .type(seat.getType())
-                    .price(seat.getPrice())
-                    .seatRow(seat.getSeatRow())
-                    .seatNumber(seat.getSeatNumber())
-                    .roomId(showtime.getRoom().getId())
-                    .isBooked(seat.getIsBooked())
-                    .build())
-            .toList();
-
-
-    /// Lấy thông tin movie.
-    int movieId = showtime.getMovieId();
-    GetMovieResponse movieResponse = movieServiceGrpcClient.getMovie(GetMovieRequest.newBuilder().setId(movieId).build());
-    if (movieResponse.hasMovie()) {
-      Movie movie = Movie.builder()
-              .id(movieResponse.getMovie().getId())
-              .name(movieResponse.getMovie().getName())
-              .poster(movieResponse.getMovie().getPoster())
-              .backdrop(movieResponse.getMovie().getBackdrop())
+      com.microservice.booking_proto.Showtime showtimeResponse = response.getShowtime();
+      Showtime showtime = Showtime.builder()
+              .id(showtimeResponse.getId())
+              .movieId(showtimeResponse.getMovieId())
+              .date(new Date(showtimeResponse.getDate()))
+              .startTime(new Time(showtimeResponse.getStartTime()))
+              .endTime(new Time(showtimeResponse.getEndTime()))
+              .room(Room.builder()
+                      .id(showtimeResponse.getRoom().getId())
+                      .name(showtimeResponse.getRoom().getName())
+                      .location(showtimeResponse.getRoom().getLocation())
+                      .cinema(Cinema.builder()
+                              .id(showtimeResponse.getRoom().getCinema().getId())
+                              .name(showtimeResponse.getRoom().getCinema().getName())
+                              .address(showtimeResponse.getRoom().getCinema().getAddress())
+                              .name(showtimeResponse.getRoom().getCinema().getName())
+                              .province(Province.builder()
+                                      .id(showtimeResponse.getRoom().getCinema().getProvince().getId())
+                                      .name(showtimeResponse.getRoom().getCinema().getProvince().getName())
+                                      .build())
+                              .build())
+                      .build())
               .build();
-      return new ResponseData(HttpStatus.OK.value(), "Success", Map.of(
-              "movie", movie,
-              "showtime", showtime,
-              "seats", seats
-      ));
+
+      List<Seat> seats = response.getSeatsList().stream().map(seat -> Seat.builder()
+                      .id(seat.getId())
+                      .type(seat.getType())
+                      .price(seat.getPrice())
+                      .seatRow(seat.getSeatRow())
+                      .seatNumber(seat.getSeatNumber())
+                      .roomId(showtime.getRoom().getId())
+                      .isBooked(seat.getIsBooked())
+                      .build())
+              .toList();
+
+
+      /// Lấy thông tin movie.
+      int movieId = showtime.getMovieId();
+      GetMovieResponse movieResponse = movieServiceGrpcClient.getMovie(GetMovieRequest.newBuilder().setId(movieId).build());
+      if (movieResponse.hasMovie()) {
+        Movie movie = Movie.builder()
+                .id(movieResponse.getMovie().getId())
+                .name(movieResponse.getMovie().getName())
+                .poster(movieResponse.getMovie().getPoster())
+                .backdrop(movieResponse.getMovie().getBackdrop())
+                .build();
+        return new ResponseData(HttpStatus.OK.value(), "Success", Map.of(
+                "movie", movie,
+                "showtime", showtime,
+                "seats", seats
+        ));
+      }
+      return new ResponseData(HttpStatus.NOT_FOUND.value(), "Booking not found", null);
+    } catch (Exception e) {
+      throw new ResourceNotFoundException("Booking not found");
     }
-    throw new ResourceNotFoundException(movieResponse.getMessage());
   }
 
   public ResponseData handlePreSeatReservation(ReserveRequest reserve) {

@@ -21,23 +21,7 @@ import java.util.concurrent.CompletableFuture;
 public class MovieServiceGrpcClient {
   @GrpcClient("movieService")
   private MovieServiceGrpc.MovieServiceBlockingStub movieServiceBlockingStub;
-
   private final TimeLimiterRegistry timeLimiterRegistry;
-
-  private CreateMovieResponse fallbackCreateMovie(CreateMovieRequest request, Throwable throwable) {
-    String message = throwable instanceof CallNotPermittedException
-            ? "Circuit breaker is open: Too many failures in movie service"
-            : "Movie service is currently unavailable. Please try again later.";
-    return CreateMovieResponse.newBuilder()
-            .setStatus(HttpStatus.SERVICE_UNAVAILABLE.value())
-            .setMessage(message)
-            .build();
-  }
-
-  @CircuitBreaker(name = "movieService", fallbackMethod = "fallbackCreateMovie")
-  public CreateMovieResponse createMovie(CreateMovieRequest request) {
-    return movieServiceBlockingStub.createMovie(request);
-  }
 
   private GetMoviesResponse fallbackGetMovies(GetMoviesRequest request, Throwable throwable) {
     String message = throwable instanceof CallNotPermittedException
@@ -48,20 +32,38 @@ public class MovieServiceGrpcClient {
             .setMessage(message)
             .build();
   }
-
-  @io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker(name = "movieService", fallbackMethod = "fallbackGetMovies")
+  @CircuitBreaker(name = "movieService", fallbackMethod = "fallbackGetMovies")
   public GetMoviesResponse getMovies(GetMoviesRequest request) throws Exception {
     /**
-     * Khi chúng ta sử dụng thêm TimeLimter thì chúng ta sẽ sinh ra 2 log ở Circuit Breaker.
-     * Log thứ nhất sẽ của TimeLimiter. Log này sẽ được sinh ra mặc định bởi vì chúng ta áp dụng TimeLimter pattern cho MovieService.
-     * Và trạng thái của log này sẽ phụ thuộc vào thời gian mà chúng ta set (timeout-duration), nếu trong đoạn timeout-duration mà chúng ta không nhận được response từ MovieService thì log này sẽ có trạng thái là TIMEOUT. Hay nói cách khác là EROR.
-     * Log thứ hai sẽ là log của Circuit Breaker. Log này sinh ra do ta áp dụng Circuit Breaker pattern cho MovieService.
-     * Trạng thái của Log này tùy thuộc vào chúng ta có nhận được response hay không(dù success hay thất bài). Nếu nhận được Response thì log này sẽ có trạng thái là SUCCESS. Còn nếu là Exception thì log này sẽ có trạng thái là ERROR.
-     * Vì vậy, chúng ta sẽ có 2 Log khác nhau cho 1 request.
+     Retry ( CircuitBreaker ( RateLimiter ( TimeLimiter ( Bulkhead ( Function ) ) ) ) )
+     - Phía trên là thứ tự thực hiện (mặc định) của các decorator.
+     - Bulkhead sẽ được thực hiện đầu tiên, sau đó là TimeLimiter, tiếp theo là RateLimiter, và cuối cùng là CircuitBreaker và Retry.
+     - Về cơ bản, khi các exception xảy ra trong các decorator, chúng sẽ được ném ra cho các decorator phía trên.
+     - Ví dụ: nếu TimeLimiter ném ra một exception, thì RateLimiter sẽ không thực hiện và sẽ ném ra exception đó cho CircuitBreaker.
+     - Nếu CircuitBreaker ném ra một exception, thì Retry sẽ không thực hiện và sẽ ném ra exception đó cho người gọi.
+     - Nếu Retry ném ra một exception, thì người gọi sẽ nhận được exception đó.
+     Ví du: - Hiện tại, chúng ta đang sử dụng CircuitBreaker và TimeLimiter.
+     - TimeLimiter sẽ thực hiện đầu tiên, sau đó là CircuitBreaker. Nếu TimeLimiter ném ra một exception, thì CircuitBreaker sẽ xử lý exception này do chúng ta đang có một hàm fallback method là fallbackGetMovies(). Nên do đó, khi timeout xảy ra người dùng sẽ nhận được response mà hàm fallback này trả về.
+     - Nhưng nếu trong trường hợp mà TimeLimiter không ném ra exception mà CircuitBreaker ném ra exception(Ví dụ như Database không hoạt động), thì hàm fallbackGetMovies() vẫn sẽ hoạt động và exception này sẽ được tính cho CircuitBreaker.
+     - Trong trường hợp cả 2 không ném ra exception thì hàm getMovies() sẽ được thực hiện và trả về kết quả.
      */
     TimeLimiter timeLimiter = timeLimiterRegistry.timeLimiter("movieService");
     return timeLimiter.executeFutureSupplier(
             () -> CompletableFuture.supplyAsync(() -> movieServiceBlockingStub.getMovies(request)));
+  }
+
+  private CreateMovieResponse fallbackCreateMovie(CreateMovieRequest request, Throwable throwable) {
+    String message = throwable instanceof CallNotPermittedException
+            ? "Circuit breaker is open: Too many failures in movie service"
+            : "Movie service is currently unavailable. Please try again later.";
+    return CreateMovieResponse.newBuilder()
+            .setStatus(HttpStatus.SERVICE_UNAVAILABLE.value())
+            .setMessage(message)
+            .build();
+  }
+  @CircuitBreaker(name = "movieService", fallbackMethod = "fallbackCreateMovie")
+  public CreateMovieResponse createMovie(CreateMovieRequest request) {
+    return movieServiceBlockingStub.createMovie(request);
   }
 
   private GetMovieResponse fallbackGetMovie(GetMovieRequest request, Throwable throwable) {
@@ -73,10 +75,11 @@ public class MovieServiceGrpcClient {
             .setMessage(message)
             .build();
   }
-
-  @CircuitBreaker(name = "mvoieService", fallbackMethod = "fallbackGetMovie")
-  public GetMovieResponse getMovie(GetMovieRequest request) {
-    return movieServiceBlockingStub.getMovie(request);
+  @CircuitBreaker(name = "movieService", fallbackMethod = "fallbackGetMovie")
+  public GetMovieResponse getMovie(GetMovieRequest request) throws Exception {
+    TimeLimiter timeLimiter = timeLimiterRegistry.timeLimiter("movieService");
+    return timeLimiter.executeFutureSupplier(
+            () -> CompletableFuture.supplyAsync(() -> movieServiceBlockingStub.getMovie(request)));
   }
 
   private SearchMoviesResponse fallbackSearchMovies(SearchMoviesRequest request, Throwable throwable) {
@@ -88,10 +91,11 @@ public class MovieServiceGrpcClient {
             .setMessage(message)
             .build();
   }
-
   @CircuitBreaker(name = "movieService", fallbackMethod = "fallbackSearchMovies")
-  public SearchMoviesResponse searchMovies(SearchMoviesRequest request) {
-    return movieServiceBlockingStub.searchMovies(request);
+  public SearchMoviesResponse searchMovies(SearchMoviesRequest request) throws Exception {
+    TimeLimiter timeLimiter = timeLimiterRegistry.timeLimiter("movieService");
+    return timeLimiter.executeFutureSupplier(
+            () -> CompletableFuture.supplyAsync(() -> movieServiceBlockingStub.searchMovies(request)));
   }
 
   private UpdateMovieResponse fallbackUpdateMovie(UpdateMovieRequest request, Throwable throwable) {
@@ -103,10 +107,11 @@ public class MovieServiceGrpcClient {
             .setMessage(message)
             .build();
   }
-
   @CircuitBreaker(name = "movieService", fallbackMethod = "fallbackUpdateMovie")
-  public UpdateMovieResponse updateMovie(UpdateMovieRequest request) {
-    return movieServiceBlockingStub.updateMovie(request);
+  public UpdateMovieResponse updateMovie(UpdateMovieRequest request) throws Exception {
+    TimeLimiter timeLimiter = timeLimiterRegistry.timeLimiter("movieService");
+    return timeLimiter.executeFutureSupplier(
+            () -> CompletableFuture.supplyAsync(() -> movieServiceBlockingStub.updateMovie(request)));
   }
 
   private GetNowPlayingMoviesResponse fallbackGetNowPlayingMovies(GetNowPlayingMoviesRequest request, Throwable throwable) {
@@ -120,7 +125,9 @@ public class MovieServiceGrpcClient {
   }
 
   @CircuitBreaker(name = "movieService", fallbackMethod = "fallbackGetNowPlayingMovies")
-  public GetNowPlayingMoviesResponse getNowPlayingMovies(GetNowPlayingMoviesRequest request) {
-    return movieServiceBlockingStub.getNowPlayingMovies(request);
+  public GetNowPlayingMoviesResponse getNowPlayingMovies(GetNowPlayingMoviesRequest request) throws Exception {
+    TimeLimiter timeLimiter = timeLimiterRegistry.timeLimiter("movieService");
+    return timeLimiter.executeFutureSupplier(
+            () -> CompletableFuture.supplyAsync(() -> movieServiceBlockingStub.getNowPlayingMovies(request)));
   }
 }
