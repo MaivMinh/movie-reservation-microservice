@@ -3,17 +3,21 @@ package com.microservice.bff.grpc;
 import com.microservice.booking_proto.*;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.timelimiter.TimeLimiter;
+import io.github.resilience4j.timelimiter.TimeLimiterRegistry;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
 @Service
 public class BookingServiceGrpcClient {
   @GrpcClient("bookingService")
   private BookingServiceGrpc.BookingServiceBlockingStub bookingServiceBlockingStub;
+  private final TimeLimiterRegistry timeLimiterRegistry;
 
   private CreateCinemaResponse fallbackCreateCinema(CreateCinemaRequest request, Throwable throwable) {
     String message = throwable instanceof CallNotPermittedException
@@ -25,8 +29,10 @@ public class BookingServiceGrpcClient {
             .build();
   }
   @CircuitBreaker(name = "bookingService", fallbackMethod = "fallbackCreateCinema")
-  public CreateCinemaResponse createCinema(CreateCinemaRequest request) {
-    return bookingServiceBlockingStub.createCinema(request);
+  public CreateCinemaResponse createCinema(CreateCinemaRequest request) throws Exception {
+    TimeLimiter timeLimiter = timeLimiterRegistry.timeLimiter("bookingService");
+    return timeLimiter.executeFutureSupplier(
+            () -> CompletableFuture.supplyAsync(() -> bookingServiceBlockingStub.createCinema(request)));
   }
 
   private GetCinemasResponse fallbackGetCinemas(GetCinemasRequest request, Throwable throwable) {
@@ -42,8 +48,10 @@ public class BookingServiceGrpcClient {
             .build();
   }
   @CircuitBreaker(name = "bookingService", fallbackMethod = "fallbackGetCinemas")
-  public GetCinemasResponse getCinemas(GetCinemasRequest request) {
-    return bookingServiceBlockingStub.getCinemas(request);
+  public GetCinemasResponse getCinemas(GetCinemasRequest request) throws Exception {
+    TimeLimiter timeLimiter = timeLimiterRegistry.timeLimiter("bookingService");
+    return timeLimiter.executeFutureSupplier(
+            () -> CompletableFuture.supplyAsync(() -> bookingServiceBlockingStub.getCinemas(request)));
   }
 
   private GetCinemaResponse fallbackGetCinema(GetCinemaRequest request, Throwable throwable) {
@@ -56,8 +64,10 @@ public class BookingServiceGrpcClient {
             .build();
   }
   @CircuitBreaker(name = "bookingService", fallbackMethod = "fallbackGetCinema")
-  public GetCinemaResponse getCinema(GetCinemaRequest request) {
-    return bookingServiceBlockingStub.getCinema(request);
+  public GetCinemaResponse getCinema(GetCinemaRequest request) throws Exception {
+    TimeLimiter timeLimiter = timeLimiterRegistry.timeLimiter("bookingService");
+    return timeLimiter.executeFutureSupplier(
+            () -> CompletableFuture.supplyAsync(() -> bookingServiceBlockingStub.getCinema(request)));
   }
 
   public SearchCinemasResponse searchCinemas(SearchCinemasRequest request) {

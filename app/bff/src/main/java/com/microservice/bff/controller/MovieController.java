@@ -2,6 +2,7 @@ package com.microservice.bff.controller;
 
 import com.microservice.bff.request.NewMovie;
 import com.microservice.bff.request.UpdateMovie;
+import com.microservice.bff.response.ContactInfo;
 import com.microservice.bff.response.ResponseData;
 import com.microservice.bff.service.AuthService;
 import com.microservice.bff.service.MovieService;
@@ -9,6 +10,8 @@ import com.microservice.bff.service.ShowtimeService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -25,6 +28,13 @@ public class MovieController {
   private final MovieService movieService;
   private final AuthService authService;
   private final ShowtimeService showtimeService;
+
+  @Value(value = "${bff.message}")
+  private String message;
+  @Value(value = "${bff.contactDetails.name}")
+  private String name;
+  @Value(value = "${bff.contactDetails.email}")
+  private String email;
 
   /// ================== ADMIN ROLE ================== ///
 
@@ -44,7 +54,7 @@ public class MovieController {
       },
     * */
     ResponseEntity<ResponseData> result = authService.isAdmin(request);
-    if (result != null)  return  result;
+    if (result != null) return result;
     ResponseData response = movieService.createMovie(newMovie);
     return ResponseEntity.status(response.getStatus()).body(response);
   }
@@ -64,7 +74,7 @@ public class MovieController {
     */
 
     ResponseEntity<ResponseData> result = authService.isAdmin(request);
-    if (result != null)  return  result;
+    if (result != null) return result;
     ResponseData response = movieService.updateMovie(movieId, updateMovie);
     return ResponseEntity.status(response.getStatus()).body(response);
   }
@@ -138,5 +148,22 @@ public class MovieController {
     size = (size > 0) ? size : 10;
     ResponseData response = movieService.getNowPlayingMovies(page, size, sort);
     return ResponseEntity.status(response.getStatus()).body(response);
+  }
+
+  /// Phương thức lấy thông tin của BFF.
+  @GetMapping(value = "/contact-info")
+  public ResponseEntity<ResponseData> getContactInfo() {
+    /**
+     * bff:
+     *   message: "Welcome to the BFF Service related production configuration!"
+     *   contactDetails:
+     *     name: "Mai Van Minh"
+     *     email: "maivanminh.se@gmail.com"
+     *   onCallSupport:
+     *     - (666) 265-3765
+     *     - (666) 734-8371
+     *
+     */
+    return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "SUCCESS", Map.of("message", message, "contactDetails", Map.of("name", name, "email", email))));
   }
 }

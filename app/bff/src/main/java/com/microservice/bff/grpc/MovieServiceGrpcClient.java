@@ -123,7 +123,6 @@ public class MovieServiceGrpcClient {
             .setMessage(message)
             .build();
   }
-
   @CircuitBreaker(name = "movieService", fallbackMethod = "fallbackGetNowPlayingMovies")
   public GetNowPlayingMoviesResponse getNowPlayingMovies(GetNowPlayingMoviesRequest request) throws Exception {
     TimeLimiter timeLimiter = timeLimiterRegistry.timeLimiter("movieService");
