@@ -12,11 +12,11 @@ spring:
           timeout: 10
           clone-on-start: true
           force-pull: true
-  rabbitmq:
-    host: "localhost"
-    port: 5672
-    username: "guest"
-    password: "guest"
+          username: MaivMinh
+          password: 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
+
+encrypt:
+  key: $2a$12$SaK40zUz3blxDp.NoIr8yeHQWm3BWgugkTGEUQeDs0ZN4irM1onWC
 
 management:
   endpoints:
@@ -32,7 +32,6 @@ management:
     health:
       probes:
         enabled: true
-encrypt:
-  key: "45D81EC1EF61DF9AD8D3E5BB397F9"
+
 server:
   port: 8071

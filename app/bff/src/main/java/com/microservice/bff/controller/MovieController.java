@@ -28,14 +28,6 @@ public class MovieController {
   private final MovieService movieService;
   private final AuthService authService;
   private final ShowtimeService showtimeService;
-
-  @Value(value = "${bff.message}")
-  private String message;
-  @Value(value = "${bff.contactDetails.name}")
-  private String name;
-  @Value(value = "${bff.contactDetails.email}")
-  private String email;
-
   /// ================== ADMIN ROLE ================== ///
 
   /// Phương thức tạo ra 1 phim mới.
@@ -148,22 +140,5 @@ public class MovieController {
     size = (size > 0) ? size : 10;
     ResponseData response = movieService.getNowPlayingMovies(page, size, sort);
     return ResponseEntity.status(response.getStatus()).body(response);
-  }
-
-  /// Phương thức lấy thông tin của BFF.
-  @GetMapping(value = "/contact-info")
-  public ResponseEntity<ResponseData> getContactInfo() {
-    /**
-     * bff:
-     *   message: "Welcome to the BFF Service related production configuration!"
-     *   contactDetails:
-     *     name: "Mai Van Minh"
-     *     email: "maivanminh.se@gmail.com"
-     *   onCallSupport:
-     *     - (666) 265-3765
-     *     - (666) 734-8371
-     *
-     */
-    return ResponseEntity.ok(new ResponseData(HttpStatus.OK.value(), "SUCCESS", Map.of("message", message, "contactDetails", Map.of("name", name, "email", email))));
   }
 }
