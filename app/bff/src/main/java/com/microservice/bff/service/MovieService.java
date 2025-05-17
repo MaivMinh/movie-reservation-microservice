@@ -154,4 +154,16 @@ public class MovieService {
       throw new RuntimeException("Error fetching now playing movies", e);
     }
   }
+
+  public ResponseData getContactInfo() {
+    try {
+      GetContactInfoRequest request = GetContactInfoRequest.newBuilder().build();
+      GetContactInfoResponse response = movieServiceGrpcClient.getContactInfo(request);
+      return ResponseData.builder()
+              .data(response.getMessage())
+              .build();
+    } catch (Exception e) {
+      throw new RuntimeException("Error fetching contact info", e);
+    }
+  }
 }

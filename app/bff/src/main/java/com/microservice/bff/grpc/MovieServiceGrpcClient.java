@@ -129,4 +129,15 @@ public class MovieServiceGrpcClient {
     return timeLimiter.executeFutureSupplier(
             () -> CompletableFuture.supplyAsync(() -> movieServiceBlockingStub.getNowPlayingMovies(request)));
   }
+
+  public GetContactInfoResponse getContactInfo(GetContactInfoRequest request) {
+    try {
+      return movieServiceBlockingStub.getContactInfo(request);
+    } catch (Exception e) {
+      log.error("Error fetching contact info from movie service", e);
+      return GetContactInfoResponse.newBuilder()
+              .setMessage("Error fetching contact info from movie service")
+              .build();
+    }
+  }
 }

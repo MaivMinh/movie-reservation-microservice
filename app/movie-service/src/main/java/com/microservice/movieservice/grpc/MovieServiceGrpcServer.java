@@ -63,4 +63,11 @@ public class MovieServiceGrpcServer extends MovieServiceGrpc.MovieServiceImplBas
     responseObserver.onNext(response);
     responseObserver.onCompleted();
   }
+
+  @Override
+  public void getContactInfo(GetContactInfoRequest request, StreamObserver<GetContactInfoResponse> responseObserver) {
+    GetContactInfoResponse response = movieService.getContactInfo(request);
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
 }

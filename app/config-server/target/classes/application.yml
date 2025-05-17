@@ -3,17 +3,22 @@ spring:
     name: config-server
   profiles:
     active: git
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:guest}
+    password: ${SPRING_RABBITMQ_PASSWORD:guest}
   cloud:
     config:
       server:
         git:
           uri: https://github.com/MaivMinh/app-config
           default-label: main
-          timeout: 10
+          timeout: 5
           clone-on-start: true
           force-pull: true
           username: MaivMinh
-          password: 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
+          password: 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
 
 encrypt:
   key: $2a$12$SaK40zUz3blxDp.NoIr8yeHQWm3BWgugkTGEUQeDs0ZN4irM1onWC
@@ -23,6 +28,7 @@ management:
     web:
       exposure:
         include: "*"
+  # Liveness and Readiness probes configuration.
   health:
     readiness-state:
       enabled: true

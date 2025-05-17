@@ -1,7 +1,106 @@
 spring:
   profiles:
-    active: ${SPRING_PROFILES_ACTIVE:prod}
+    active: ${SPRING_PROFILES_ACTIVE:default}
   application:
     name: auth-service
+    security:
+      jwt:
+        access-token-key: ${SPRING_APPLICATION_SECURITY_JWT_ACCESS_TOKEN_KEY:$2a$12$iP3.JTboJiEaRDe3lLx4oOkZbBCf8Yf.7SO8UR8D8g2NWvNL3m0nu}
+        refresh-token-key: ${SPRING_APPLICATION_SECURITY_JWT_REFRESH_TOKEN_KEY:$2a$12$n18UlSjsLpPQM.2B59gRxOS1oLLS5Baqk3dHIqmeFTMmrG3VF/dsu}
+        access-token-expiration: 3600000
+        refresh-token-expiration: 86400000
+    server:
+      host: ${SPRING_APPLICATION_SERVER_HOST:http://localhost:8888}
   config:
-    import: optional:configserver:${SPRING_CLOUD_CONFIG_URI:http://localhost:8071/}
+    import: ${SPRING_CONFIG_IMPORT:optional:configserver:http://localhost:8071/}
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:guest}
+    password: ${SPRING_RABBITMQ_PASSWORD:guest}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+  sql:
+    init:
+      mode: always # Giúp khởi tạo database khi khởi động ứng dụng. Điều này có lợi khi triển khai ứng dụng thông qua Docker và Docker compose.
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/movie-reservation}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:49@Da5J,[KsemDN}
+  mail:
+    host: ${SPRING_MAIL_HOST:smtp.gmail.com}
+    port: ${SPRING_MAIL_PORT:587}
+    username: ${SPRING_MAIL_USERNAME:maivanminh.se@gmail.com}
+    password: ${SPRING_MAIL_PASSWORD:wbbm jcpx oanc wzwd}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:localhost}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+      password: ${SPRING_DATA_REDIS_PASSWORD:}
+  cache:
+    type: redis
+  threads:
+    virtual:
+      enabled: true
+server:
+  port: 8081
+
+# Spring Actuator Configurations
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: always
+  metrics:
+    distribution:
+      percentiles-histogram:
+        resilience4j:
+          circuitbreaker:
+            enabled: true
+        http:
+          server:
+            requests:
+              enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    # Liveness and Readiness probes configuration.
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+    circuitbreakers:
+      enabled: true
+    ratelimiters:
+      enabled: true
+    diskspace:
+      enabled: true
+    redis:
+      enabled: true
+
+grpc:
+  server:
+    port: 9090
+
+# Database config.
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}
+      preferIpAddress: true

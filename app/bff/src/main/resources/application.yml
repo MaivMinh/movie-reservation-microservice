@@ -1,7 +1,142 @@
 spring:
   profiles:
-    active: ${SPRING_PROFILES_ACTIVE:prod}
+    active: ${SPRING_PROFILES_ACTIVE:default}
   application:
     name: bff
+  # Lưu ý: Để sử dụng Spring Cloud Config, bạn cần thêm dependency spring-cloud-starter-config vào file pom.xml hoặc build.gradle của bạn.
+  # Khi dùng Spring Cloud Config Monitor, bạn cần thêm dependency spring-cloud-starter-bus-amqp vào file pom.xml hoặc build.gradle của bạn. Và với việc sử dụng Monitor thì nó sẽ tạo ra vấn đề khiến cho BFF không kết nối được tới Config Server.
   config:
-    import: optional:configserver:${SPRING_CLOUD_CONFIG_URI:http://localhost:8071/}
+    import: ${SPRING_CONFIG_IMPORT:optional:configserver:http://localhost:8071/}
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:guest}
+    password: ${SPRING_RABBITMQ_PASSWORD:guest}
+  threads:
+    virtual:
+      enabled: true
+
+# Spring Actuator Configurations
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: always
+  metrics:
+    distribution:
+      percentiles-histogram:
+        resilience4j:
+          circuitbreaker:
+            enabled: true
+        http:
+          server:
+            requests:
+              enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    # Liveness and Readiness probes configuration.
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+    circuitbreakers:
+      enabled: true
+    ratelimiters:
+      enabled: true
+    diskspace:
+      enabled: true
+    redis:
+      enabled: true
+
+grpc:
+  client:
+    authService:
+      address: ${GRPC_SERVER_AUTH_ADDRESS:static://localhost:9091}
+      negotiation-type: plaintext
+      enable-keep-alive: true
+      keep-alive-without-calls: true
+    movieService:
+      address: ${GRPC_SERVER_MOVIE_ADDRESS:static://localhost:9092}
+      negotiation-type: plaintext
+      enable-keep-alive: true
+      keep-alive-without-calls: true
+    bookingService:
+      address: ${GRPC_SERVER_BOOKING_ADDRESS:static://localhost:9093}
+      negotiation-type: plaintext
+      enable-keep-alive: true
+      keep-alive-without-calls: true
+
+server:
+  port: 8080
+
+# Eureka config.
+eureka:
+  client:
+    register-with-eureka: true
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}
+      preferIpAddress: true
+    fetch-registry: true
+
+
+# Current settings
+springdoc:
+  api-docs:
+    path: /api-docs/v3/api-docs
+  server-url: https://moviereservation.software
+  server-urls:
+    compute: true
+  swagger-ui:
+    path: /api-docs/swagger-ui.html
+    disable-swagger-default-url: true
+    url: /api-docs/v3/api-docs
+
+
+# Circuit Breaker Configurations
+resilience4j:
+  timelimiter:
+    instances:
+      default:
+        timeout-duration: 8s
+        cancel-running-future: true
+      authService:
+        timeout-duration: 8s
+        cancel-running-future: true
+      movieService:
+        timeout-duration: 8s
+        cancel-running-future: true
+      bookingService:
+        timeout-duration: 8s
+        cancel-running-future: true
+  circuitbreaker:
+    instances:
+      authService:
+        register-health-indicator: true
+        sliding-window-size: 6
+        minimum-number-of-calls: 6
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 20000
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-type: COUNT_BASED
+      movieService:
+        register-health-indicator: true
+        sliding-window-size: 6
+        minimum-number-of-calls: 6
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 20000
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-type: COUNT_BASED
+      bookingService:
+        register-health-indicator: true
+        sliding-window-size: 6
+        minimum-number-of-calls: 12
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 20000
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-type: COUNT_BASED
+        record-exceptions:
+          - java.lang.Exception

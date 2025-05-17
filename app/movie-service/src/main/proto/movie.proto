@@ -14,6 +14,13 @@ service MovieService {
   rpc updateMovie(UpdateMovieRequest) returns (UpdateMovieResponse);
   rpc isMoviePlayingNow(IsMoviePlayingNowRequest) returns (IsMoviePlayingNowResponse);
   rpc getNowPlayingMovies(GetNowPlayingMoviesRequest) returns (GetNowPlayingMoviesResponse);
+  rpc getContactInfo(GetContactInfoRequest) returns (GetContactInfoResponse);
+}
+
+message GetContactInfoRequest {}
+
+message GetContactInfoResponse {
+  string message = 1;
 }
 
 message GetNowPlayingMoviesRequest {

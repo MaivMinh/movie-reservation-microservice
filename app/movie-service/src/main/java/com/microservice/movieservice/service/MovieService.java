@@ -7,10 +7,13 @@ import com.microservice.movieservice.model.Movie;
 import com.microservice.movieservice.model.MovieGenre;
 import com.microservice.movieservice.model.MovieStatus;
 import com.microservice.movieservice.repository.MovieRepo;
+import com.microservice.movieservice.response.ContactInfo;
 import com.microservice.movieservice.response.ResponseData;
 import com.microservice.movieservice.response.ResponseError;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,11 +37,13 @@ import static org.springframework.data.jpa.domain.Specification.where;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MovieService {
   private final MovieRepo movieRepo;
   private final S3Service s3Service;
   private final GenreService genreService;
+  @Autowired
+  private ContactInfo contactInfo;
 
   public Movie findMovieByPoster(String combine) {
     return movieRepo.findByPoster(combine);
@@ -435,6 +440,12 @@ public class MovieService {
                     .build()).toList())
             .setTotalElement(pageMovie.getTotalElements())
             .setTotalPage(pageMovie.getTotalPages())
+            .build();
+  }
+
+  public GetContactInfoResponse getContactInfo(GetContactInfoRequest request) {
+    return GetContactInfoResponse.newBuilder()
+            .setMessage(contactInfo.getMessage())
             .build();
   }
 }

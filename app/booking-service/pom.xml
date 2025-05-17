@@ -12,6 +12,7 @@
     <version>1.0.0</version>
     <name>booking-service</name>
     <description>Booking service</description>
+    <packaging>jar</packaging>
     <url/>
     <licenses>
         <license/>

@@ -31,16 +31,16 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthService {
   private final JwtUtilsService jwtUtilsService;
-  @Value("${application.security.jwt.access-token-key}")
+  @Value("${spring.application.security.jwt.access-token-key}")
   private String accessToken;
-  @Value("${application.security.jwt.refresh-token-key}")
+  @Value("${spring.application.security.jwt.refresh-token-key}")
   private String refreshToken;
-  @Value("${application.security.jwt.access-token-expiration}")
+  @Value("${spring.application.security.jwt.access-token-expiration:3600000}")
   private long expiration;
-  @Value("${application.security.jwt.refresh-token-expiration}")
+  @Value("${spring.application.security.jwt.refresh-token-expiration:86400000}")
   private long refreshTokenExpiration;
 
-  @Value("${application.server.host}")
+  @Value("${spring.application.server.host}")
   private String host;
 
   private final AccountService accountService;

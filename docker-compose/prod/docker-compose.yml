@@ -1,0 +1,227 @@
+version: "3.8"
+
+services:
+  config-server:
+    image: config-server:1.0
+    restart: on-failure
+    ports:
+      - "8071:8071"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  service-discovery:
+    image: service-discovery:1.0
+    build:
+      context: ../de
+    restart: on-failure
+    networks:
+      - movie-reservation
+    environment:
+      - SPRING_APPLICATION_NAME=service-discovery
+      - SPRING_CONFIG_IMPORT=configserver:http://config-server:8071/
+      - SPRING_PROFILES_ACTIVE=prod
+    ports:
+      - "8761:8761"
+    depends_on:
+      - config-server
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  redis-api-gateway:
+    image: redis:7.4
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+  api-gateway:
+    image: api-gateway:1.0
+    restart: on-failure
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    ports:
+      - "8888:8888"
+    depends_on:
+      - service-discovery
+      - redis-api-gateway
+    environment:
+      - SPRING_APPLICATION_NAME=api-gateway
+      - SPRING_CONFIG_IMPORT=configserver:http://config-server:8071/
+      - SPRING_PROFILES_ACTIVE=prod
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
+      - EUREKA_INSTANCE_PREFERIPADDRESS=true
+      - SPRING_DATA_REDIS_HOST=redis-api-gateway
+      - SPRING_DATA_REDIS_PORT=6379
+      - GRPC_SERVER_AUTH_ADDRESS=static://auth-service:9091
+      - APPLICATION_SERVER_HOST=static://api-gateway:8888
+      # APPLICATION_SERVER_PORT được dùng để gửi email tới cho người dùng mới tạo tài khoản. Xem trong chức năng register.
+
+
+
+  bff:
+    image: bff:1.0
+    restart: on-failure
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      - service-discovery
+    environment:
+      - SPRING_APPLICATION_NAME=bff
+      - SPRING_CONFIG_IMPORT=configserver:http://config-server:8071/
+      - SPRING_PROFILES_ACTIVE=prod
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
+      - EUREKA_INSTANCE_PREFERIPADDRESS=true
+      - GRPC_SERVER_AUTH_ADDRESS=static://auth-service:9091
+      - GRPC_SERVER_MOVIE_ADDRESS=static://movie-service:9092
+      - GRPC_SERVER_BOOKING_ADDRESS=static://booking-service:9093
+
+  auth-service:
+    image: auth-service:1.0
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    restart: on-failure
+    env_file:
+      - .env
+    ports:
+      - "9091:9091"
+    depends_on:
+      - service-discovery
+    environment:
+      - SPRING_APPLICATION_NAME=auth-service
+      - SPRING_CONFIG_IMPORT=configserver:http://config-server:8071/
+      - SPRING_PROFILES_ACTIVE=prod
+      - APPLICATION_SECURITY_JWT_ACCESS_TOKEN_KEY=${APPLICATION_SECURITY_JWT_ACCESS_TOKEN_KEY}
+      - APPLICATION_SECURITY_JWT_REFRESH_TOKEN_KEY=${APPLICATION_SECURITY_JWT_REFRESH_TOKEN_KEY}
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
+      - EUREKA_INSTANCE_PREFERIPADDRESS=true
+      - BRAVO_API_KEY=${BRAVO_API_KEY}
+      - SPRING_DATA_REDIS_HOST=redis-api-gateway
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_DATA_REDIS_PASSWORD=${REDIS_PASSWORD}
+      - SPRING_CACHE_TYPE=redis
+
+
+  movie-service:
+    image: movie-service:1.0
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    restart: on-failure
+    ports:
+      - "9092:9092"
+    env_file:
+      - .env
+    depends_on:
+      - service-discovery
+    environment:
+      - SPRING_APPLICATION_NAME=movie-service
+      - SPRING_CONFIG_IMPORT=configserver:http://config-server:8071/
+      - SPRING_PROFILES_ACTIVE=prod
+      - SECRET_KEY=${SECRET_KEY}
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
+      - EUREKA_INSTANCE_PREFERIPADDRESS=true
+      - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+      - AWS_SECRET_KEY=${AWS_SECRET_KEY}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_BUCKET_NAME=${AWS_BUCKET_NAME}
+      - AWS_CLOUDFRONT_DOMAIN=${AWS_CLOUDFRONT_DOMAIN}
+
+  rabbitmq-service:
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    image: rabbitmq:4.0-management
+    restart: on-failure
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+      - "61613:61613"
+    environment:
+      - RABBITMQ_PLUGINS=rabbitmq_stomp rabbitmq_web_stomp
+    command: [
+      "bash", "-c",
+      "chmod 400 /var/lib/rabbitmq/.erlang.cookie; 
+          rabbitmq-plugins enable rabbitmq_management;
+          rabbitmq-plugins enable rabbitmq_stomp;
+          rabbitmq-server" ]
+
+
+  websocket-service:
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    image: websocket-service:1.0
+    restart: on-failure
+    depends_on:
+      - service-discovery
+      - rabbitmq-service
+    env_file:
+      - .env
+    ports:
+      - "8084:8084"
+      - "9094:9094"
+    environment:
+      - SPRING_APPLICATION_NAME=websocket-service
+      - SPRING_CONFIG_IMPORT=configserver:http://config-server:8071/
+      - SPRING_PROFILES_ACTIVE=prod
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
+      - EUREKA_INSTANCE_PREFERIPADDRESS=true
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - SPRING_RABBITMQ_HOST=rabbitmq-service
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+      - SPRING_MESSAGING_STOMP_BROKER_RELAY_HOST=rabbitmq-service
+      - SPRING_MESSAGING_STOMP_BROKER_RELAY_PORT=61613
+
+  booking-service:
+    image: booking-service:1.0
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    restart: on-failure
+    ports:
+      - "9093:9093"
+    env_file:
+      - .env
+    depends_on:
+      - service-discovery
+    environment:
+      - SPRING_APPLICATION_NAME=booking-service
+      - SPRING_CONFIG_IMPORT=configserver:http://config-server:8071/
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
+      - EUREKA_INSTANCE_PREFERIPADDRESS=true
+      - GRPC_SERVER_MOVIE_ADDRESS=static://movie-service:9092
+      - GRPC_SERVER_WEBSOCKET_ADDRESS=static://websocket-service:9094
+
+networks:
+  movie-reservation:
+    driver: "bridge"

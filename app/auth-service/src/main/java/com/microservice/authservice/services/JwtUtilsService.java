@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 @Service
 @RequiredArgsConstructor
 public class JwtUtilsService {
-  @Value("${application.security.jwt.access-token-key}")
+  @Value("${spring.application.security.jwt.access-token-key}")
   private String secret;
 
   public Claims verifyToken(String token) {

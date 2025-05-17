@@ -141,4 +141,11 @@ public class MovieController {
     ResponseData response = movieService.getNowPlayingMovies(page, size, sort);
     return ResponseEntity.status(response.getStatus()).body(response);
   }
+
+  /// Phương thức thực hiện lấy thông tin của movie-service.
+  @GetMapping(value = "/contact-info")
+  public ResponseEntity<ResponseData> getContactInfo() {
+    ResponseData response = movieService.getContactInfo();
+    return ResponseEntity.status(200).body(response);
+  }
 }
