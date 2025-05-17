@@ -1,0 +1,449 @@
+services:
+  rabbitmq-service:
+    image: rabbitmq:3.11-management
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 10s # Khoảng thời gian giữa các lần thử lại.
+      retries: 10 # Nếu không có response hoặc response không phải là UP thì sẽ thử lại 10 lần.
+      timeout: 5s # Với mỗi lần thử, nếu sau 5s mà không có response thì sẽ coi là không thành công.
+      start_period: 30s # Sau 10s kể từ khi start thì mới bắt đầu kiểm tra healthcheck
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    restart: on-failure
+    networks:
+      - movie-reservation
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+      - "61613:61613"
+    environment:
+      - RABBITMQ_PLUGINS=rabbitmq_stomp
+      - RABBITMQ_PLUGINS=rabbitmq_web_stomp
+    command: >
+      bash -c "rabbitmq-plugins enable rabbitmq_management && 
+               rabbitmq-plugins enable rabbitmq_stomp && 
+               rabbitmq-server"
+  
+
+  config-server:
+    image: config-server:1.0
+    restart: on-failure
+    networks:
+      - movie-reservation
+    healthcheck:
+      test: "curl --fail --silent http://localhost:8071/actuator/health/readiness | grep UP || exit 1"  # Kiểm tra xem config-server có sẵn sàng không. Khi response của curl là UP thì coi như config-server đã sẵn sàng.
+      interval: 10s # Khoảng thời gian giữa các lần thử lại.
+      retries: 10 # Nếu không có response hoặc response không phải là UP thì sẽ thử lại 10 lần.
+      timeout: 5s # Với mỗi lần thử, nếu sau 5s mà không có response thì sẽ coi là không thành công.
+      start_period: 15s # Sau 15s kể từ khi start thì mới bắt đầu kiểm tra healthcheck
+    ports:
+      - "8071:8071"
+    depends_on:
+      rabbitmq-service:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq-service
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+
+  service-discovery:
+    image: service-discovery:1.0
+    restart: on-failure
+    healthcheck:
+      test: "curl --fail --silent http://localhost:8761/actuator/health/readiness | grep UP || exit 1"  # Kiểm tra xem config-server có sẵn sàng không. Khi response của curl là UP thì coi như config-server đã sẵn sàng.
+      interval: 10s # Khoảng thời gian giữa các lần thử lại.
+      retries: 10 # Nếu không có response hoặc response không phải là UP thì sẽ thử lại 10 lần.
+      timeout: 5s # Với mỗi lần thử, nếu sau 5s mà không có response thì sẽ coi là không thành công.
+      start_period: 15s # Sau 15s kể từ khi start thì mới bắt đầu kiểm tra healthcheck
+    networks:
+      - movie-reservation
+    environment:
+      - SPRING_APPLICATION_NAME=service-discovery
+      - SPRING_CONFIG_IMPORT=configserver:http://config-server:8071/
+      - SPRING_PROFILES_ACTIVE=default
+      - SPRING_RABBITMQ_HOST=rabbitmq-service
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+    ports:
+      - "8761:8761"
+    depends_on:
+      config-server:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  redis-api-gateway:
+    image: redis:7.4
+    restart: unless-stopped
+    networks:
+      - movie-reservation
+    ports:
+      - "6379:6379"
+  api-gateway:
+    image: api-gateway:1.0
+    restart: on-failure
+    networks:
+      - movie-reservation
+    healthcheck:
+      test: "curl --fail --silent http://localhost:8888/actuator/health/readiness | grep UP || exit 1"  # Kiểm tra xem config-server có sẵn sàng không. Khi response của curl là UP thì coi như config-server đã sẵn sàng.
+      interval: 10s # Khoảng thời gian giữa các lần thử lại.
+      retries: 10 # Nếu không có response hoặc response không phải là UP thì sẽ thử lại 10 lần.
+      timeout: 5s # Với mỗi lần thử, nếu sau 5s mà không có response thì sẽ coi là không thành công.
+      start_period: 15s # Sau 15s kể từ khi start thì mới bắt đầu kiểm tra healthcheck
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    ports:
+      - "8888:8888"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      service-discovery:
+        condition: service_healthy
+    environment:
+      - SPRING_APPLICATION_NAME=api-gateway
+      - SPRING_CONFIG_IMPORT=configserver:http://config-server:8071/
+      - SPRING_PROFILES_ACTIVE=default
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
+      - EUREKA_INSTANCE_PREFERIPADDRESS=true
+      - SPRING_DATA_REDIS_HOST=redis-api-gateway
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_RABBITMQ_HOST=rabbitmq-service
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+      - GRPC_SERVER_AUTH_ADDRESS=static://auth-service:9091
+
+
+  bff:
+    image: bff:1.0
+    restart: on-failure
+    networks:
+      - movie-reservation
+    healthcheck:
+      test: "curl --fail --silent http://localhost:8080/actuator/health/readiness | grep UP || exit 1"  # Kiểm tra xem config-server có sẵn sàng không. Khi response của curl là UP thì coi như config-server đã sẵn sàng.
+      interval: 10s # Khoảng thời gian giữa các lần thử lại.
+      retries: 10 # Nếu không có response hoặc response không phải là UP thì sẽ thử lại 10 lần.
+      timeout: 5s # Với mỗi lần thử, nếu sau 5s mà không có response thì sẽ coi là không thành công.
+      start_period: 15s # Sau 15s kể từ khi start thì mới bắt đầu kiểm tra healthcheck
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      api-gateway:
+        condition: service_healthy
+    environment:
+      - SPRING_APPLICATION_NAME=bff
+      - SPRING_CONFIG_IMPORT=configserver:http://config-server:8071/
+      - SPRING_PROFILES_ACTIVE=default
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
+      - EUREKA_INSTANCE_PREFERIPADDRESS=true
+      - GRPC_SERVER_AUTH_ADDRESS=static://auth-service:9091
+      - GRPC_SERVER_MOVIE_ADDRESS=static://movie-service:9092
+      - GRPC_SERVER_BOOKING_ADDRESS=static://booking-service:9093
+      - SPRING_RABBITMQ_HOST=rabbitmq-service
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+
+
+
+  auth-db-service:
+    image: mysql:8.0
+    restart: on-failure
+    networks:
+      - movie-reservation
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 10s
+      retries: 5
+      interval: 10s
+      start_period: 30s
+    env_file:
+      - .env
+    environment:
+      - MYSQL_DATABASE=auth-db
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - auth-db-data:/var/lib/mysql
+
+  # =======================
+  # Authentication Service
+  # =======================
+  auth-service:
+    image: auth-service:1.0
+    networks:
+      - movie-reservation
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    restart: on-failure
+    env_file:
+      - .env
+    ports:
+      - "9091:9091"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      service-discovery:
+        condition: service_healthy
+      api-gateway:
+        condition: service_healthy
+      auth-db-service:
+        condition: service_healthy
+      bff:
+        condition: service_healthy
+    environment:
+      - SPRING_APPLICATION_NAME=auth-service
+      - SPRING_CONFIG_IMPORT=configserver:http://config-server:8071/
+      - SPRING_PROFILES_ACTIVE=default
+      - SPRING_APPLICATION_SECURITY_JWT_ACCESS_TOKEN_KEY=${SPRING_APPLICATION_SECURITY_JWT_ACCESS_TOKEN_KEY}
+      - SPRING_APPLICATION_SECURITY_JWT_REFRESH_TOKEN_KEY=${SPRING_APPLICATION_SECURITY_JWT_REFRESH_TOKEN_KEY}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
+      - EUREKA_INSTANCE_PREFERIPADDRESS=true
+      - BRAVO_API_KEY=${BRAVO_API_KEY}
+      - SPRING_DATA_REDIS_HOST=redis-api-gateway
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_CACHE_TYPE=redis
+      - SPRING_RABBITMQ_HOST=rabbitmq-service
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+      - SPRING_DATASOURCE_URL=jdbc:mysql://auth-db-service:3306/auth-db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - SPRING_APPLICATION_SERVER_HOST=http://api-gateway:8888
+      # APPLICATION_SERVER_PORT được dùng để gửi email tới cho người dùng mới tạo tài khoản. Xem trong chức năng register.
+
+
+  movie-db-service:
+    image: mysql:8.0
+    restart: on-failure
+    networks:
+      - movie-reservation
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 10s
+      retries: 5
+      interval: 10s
+      start_period: 30s
+    env_file:
+      - .env
+    environment:
+      - MYSQL_DATABASE=movie-db
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - movie-db-data:/var/lib/mysql
+
+  # =======================
+  # Movie Service
+  # =======================
+  movie-service:
+    image: movie-service:1.0
+    networks:
+      - movie-reservation
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    restart: on-failure
+    ports:
+      - "9092:9092"
+      - "8082:8082"
+    env_file:
+      - .env
+    depends_on:
+      config-server:
+        condition: service_healthy
+      service-discovery:
+        condition: service_healthy
+      api-gateway:
+        condition: service_healthy
+      movie-db-service:
+        condition: service_healthy
+      bff:
+        condition: service_healthy
+    environment:
+      - SPRING_APPLICATION_NAME=movie-service
+      - SPRING_CONFIG_IMPORT=configserver:http://config-server:8071/
+      - SPRING_PROFILES_ACTIVE=default
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
+      - EUREKA_INSTANCE_PREFERIPADDRESS=true
+      - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+      - AWS_SECRET_KEY=${AWS_SECRET_KEY}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_BUCKET_NAME=${AWS_BUCKET_NAME}
+      - AWS_CLOUDFRONT_DOMAIN=${AWS_CLOUDFRONT_DOMAIN}
+      - SPRING_RABBITMQ_HOST=rabbitmq-service
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+      - SPRING_DATASOURCE_URL=jdbc:mysql://movie-db-service:3306/movie-db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+
+
+
+  booking-db-service:
+    image: mysql:8.0
+    restart: on-failure
+    networks:
+      - movie-reservation
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 10s
+      retries: 5
+      interval: 10s
+      start_period: 30s
+    env_file:
+      - .env
+    environment:
+      - MYSQL_DATABASE=booking-db
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3308:3306"
+    volumes:
+      - booking-db-data:/var/lib/mysql
+  # =======================
+  # Booking Service
+  # =======================
+  booking-service:
+    image: booking-service:1.0
+    networks:
+      - movie-reservation
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    restart: on-failure
+    ports:
+      - "9093:9093"
+      - "8083:8083"
+    env_file:
+      - .env
+    depends_on:
+      config-server:
+        condition: service_healthy
+      service-discovery:
+        condition: service_healthy
+      api-gateway:
+        condition: service_healthy
+      booking-db-service:
+        condition: service_healthy
+      bff:
+        condition: service_healthy
+    environment:
+      - SPRING_APPLICATION_NAME=booking-service
+      - SPRING_CONFIG_IMPORT=configserver:http://config-server:8071/
+      - SPRING_PROFILES_ACTIVE=default
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
+      - EUREKA_INSTANCE_PREFERIPADDRESS=true
+      - GRPC_SERVER_MOVIE_ADDRESS=static://movie-service:9092
+      - GRPC_SERVER_WEBSOCKET_ADDRESS=static://websocket-service:9094
+      - SPRING_RABBITMQ_HOST=rabbitmq-service
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+      - SPRING_DATASOURCE_URL=jdbc:mysql://booking-db-service:3306/booking-db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+
+  websocket-db-service:
+    image: mysql:8.0
+    restart: on-failure
+    networks:
+      - movie-reservation
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 10s
+      retries: 5
+      interval: 10s
+      start_period: 30s
+    environment:
+      - MYSQL_DATABASE=websocket-db
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3309:3306"
+    volumes:
+      - websocket-db-data:/var/lib/mysql
+  # =======================
+  # Websocket Service
+  # =======================
+  websocket-service:
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    image: websocket-service:1.0
+    restart: on-failure
+    networks:
+      - movie-reservation
+    depends_on:
+      config-server:
+        condition: service_healthy
+      service-discovery:
+        condition: service_healthy
+      api-gateway:
+        condition: service_healthy
+      websocket-db-service:
+        condition: service_healthy
+      bff:
+        condition: service_healthy
+    env_file:
+      - .env
+    ports:
+      - "8084:8084"
+      - "9094:9094"
+    environment:
+      - SPRING_APPLICATION_NAME=websocket-service
+      - SPRING_CONFIG_IMPORT=configserver:http://config-server:8071/
+      - SPRING_PROFILES_ACTIVE=default
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
+      - EUREKA_INSTANCE_PREFERIPADDRESS=true
+      - SPRING_RABBITMQ_HOST=rabbitmq-service
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+      - SPRING_MESSAGING_STOMP_BROKER_RELAY_HOST=rabbitmq-service
+      - SPRING_MESSAGING_STOMP_BROKER_RELAY_PORT=61613
+      - SPRING_DATASOURCE_URL=jdbc:mysql://websocket-db-service:3306/websocket-db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+
+networks:
+  movie-reservation:
+    driver: "bridge"
+
+# =======================
+# Docker Volumes
+# =======================
+volumes:
+  auth-db-data:
+    driver: local
+  movie-db-data:
+    driver: local
+  booking-db-data:
+    driver: local
+  websocket-db-data:
+    driver: local

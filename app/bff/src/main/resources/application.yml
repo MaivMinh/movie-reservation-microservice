@@ -1,14 +1,27 @@
 spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:default}
   application:
     name: bff
-server:
-  port: 8080
-
+  # Lưu ý: Để sử dụng Spring Cloud Config, bạn cần thêm dependency spring-cloud-starter-config vào file pom.xml hoặc build.gradle của bạn.
+  # Khi dùng Spring Cloud Config Monitor, bạn cần thêm dependency spring-cloud-starter-bus-amqp vào file pom.xml hoặc build.gradle của bạn. Và với việc sử dụng Monitor thì nó sẽ tạo ra vấn đề khiến cho BFF không kết nối được tới Config Server.
+  config:
+    import: ${SPRING_CONFIG_IMPORT:optional:configserver:http://localhost:8071/}
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:guest}
+    password: ${SPRING_RABBITMQ_PASSWORD:guest}
+  threads:
+    virtual:
+      enabled: true
 
 # Spring Actuator Configurations
 management:
   endpoint:
     health:
+      probes:
+        enabled: true
       show-details: always
   metrics:
     distribution:
@@ -24,8 +37,12 @@ management:
     web:
       exposure:
         include: "*"
-        exclude: "env,beans,scheduledtasks"
   health:
+    # Liveness and Readiness probes configuration.
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
     circuitbreakers:
       enabled: true
     ratelimiters:
@@ -34,16 +51,6 @@ management:
       enabled: true
     redis:
       enabled: true
-
-
-# Eureka config.
-eureka:
-  client:
-    register-with-eureka: true
-    service-url:
-      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}
-      preferIpAddress: true
-    fetch-registry: true
 
 grpc:
   client:
@@ -63,6 +70,19 @@ grpc:
       enable-keep-alive: true
       keep-alive-without-calls: true
 
+server:
+  port: 8080
+
+# Eureka config.
+eureka:
+  client:
+    register-with-eureka: true
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}
+      preferIpAddress: true
+    fetch-registry: true
+
+
 # Current settings
 springdoc:
   api-docs:
@@ -78,41 +98,45 @@ springdoc:
 
 # Circuit Breaker Configurations
 resilience4j:
+  timelimiter:
+    instances:
+      default:
+        timeout-duration: 8s
+        cancel-running-future: true
+      authService:
+        timeout-duration: 8s
+        cancel-running-future: true
+      movieService:
+        timeout-duration: 8s
+        cancel-running-future: true
+      bookingService:
+        timeout-duration: 8s
+        cancel-running-future: true
   circuitbreaker:
     instances:
       authService:
         register-health-indicator: true
-        sliding-window-size: 12 # Bởi vì circuit breaker sử dụng gRPC, nên sẽ gấp đôi so với số lượng của REST thông thường.
-        minimum-number-of-calls: 12
+        sliding-window-size: 6
+        minimum-number-of-calls: 6
         failure-rate-threshold: 50
         wait-duration-in-open-state: 20000
-        permitted-number-of-calls-in-half-open-state: 6
+        permitted-number-of-calls-in-half-open-state: 3
         sliding-window-type: COUNT_BASED
-        record-exceptions:
-          - java.lang.Throwable
-          - io.grpc.StatusRuntimeException
-          - java.io.IOException
       movieService:
         register-health-indicator: true
-        sliding-window-size: 12
-        minimum-number-of-calls: 12
+        sliding-window-size: 6
+        minimum-number-of-calls: 6
         failure-rate-threshold: 50
         wait-duration-in-open-state: 20000
-        permitted-number-of-calls-in-half-open-state: 6
+        permitted-number-of-calls-in-half-open-state: 3
         sliding-window-type: COUNT_BASED
-        record-exceptions:
-          - java.lang.Throwable
-          - io.grpc.StatusRuntimeException
-          - java.io.IOException
       bookingService:
         register-health-indicator: true
-        sliding-window-size: 12
+        sliding-window-size: 6
         minimum-number-of-calls: 12
         failure-rate-threshold: 50
         wait-duration-in-open-state: 20000
-        permitted-number-of-calls-in-half-open-state: 6
+        permitted-number-of-calls-in-half-open-state: 3
         sliding-window-type: COUNT_BASED
         record-exceptions:
-          - java.lang.Throwable
-          - io.grpc.StatusRuntimeException
-          - java.io.IOException
+          - java.lang.Exception

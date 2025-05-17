@@ -24,7 +24,6 @@ public class MovieServiceGrpcServer extends MovieServiceGrpc.MovieServiceImplBas
 
   @Override
   public void getMovies(GetMoviesRequest request, StreamObserver<GetMoviesResponse> responseObserver) {
-    System.out.println("Request from client");
     GetMoviesResponse response = movieService.getMovies(request);
     responseObserver.onNext(response);
     responseObserver.onCompleted();
@@ -61,6 +60,13 @@ public class MovieServiceGrpcServer extends MovieServiceGrpc.MovieServiceImplBas
   @Override
   public void getNowPlayingMovies(GetNowPlayingMoviesRequest request, StreamObserver<GetNowPlayingMoviesResponse> responseObserver) {
     GetNowPlayingMoviesResponse response = movieService.getNowPlayingMovies(request);
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+  }
+
+  @Override
+  public void getContactInfo(GetContactInfoRequest request, StreamObserver<GetContactInfoResponse> responseObserver) {
+    GetContactInfoResponse response = movieService.getContactInfo(request);
     responseObserver.onNext(response);
     responseObserver.onCompleted();
   }

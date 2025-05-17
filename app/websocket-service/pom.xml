@@ -8,7 +8,7 @@
         <version>1.0.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-    <artifactId>websock-service</artifactId>
+    <artifactId>websocket-service</artifactId>
     <version>1.0.0</version>
     <name>websocket-service</name>
     <description>Websocket service</description>
